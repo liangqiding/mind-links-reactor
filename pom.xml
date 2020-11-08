@@ -4,7 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>m-netty</module>
+        <module>m-service</module>
+        <module>m-auth</module>
+        <module>m-common</module>
+        <module>m-gateway</module>
+        <module>m-center</module>
     </modules>
 
     <groupId>com.mind</groupId>
