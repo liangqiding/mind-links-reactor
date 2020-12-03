@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="links.common.dao.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="links.common.domain.User">
+        <id column="user_id" property="userId" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="account" property="account" />
+        <result column="avatar" property="avatar" />
+        <result column="phone" property="phone" />
+        <result column="sex" property="sex" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="provinceCode" property="provinceCode" />
+        <result column="cityCode" property="cityCode" />
+        <result column="areaCode" property="areaCode" />
+        <result column="townCode" property="townCode" />
+        <result column="update_user" property="updateUser" />
+        <result column="place" property="place" />
+        <result column="isDelete" property="isDelete" />
+        <result column="enable" property="enable" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id, username, password, account, avatar, phone, sex, create_time, update_time, provinceCode, cityCode, areaCode, townCode, update_user, place, isDelete, enable
+    </sql>
+
+</mapper>

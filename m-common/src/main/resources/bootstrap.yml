@@ -1,0 +1,72 @@
+#==========================swagger 访问接口==================================
+#           http://${ip}:10131/swagger-ui/index.html                      #
+#==========================================================================
+server:
+  port: 10131
+spring:
+  #
+  application:
+    name: i2dspEmgData
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.188.106:8848
+        namespace: cc8561c5-2d87-4db8-95fc-ddc0fb03e563
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        file-extension: yaml
+        prefix: i2dspEmgData
+  profiles:
+    active: test
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.188.104:4000/i2dsp_emg_base?useUnicode=true&useSSL=false&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&useServerPrepStmts=true&allowMultiQueries=true
+    username: i2dsp_admin
+    password: i2dsp
+    hikari:
+      maximum-pool-size: 20
+  # redis
+  redis:
+    database: 10
+    host: 192.168.188.104
+    #    database: 3
+    #    host: 210.5.30.198
+    password: i2dsp
+    port: 6379
+    jedis:
+      pool:
+        #        max-wait:
+        max-idle: 8
+        min-idle: 0
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.i2dsp.emg.data.domain
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 1
+    #驼峰下划线转换
+    #刷新mapper 调试神器
+    refresh-mapper: true
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #配置JdbcTypeForNull
+    jdbc-type-for-null: 'null'
+############################################################################################
+#                               调试选项(热加载)                                             #
+############################################################################################
+# 是否开始swagger api文档 true or false
+swagger:
+  enable: true
+#  是否直接在控制台打印异常  true or false
+exception:
+  printStackTrace: true
+# 是否打印数据库语句查询情况 debug  or false
+logging.level:
+  com.i2dsp.data.dao: debug
