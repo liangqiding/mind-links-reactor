@@ -2,45 +2,76 @@
 #           http://${ip}:10131/swagger-ui/index.html                      #
 #==========================================================================
 server:
-  port: 10131
+  port: 10100
 spring:
-  #
+  ##################################################################################################
+  #                               nacos
+  #                           192.168.60.119:8848
+  ##################################################################################################
   application:
-    name: i2dspEmgData
+    name: AuthSercurity
   cloud:
     nacos:
       discovery:
+        enabled: false
         server-addr: 192.168.188.106:8848
         namespace: cc8561c5-2d87-4db8-95fc-ddc0fb03e563
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         namespace: ${spring.cloud.nacos.discovery.namespace}
         file-extension: yaml
-        prefix: i2dspEmgData
+        prefix: AuthSercurity
   profiles:
     active: test
-
+  ##################################################################################################
+  #                               mysql
+  #                           192.168.60.119:8848
+  ##################################################################################################
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.188.104:4000/i2dsp_emg_base?useUnicode=true&useSSL=false&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&useServerPrepStmts=true&allowMultiQueries=true
-    username: i2dsp_admin
-    password: i2dsp
-    hikari:
-      maximum-pool-size: 20
-  # redis
+    url: jdbc:mysql://192.168.60.119:3306/mind_links_core?useUnicode=true&useSSL=false&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&useServerPrepStmts=true&allowMultiQueries=true
+    username: root
+    password: 123456
+    #####################################  druid #####################################################
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    # 打开PSCache
+    poolPreparedStatements: true
+    #配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
+    #如果运行时报错  java.lang.ClassNotFoundException: org.apache.log4j.Priority
+    #则导入 log4j 依赖即可，Maven 地址： https://mvnrepository.com/artifact/log4j/log4j
+    filters: stat,wall,log4j,config
+    #指定每个连接上PSCache的大小
+    maxPoolPreparedStatementPerConnectionSize: 20
+    #合并多个DruidDataSource的监控数据
+    useGlobalDataSourceStat: true
+    #通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  ##################################################################################################
+  #                               redis
+  #
+  ##################################################################################################
   redis:
     database: 10
     host: 192.168.188.104
-    #    database: 3
-    #    host: 210.5.30.198
     password: i2dsp
     port: 6379
     jedis:
       pool:
-        #        max-wait:
         max-idle: 8
         min-idle: 0
-
+##################################################################################################
+#                               mybatis-plus
+#
+##################################################################################################
 mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
   #实体扫描，多个package用逗号或者分号分隔
