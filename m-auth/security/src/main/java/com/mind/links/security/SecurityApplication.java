@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @MapperScan("com.mind.links.security.dao")
-@EnableCaching
 @EnableTransactionManagement(proxyTargetClass = true)
 public class SecurityApplication {
     public static void main(String[] args) {

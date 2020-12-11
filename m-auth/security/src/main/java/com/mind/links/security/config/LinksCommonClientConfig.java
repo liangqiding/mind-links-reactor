@@ -1,9 +1,7 @@
 package com.mind.links.security.config;
 
-
 import com.mind.links.common.config.LinksCommonClient;
 import org.springframework.context.annotation.Configuration;
-
 /**
  * description : TODO 初始化 LinksCommon,让spring加载自定义注解
  *
@@ -13,5 +11,5 @@ import org.springframework.context.annotation.Configuration;
  */
 @LinksCommonClient
 @Configuration
-public class LinksCommonClientConfig {
+public class LinksCommonClientConfig  {
 }

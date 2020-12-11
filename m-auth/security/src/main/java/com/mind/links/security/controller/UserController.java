@@ -28,7 +28,7 @@ public class UserController {
     @CustomAopHandler(log = true,module = "user",desc = "用户查询")
     public ResponseResult<List<User>> test() {
         log.info("==========================================================================");
-        return new ResponseResult<>(userService.list());
+        return new ResponseResult<>(userService.listUsers(666L));
     }
 }
 

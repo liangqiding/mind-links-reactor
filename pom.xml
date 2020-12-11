@@ -9,6 +9,7 @@
         <module>m-common</module>
         <module>m-gateway</module>
         <module>m-center</module>
+        <module>m-cache</module>
     </modules>
 
     <groupId>com.mind.links</groupId>
@@ -53,7 +54,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.49</version>
+            <version>1.2.75</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -178,6 +179,11 @@
                 <version>2.0</version>
             </dependency>
             <!--            mybatis-plus end-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>2.4.0</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
