@@ -101,3 +101,4 @@ exception:
 # 是否打印数据库语句查询情况 debug  or false
 logging.level:
   com.i2dsp.data.dao: debug
+

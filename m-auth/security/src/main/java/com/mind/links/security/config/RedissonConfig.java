@@ -2,14 +2,18 @@ package com.mind.links.security.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.Codec;
 import org.redisson.config.Config;
 import org.redisson.spring.cache.CacheConfig;
 import org.redisson.spring.cache.RedissonSpringCacheManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ClassUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,14 +29,25 @@ import java.util.Map;
 @ComponentScan
 @EnableCaching
 public class RedissonConfig {
+    @Autowired
+    RedisProperties redisProperties;
 
+
+    /**
+     * 配置参考 https://github.com/redisson/redisson/wiki/2.-Configuration
+     */
     @Bean
     public RedissonClient getRedisson() throws Exception {
         RedissonClient redisson = null;
         Config config = new Config();
-        // 配置参考 https://github.com/redisson/redisson/wiki/2.-Configuration
-        config = Config.fromYAML(RedissonConfig.class.getClassLoader().getResource("redisson-config.yml"));
-        config.useSingleServer().setDatabase(13);
+        config.useSingleServer()
+                .setPassword(redisProperties.getPassword())
+                .setDatabase(redisProperties.getDatabase())
+                .setAddress(redisProperties.getAddress())
+                .setConnectionPoolSize(redisProperties.getConnectionPoolSize())
+                .setTimeout(redisProperties.getTimeout());
+        Codec codec = (Codec) ClassUtils.forName(redisProperties.getCodec(), ClassUtils.getDefaultClassLoader()).newInstance();
+        config.setCodec(codec);
         redisson = Redisson.create(config);
         return redisson;
     }

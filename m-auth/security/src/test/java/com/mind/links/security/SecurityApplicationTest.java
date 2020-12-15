@@ -1,4 +1,4 @@
-package com.links.security;
+package com.mind.links.security;
 
 import com.mind.links.security.domain.User;
 import com.mind.links.security.service.impl.UserServiceImpl;

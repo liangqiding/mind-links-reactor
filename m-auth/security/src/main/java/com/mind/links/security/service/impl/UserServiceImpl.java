@@ -23,7 +23,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     @Cacheable(key = "#root.methodName+'-'+#p0")
     public List<User> listUsers(Long id) {
-        System.out.println(id);
         return list();
     }
 }

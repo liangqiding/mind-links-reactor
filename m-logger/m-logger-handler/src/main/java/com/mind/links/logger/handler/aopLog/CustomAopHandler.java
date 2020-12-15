@@ -1,4 +1,4 @@
-package com.mind.links.common.aopLog;
+package com.mind.links.logger.handler.aopLog;
 
 import java.lang.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.mind.links.common.aopLog;
+package com.mind.links.logger.handler.aopLog;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
@@ -28,16 +29,20 @@ import java.util.Map;
 
 @Aspect
 @Component
-//@Lazy(false)
+@Lazy(false)
 public class CustomAspect {
 
+    @Value("${server.port}")
+    private String port;
+
+
     public CustomAspect() {
-        logger.info("CustomAspect B 实例化=====================================");
+        logger.info("=== com.mind.links.logger.handler.aopLog  实例化成功=====================================");
     }
 
     private final Logger logger = LoggerFactory.getLogger(CustomAspect.class);
 
-    @Pointcut("@annotation(com.mind.links.common.aopLog.CustomAopHandler)")
+    @Pointcut("@annotation(com.mind.links.logger.handler.aopLog.CustomAopHandler)")
     private void cutMethod() {
     }
 
@@ -105,6 +110,7 @@ public class CustomAspect {
             JSONObject requestInfo = this.getRequestInfo(joinPoint, request);
             requestInfo.put("model", customAopHandler.module());
             requestInfo.put("desc", customAopHandler.desc());
+            requestInfo.put("port", port);
             requestInfo.put("executionTime", (end - start) + "ms");
             logger.info("########" + requestInfo);
         }

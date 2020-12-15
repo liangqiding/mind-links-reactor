@@ -6,7 +6,7 @@ import com.mind.links.proxy.JdkDynamicProxy;
  * description : TODO
  *
  * @author : qiDing
- * date: 2020-12-11 08:30
+ * date: 2017-12-11 08:30
  * @version v1.0.0
  */
 public class TestProxyServiceImpl implements TestProxyService {

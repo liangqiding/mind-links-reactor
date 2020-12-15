@@ -21,6 +21,11 @@
            <version>0.0.1-SNAPSHOT</version>
        </dependency>
        <dependency>
+           <groupId>com.mind.links</groupId>
+           <artifactId>m-logger-handler</artifactId>
+           <version>0.0.1-SNAPSHOT</version>
+       </dependency>
+       <dependency>
            <groupId>com.github.pagehelper</groupId>
            <artifactId>pagehelper-spring-boot-starter</artifactId>
        </dependency>
@@ -56,7 +61,6 @@
            <groupId>log4j</groupId>
            <artifactId>log4j</artifactId>
        </dependency>
-
    </dependencies>
 
 </project>

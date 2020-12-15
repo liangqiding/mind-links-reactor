@@ -17,4 +17,5 @@ singleServerConfig:
 threads: 0
 nettyThreads: 0
 codec: !<org.redisson.codec.JsonJacksonCodec> {}
+#codec: !<org.redisson.codec.FstCodec> {}
 transportMode: "NIO"

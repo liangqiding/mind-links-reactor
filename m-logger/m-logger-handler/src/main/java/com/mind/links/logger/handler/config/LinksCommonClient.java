@@ -1,4 +1,4 @@
-package com.mind.links.common.config;
+package com.mind.links.logger.handler.config;
 
 import org.springframework.context.annotation.Import;
 

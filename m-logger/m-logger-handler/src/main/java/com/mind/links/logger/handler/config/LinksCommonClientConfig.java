@@ -1,5 +1,7 @@
-package com.mind.links.common.config;
+package com.mind.links.logger.handler.config;
 
+import com.mind.links.logger.handler.aopLog.CustomAspect;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,7 +13,8 @@ import org.springframework.context.annotation.Configuration;
  * @version v1.0.0
  */
 @Configuration
-@ComponentScan("com.mind.links.common.aopLog.**")
+@ConditionalOnClass(CustomAspect.class)
+@ComponentScan(basePackages = {"com.mind.links.logger.handler.aopLog"})
 public class LinksCommonClientConfig {
 
 }

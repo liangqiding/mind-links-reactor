@@ -1,4 +1,4 @@
-package com.mind.links.common.utils;
+package com.mind.links.uitls;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -35,13 +35,13 @@ public final class SpringBeanFactory implements ApplicationContextAware {
         context = applicationContext;
     }
 
-    /**
-     * 注册Bean
-     */
-    public void registerBean(Class<?> cl) {
-        ConfigurableApplicationContext context = (ConfigurableApplicationContext) SpringBeanFactory.context;
-        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
-        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(cl);
-        beanFactory.registerBeanDefinition(cl.getName(), beanDefinitionBuilder.getBeanDefinition());
-    }
+//    /**
+//     * 注册Bean
+//     */
+//    public void registerBean(Class<?> cl) {
+//        ConfigurableApplicationContext context = (ConfigurableApplicationContext) SpringBeanFactory.context;
+//        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
+//        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(cl);
+//        beanFactory.registerBeanDefinition(cl.getName(), beanDefinitionBuilder.getBeanDefinition());
+//    }
 }

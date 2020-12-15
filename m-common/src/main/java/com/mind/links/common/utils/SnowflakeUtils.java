@@ -155,68 +155,27 @@ public class SnowflakeUtils {
         }
     }
 
-    public static TaskExecutor consumerPool() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        // 设置核心线程数
-        executor.setCorePoolSize(2);
-        // 设置最大线程数
-        executor.setMaxPoolSize(4);
-        // 设置队列容量
-        executor.setQueueCapacity(20);
-        // 设置线程活跃时间（秒）
-        executor.setKeepAliveSeconds(60);
-        // 设置默认线程名称
-        executor.setThreadNamePrefix("线程池kafkaHandle-");
-        /*
-        todo 设置拒绝策略
-         当抛出RejectedExecutionException异常时，会调rejectedExecution方法 调用者运行策略实现了一种调节机制，
-         该策略既不会抛弃任务也不会爆出异常，而是将任务退回给调用者，从而降低新任务的流量
-        */
-
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        // 等待所有任务结束后再关闭线程池
-        executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.initialize();
-        return executor;
-    }
-
+    /**
+     * 雪花id 压测
+     */
+    @SuppressWarnings(value={"all"})
     public static void main(String[] args) throws InterruptedException {
-        Map<Long, Integer> longLongHashMap=new ConcurrentHashMap<Long, Integer>();
-        Thread thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runs(longLongHashMap);
-            }
-        });
-        Thread thread2 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runs(longLongHashMap);
-            }
-        });
-        Thread thread3 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runs(longLongHashMap);
-            }
-        });
-        Thread thread4 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runs(longLongHashMap);
-            }
-        });
-       thread1.start();
-       thread2.start();
-       thread3.start();
-       thread4.start();
-       Thread.sleep(15000);
+        Map<Long, Integer> longLongHashMap = new ConcurrentHashMap<Long, Integer>();
+        for (int i = 0; i < 5; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    runs(longLongHashMap);
+                }
+            }).start();
+        }
+        Thread.sleep(15000);
         System.out.println(longLongHashMap.size());
     }
 
     public static void runs(Map<Long, Integer> longLongHashMap) {
         for (int i = 0; i < 100000; i++) {
-            System.out.println(Thread.currentThread().getName()+"::"+i);
+            System.out.println(Thread.currentThread().getName() + "::" + i);
             Long id = genId();
             if (longLongHashMap.containsKey(id)) {
                 System.out.println("重复了+" + id);

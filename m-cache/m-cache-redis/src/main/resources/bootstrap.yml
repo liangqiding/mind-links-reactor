@@ -7,6 +7,7 @@ spring:
   ##################################################################################################
   #                               nacos
   #                           192.168.60.119:8848
+  #                         http://192.168.60.119:8848/nacos/index.html
   ##################################################################################################
   application:
     name: AuthSercurity
@@ -14,7 +15,7 @@ spring:
     nacos:
       discovery:
         enabled: false
-        server-addr: 210.5.30.195:8848
+        server-addr: 192.168.60.119:8848
         namespace: cc8561c5-2d87-4db8-95fc-ddc0fb03e563
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
@@ -56,10 +57,31 @@ spring:
     #通过connectProperties属性来打开mergeSql功能；慢SQL记录
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
   ##################################################################################################
-  #                               redis
+  #                               redisson 单服务器配置
   #
   ##################################################################################################
-
+redisson:
+  singleServerConfig:
+    idleConnectionTimeout: 10000
+    connectTimeout: 10000
+    timeout: 3000
+    retryAttempts: 3
+    retryInterval: 1500
+    password: NXMz5MpQ8BTTQ4wRPTk7
+    subscriptionsPerConnection: 5
+    clientName: null
+    address: redis://192.168.188.104:6379
+    subscriptionConnectionMinimumIdleSize: 1
+    subscriptionConnectionPoolSize: 50
+    connectionMinimumIdleSize: 32
+    connectionPoolSize: 64
+    database: 12
+    dnsMonitoringInterval: 5000
+    threads: 0
+    nettyThreads: 0
+    codec: !<org.redisson.codec.JsonJacksonCodec> { }
+    #codec: !<org.redisson.codec.FstCodec> {}
+    transportMode: "NIO"
 ##################################################################################################
 #                               mybatis-plus
 #
