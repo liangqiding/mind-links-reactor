@@ -174,27 +174,6 @@ docker方式脚本初使化：进入docker-compose目录，执行命令 `docker-
 |  gateway | gateway-admin             | mysql、redis            |  网关管理    |  http://localhost:8445  | [网关管理后台文档](./gateway/gateway-admin)   |
 |  monitor | admin                     |                         |  总体监控    |  http://localhost:8022  |      |
 
-* 4.案例示意图
-
-以下是一个用户访问的的示意图，用户请求通过gateway-web应用网关访问后端应用，通过authorization-server应用登陆授权换取token，请求通过authentication-server应用进行权限签别后转发到"您的业务应用"中
-
-authorization-server为授权应用，启动前请初使化好数据库，[授权Server文档](./auth/authorization-server)。
-
-authentication-server为签权应用，若有新增接口，请初使化相关权限数据到resource表中。
-
-gateway-admin可动态调整gateway-web的路由策略，测试前请先配置网关的转发策略，[路由策略配置](https://github.com/zhoutaoo/SpringCloud/tree/master/gateway/gateway-admin#%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97)。
-
-[示意图](https://www.processon.com/view/link/5cc05ff9e4b059e20a06e3c4)
-
-* 6.前端项目
-
-确确保gateway-admin、gateway-web、organization、authorization-server、authentication-server服务启动，然后启动
-
-[前端项目](https://github.com/zhoutaoo/SpringCloud-Admin)（该项目目前还在开发中）
-
-大家启动如有问题，可以先到这里看看，也可以加入交流群
-
-[常见问题](https://github.com/zhoutaoo/SpringCloud/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
 
 
 ### 测试
