@@ -166,22 +166,10 @@ docker方式脚本初使化：进入docker-compose目录，执行命令 `docker-
 
 以下应用都依赖于rabbitmq、nacos，启动服务前请先启动mq和注册中心
 
-| 服务分类  | 服务名                     |  依赖基础组件             |   简介      |  应用地址                | 文档                    |
-|----------|---------------------------|-------------------------|-------------|-------------------------|-------------------------|
-|  center  | bus-server                |                         |  消息中心    |  http://localhost:8071  | [消息中心文档](./center/bus)         |
-|  sysadmin| organization              | mysql、redis            |  用户组织应用 |  http://localhost:8010  | 待完善      |
-|  auth    | authorization-server      | mysql、organization     |  授权服务    |  http://localhost:8000  | [权限服务简介](./auth) 、[授权server文档](./auth/authorization-server)     |
-|  auth    | authentication-server     | mysql、organization     |  认证服务    |  http://localhost:8001  | [认证server文档](./auth/authentication-server)    |
-|  auth    | authentication-client     | 无                      |  认证客户端  |  jar包引入               |      |
-|  gateway | gateway-web               | redis                   |  WEB网关    |  http://localhost:8443  | [WEB网关简介](./gateway)  [WEB网关文档](./gateway/gateway-web)       |
-|  gateway | gateway-admin             | mysql、redis            |  网关管理    |  http://localhost:8445  | [网关管理后台文档](./gateway/gateway-admin)   |
-|  monitor | admin                     |                         |  总体监控    |  http://localhost:8022  |      |
 
+# 开发进度
 
-
-### 测试
-
-### 基础服务及开发进度
+### 基础架构搭建
 
 |  服务     | 使用技术                 |   进度        |    备注   |
 |----------|-------------------------|---------------|-----------|
@@ -198,24 +186,17 @@ docker方式脚本初使化：进入docker-compose目录，执行命令 `docker-
 |  分库分表 | Mycat                   |   🏗          |           |
 |  数据权限 |                         |   🏗          |  使用mybatis对原查询做增强，业务代码不用控制，即可实现。         |
 
-├── m-common -- 工具类及通用代码
-├── m-auth -- SpringSecurity封装公用模块
-├── m-cache -- 缓存管理
-├── m-center -- 总线控制中心
-├── m-search -- 基于Elasticsearch的搜索系统
-├── m-logger -- 统一日记处理
-├── m-gateway -- 网关
-└── m-service -- tcp 核心服务
 ### 基后台模块及开发进度
+
 |  服务     | 使用技术   |   进度         |    备注   |
 |----------|-----------|---------------|-----------|
 | m-common |           |    ✅          |           |
-| m-auth |             |    设计中          |           |
-| m-service |          |    设计中          |           |
-| m-center |           |    设计中           |           |
-| m-search |           |    设计中           |           |
-| m-logger |           |    设计中           |           |
-| m-gateway |          |    设计中           |           |
+| m-auth |             |    🏗          |           |
+| m-service |          |    🏗          |           |
+| m-center |           |    🏗           |           |
+| m-search |           |    🏗           |           |
+| m-logger |           |    🏗           |           |
+| m-gateway |          |    🏗           |           |
 
 
 ### 平台功能
