@@ -1,10 +1,12 @@
 # mall
 
-qq
 ## 前言
 
-`mind-links`项目致力于打造一个完整的智能家电系统，采用现阶段流行技术实现。
+`mind-links`项目致力于打造一个完整的智能家电系统，每项技术均采用现阶段流行技术实现。
 
+- 后台项目 基于SpringCloud的微服务开发脚手架实现  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)
+- 前端项目 采用TS.JS形式，基于vue-typescript-admin-template开发脚手架实现 参考地址[https://github.com/Armour/vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
+- 本项目readme文档格式  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)
 ## 项目文档
 
 - 文档地址：[http://#暂无](http://#)
