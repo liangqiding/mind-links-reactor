@@ -1,4 +1,4 @@
-# mall
+# mind-links 智能家电系统
 
 ## 前言
 
@@ -6,6 +6,7 @@
 
 - 后台项目 基于SpringCloud的微服务开发脚手架实现  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)
 - 前端项目 采用TS.JS形式，基于vue-typescript-admin-template开发脚手架实现 参考地址[https://github.com/Armour/vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
+- TCP测试设备 基于c/c++ 编写的小型测试客户端 
 - 本项目readme文档格式  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)
 ## 项目文档
 
