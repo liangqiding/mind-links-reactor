@@ -195,7 +195,7 @@ docker方式脚本初使化：进入docker-compose目录，执行命令 `docker-
 | m-service |  TCP核心服务  |    🏗          |     TCP核心服务      |
 | m-center  |总线控制中心   |    🏗           |     消息过滤，分流      |
 | m-search |  ES 搜索框架  |    🏗           |       Elasticsearch 搜索引擎    |
-| m-logger | 多模块日记收集  |    🏗           |   设计多模块共用jar包，导入添加注解即可实现日记生成和收集，并引入整Elasticsearch 日记收集并同步，实现分布式日记收集分析        |
+| m-logger | 多模块日记收集  |    🏗           |   设计多模块共用jar包，导入添加注解即可实现日记生成和收集，并引入Elasticsearch日记收集并同步，实现分布式日记收集分析        |
 | m-gateway |  网关统计  |    🏗           |     网关实现多模块统计授权认证，分流及服务熔断      |
 
 
