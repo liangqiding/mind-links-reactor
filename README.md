@@ -24,25 +24,27 @@ qq
 
 ![后台监控系统功能演示(更新中)](http://#)
 
-#### 前台商城系统
+#### 前台监控仪表盘系统
 
-前端项目`mall-app-web`地址：敬请期待......
+前端项目`web`地址：敬请期待......
 
-项目演示地址：[http://www.macrozheng.com/app/index.html](http://www.macrozheng.com/app/index.html)
+项目演示地址：[http://#](http://#)
 
-![前台商城系统功能演示](http://img.macrozheng.com/mall/project/mall_app_show.png)
+![前台仪表盘系统功能演示](http://#)
 
 ### 组织结构
 
 ``` lua
 mall
-├── mall-common -- 工具类及通用代码
-├── mall-mbg -- MyBatisGenerator生成的数据库操作代码
-├── mall-security -- SpringSecurity封装公用模块
-├── mall-admin -- 后台商城管理系统接口
-├── mall-search -- 基于Elasticsearch的商品搜索系统
-├── mall-portal -- 前台商城系统接口
-└── mall-demo -- 框架搭建时的测试代码
+├── m-common -- 工具类及通用代码
+├── m-auth -- SpringSecurity封装公用模块
+├── m-cache -- 缓存管理
+├── m-center -- 总线控制中心
+├── m-search -- 基于Elasticsearch的搜索系统
+├── m-logger -- 统一日记处理
+├── m-gateway -- 网关
+└── m-service -- tcp 核心服务
+
 ```
 
 ### 技术选型
@@ -88,29 +90,13 @@ mall
 
 ##### 系统架构图
 
-![系统架构图](http://img.macrozheng.com/mall/project/mall_micro_service_arch.jpg)
+
 
 ##### 业务架构图
 
-![系统架构图](http://img.macrozheng.com/mall/project/mall_business_arch.png)
+
 
 #### 模块介绍
-
-##### 后台管理系统 `mall-admin`
-
-- 商品管理：[功能结构图-商品.jpg](document/resource/mind_product.jpg)
-- 订单管理：[功能结构图-订单.jpg](document/resource/mind_order.jpg)
-- 促销管理：[功能结构图-促销.jpg](document/resource/mind_sale.jpg)
-- 内容管理：[功能结构图-内容.jpg](document/resource/mind_content.jpg)
-- 用户管理：[功能结构图-用户.jpg](document/resource/mind_member.jpg)
-
-##### 前台商城系统 `mall-portal`
-
-[功能结构图-前台.jpg](document/resource/mind_portal.jpg)
-
-#### 开发进度
-
-![项目开发进度图](http://img.macrozheng.com/mall/project/mall_dev_flow.png)
 
 ## 环境搭建
 
@@ -173,16 +159,4 @@ mall
 - 读写分离解决方案请参考：[你还在代码里做读写分离么，试试这个中间件吧](http://www.macrozheng.com/#/reference/gaea);
 - Redis集群解决方案请参考：[Docker环境下秒建Redis集群，连SpringBoot也整上了！](http://www.macrozheng.com/#/reference/redis_cluster)。
 
-## 公众号
 
-mall项目全套学习教程连载中，关注公众号「**macrozheng**」第一时间获取。
-
-加微信群交流，公众号后台回复「**加群**」即可。
-
-![公众号图片](http://macro-oss.oss-cn-shenzhen.aliyuncs.com/mall/banner/qrcode_for_macrozheng_258.jpg)
-
-## 许可证
-
-[Apache License 2.0](https://github.com/macrozheng/mall/blob/master/LICENSE)
-
-Copyright (c) 2018-2020 macrozheng
