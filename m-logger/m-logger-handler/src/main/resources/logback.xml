@@ -3,7 +3,7 @@
 <!--    <include resource="org/springframework/boot/logging/logback/base.xml"/>-->
     <logger name="org.springframework.web" level="debug"/>
 
-    <!-- 定义日志文件 输入位置 不指定前/ 表示项目路径 -->
+    <!-- 定义日志文件 输出位置 不指定前/ 表示项目路径 -->
     <property name="LOG_PATH" value="logs"/>
     <property name="MAX_HISTORY" value="30"/>
     <property name="MAX_TOTAL_SIZE" value="30GB"/>

@@ -111,14 +111,14 @@
 | 工具          | 版本号 | 下载                                                         |
 | ------------- | ------ | ------------------------------------------------------------ |
 | JDK           | 1.8    | https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html |
-| Mysql         | 5.7    | https://www.mysql.com/                                       |
-| Redis         | 5.0    | https://redis.io/download                                    |
-| MongoDB       | 4.2.5  | https://www.mongodb.com/download-center                      |
-| RabbitMQ      | 3.7.14 | http://www.rabbitmq.com/download.html                        |
-| Nginx         | 1.10   | http://nginx.org/en/download.html                            |
-| Elasticsearch | 7.6.2  | https://www.elastic.co/downloads/elasticsearch               |
-| Logstash      | 7.6.2  | https://www.elastic.co/cn/downloads/logstash                 |
-| Kibana        | 7.6.2  | https://www.elastic.co/cn/downloads/kibana                   |
+| Mysql         | 8.0    | https://www.mysql.com/                                       |
+| Redis         |        | https://redis.io/download                                    |
+| MongoDB       | 4.3    | https://www.mongodb.com/download-center                      |
+| Kafka         |        | http://www.rabbitmq.com/download.html                        |
+| Nginx         |        | http://nginx.org/en/download.html                            |
+| Elasticsearch | 7.10.1  | https://www.elastic.co/downloads/elasticsearch               |
+| Logstash      | 7.10.1  | https://www.elastic.co/cn/downloads/logstash                 |
+| Kibana        | 7.10.1  | https://www.elastic.co/cn/downloads/kibana                   |
 
 ### 搭建步骤
 
@@ -194,7 +194,7 @@ docker方式脚本初使化：进入docker-compose目录，执行命令 `docker-
 | m-service |  TCP核心服务  |    🏗          |     TCP核心服务      |
 | m-center  |总线控制中心   |    🏗           |     消息过滤，分流      |
 | m-search |  ES 搜索框架  |    🏗           |       Elasticsearch 搜索引擎    |
-| m-logger | 分布式日记收集  |    🏗           |   设计多模块共用自定义注解，并引入Elasticsearch日记收集并同步，其它模块导入添加注解即可实现日记生成和收集，实现分布式日记收集分析        |
+| m-logger | 分布式日记收集  |    🏗           |   设计多模块共用自定义注解，并引入kafka日记统一收集，其它模块导入添加注解即可实现日记生成和收集，实现分布式日记收集分析        |
 | m-gateway |  网关统计    |    🏗           |     网关实现多模块统计授权认证，分流及服务熔断      |
 
 

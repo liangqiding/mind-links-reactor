@@ -15,7 +15,6 @@
         <module>m-logger-handler</module>
     </modules>
 
-
     <dependencies>
         <dependency>
             <groupId>com.mind.links</groupId>
@@ -23,22 +22,15 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.github.danielwegener</groupId>
             <artifactId>logback-kafka-appender</artifactId>
             <version>0.2.0-RC2</version>
         </dependency>
-
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>6.5</version>
         </dependency>
-        <!-- Your project must also directly depend on either logback-classic or logback-access.  For example: -->
-        <dependency>
+         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
