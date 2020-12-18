@@ -11,6 +11,7 @@
         <module>m-center</module>
         <module>m-cache</module>
         <module>m-logger</module>
+        <module>m-search</module>
     </modules>
 
     <groupId>com.mind.links</groupId>
@@ -25,6 +26,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-cloud.version>Hoxton.SR5</spring-cloud.version>
+        <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
     </properties>
 
 
@@ -33,7 +35,6 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
@@ -95,7 +96,7 @@
                 <scope>import</scope>
             </dependency>
             <!--nacos-->
-                 <dependency>
+            <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>1.2.3</version>
@@ -186,24 +187,28 @@
                 <version>2.4.0</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>2.3.3.RELEASE</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.junit.vintage</groupId>
-                        <artifactId>junit-vintage-engine</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson</artifactId>
                 <version>3.14.0</version>
             </dependency>
+        <!--日记三件套-->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-access</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
+            <!--日记三件套-->
         </dependencies>
-
     </dependencyManagement>
 
     <repositories>

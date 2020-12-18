@@ -7,7 +7,6 @@
 - 后台项目 基于SpringCloud的微服务开发脚手架实现  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)
 - 前端项目 采用TS.JS形式，基于vue-typescript-admin-template开发脚手架实现 参考地址[https://github.com/Armour/vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
 - TCP测试设备 基于c/c++ 编写的小型测试客户端 
-- 本项目readme文档格式  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)
 ## 项目文档
 
 - 文档地址：[http://#暂无](http://#)
@@ -15,7 +14,7 @@
 
 ## 项目介绍
 
-`mind-links`项目是一套完成的智能家电系统，包括前台监控系统及后台管理系统,采用多种流行技术实现,核心技术如：netty,springCloud,nacos,采用Docker容器化部署。
+`mind-links`项目是一套分布式的智能家电系统，包括前台监控系统及后台管理系统,采用多种流行技术实现,核心技术如：netty,springCloud,nacos,采用Docker容器化部署。
 
 ### 项目演示
 
@@ -39,27 +38,27 @@
 
 #### 后端技术
 
-| 技术                 | 说明                | 官网                                                 |
-| -------------------- | ------------------- | ---------------------------------------------------- |
-| SpringBoot           | 容器+MVC框架        | https://spring.io/projects/spring-boot               |
-| SpringSecurity       | 认证和授权框架      | https://spring.io/projects/spring-security           |
-| MyBatis              | ORM框架             | http://www.mybatis.org/mybatis-3/zh/index.html       |
-| MyBatisGenerator     | 数据层代码生成      | http://www.mybatis.org/generator/index.html          |
-| PageHelper           | MyBatis物理分页插件 | http://git.oschina.net/free/Mybatis_PageHelper       |
-| Swagger-UI           | 文档生产工具        | https://github.com/swagger-api/swagger-ui            |
-| Hibernator-Validator | 验证框架            | http://hibernate.org/validator                       |
-| Elasticsearch        | 搜索引擎            | https://github.com/elastic/elasticsearch             |
-| RabbitMQ             | 消息队列            | https://www.rabbitmq.com/                            |
-| Redis                | 分布式缓存          | https://redis.io/                                    |
-| MongoDB              | NoSql数据库         | https://www.mongodb.com                              |
-| Docker               | 应用容器引擎        | https://www.docker.com                               |
-| Druid                | 数据库连接池        | https://github.com/alibaba/druid                     |
-| OSS                  | 对象存储            | https://github.com/aliyun/aliyun-oss-java-sdk        |
-| MinIO                | 对象存储            | https://github.com/minio/minio                       |
-| JWT                  | JWT登录支持         | https://github.com/jwtk/jjwt                         |
-| LogStash             | 日志收集工具        | https://github.com/logstash/logstash-logback-encoder |
-| Lombok               | 简化对象封装工具    | https://github.com/rzwitserloot/lombok               |
-| Jenkins              | 自动化部署工具      | https://github.com/jenkinsci/jenkins                 |
+| 技术                  | 版本         |说明                | 官网                                                 |
+| -------------------- | ---------   |------------------- | ---------------------------------------------------- |
+| SpringCloud          |  Hoxton.SR5 |容器+MVC框架        |                                                       |
+| SpringBoot           |2.3.3.RELEASE|容器+MVC框架        | https://spring.io/projects/spring-boot               |
+| SpringSecurity       |             |认证和授权框架      | https://spring.io/projects/spring-security           |
+| mybatis-plus         |   3.3.1     |ORM框架             |                                                     |
+| mybatis-plus-generator|  3.3.1     |数据层代码生成      | http://www.mybatis.org/generator/index.html          |
+| PageHelper           |   1.2.13    |MyBatis物理分页插件 | http://git.oschina.net/free/Mybatis_PageHelper       |
+| Swagger-UI           |   3.0.0     |文档生产工具        | https://github.com/swagger-api/swagger-ui            |
+| Hibernator-Validator | 6.1.5.Final |验证框架            | http://hibernate.org/validator                       |
+| Elasticsearch        |   7.10.1    |搜索引擎            | https://github.com/elastic/elasticsearch             |
+| Kafka                |             |消息队列            |                                                      |
+| Redisson             |   3.14.0    |分布式缓存,分布式锁   | https://redis.io/                                    |
+| MongoDB              |             |NoSql数据库         | https://www.mongodb.com                              |
+| Docker               |             |应用容器引擎        | https://www.docker.com                               |
+| Druid                |            | 数据库连接池        | https://github.com/alibaba/druid                     |
+| MinIO                |             |对象存储            | https://github.com/minio/minio                       |
+| JWT                  |             |JWT登录支持         | https://github.com/jwtk/jjwt                         |
+| LogStash             |   7.10.1    |日志收集工具        | https://github.com/logstash/logstash-logback-encoder |
+| Lombok               |             |简化对象封装工具    | https://github.com/rzwitserloot/lombok               |
+| Jenkins              |             |自动化部署工具      | https://github.com/jenkinsci/jenkins                 |
 
 #### 前端技术
 
@@ -195,8 +194,8 @@ docker方式脚本初使化：进入docker-compose目录，执行命令 `docker-
 | m-service |  TCP核心服务  |    🏗          |     TCP核心服务      |
 | m-center  |总线控制中心   |    🏗           |     消息过滤，分流      |
 | m-search |  ES 搜索框架  |    🏗           |       Elasticsearch 搜索引擎    |
-| m-logger | 多模块日记收集  |    🏗           |   设计多模块共用自定义注解，并引入Elasticsearch日记收集并同步，其它模块导入添加注解即可实现日记生成和收集，实现分布式日记收集分析        |
-| m-gateway |  网关统计  |    🏗           |     网关实现多模块统计授权认证，分流及服务熔断      |
+| m-logger | 分布式日记收集  |    🏗           |   设计多模块共用自定义注解，并引入Elasticsearch日记收集并同步，其它模块导入添加注解即可实现日记生成和收集，实现分布式日记收集分析        |
+| m-gateway |  网关统计    |    🏗           |     网关实现多模块统计授权认证，分流及服务熔断      |
 
 
 ### 前端模块开发进度

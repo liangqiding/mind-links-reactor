@@ -103,8 +103,26 @@ mybatis-plus:
     #配置JdbcTypeForNull
     jdbc-type-for-null: 'null'
 ############################################################################################
-#                               调试选项(热加载)                                             #
-############################################################################################
+#                               调试选项(热加载)
+#                path:  路径
+#                maxHistory:   本地打印保存时间
+#                sendKafka： 设置kafka日记收集的级别,如需收集更多的级别,取消注释即可
+#                printFile： 设置本地日记打印的级别,如不需要打印，注释即可
+#############################################################################################
+mind.links.logger:
+  topic: logger
+  path: ${spring.application.name}
+  maxHistory: 30
+  sendKafka:
+    #level1: DEBUG
+    level2: INFO
+    #level3: WARN
+    level4: ERROR
+  printFile:
+    #level1: DEBUG
+    #level2: INFO
+    #level3: WARN
+    #level4: ERROR
 # 是否开始swagger api文档 true or false
 swagger:
   enable: true

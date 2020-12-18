@@ -1,0 +1,20 @@
+<propertys>
+    <property name="create51jobIndex">
+        <![CDATA[
+{
+  "settings":{
+    "number_of_shards":3,
+    "number_of_replicas":2
+  },
+  "mappings":{
+    "properties":{
+      "id":{"type":"long"},
+      "name":{"type":"text","analyzer":"ik_smart"},
+      "text":{"type":"text","analyzer":"ik_max_word"}
+    }
+  }
+
+}
+]]>
+    </property>
+</propertys>
