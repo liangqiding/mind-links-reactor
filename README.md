@@ -75,12 +75,13 @@
 
 #### 架构图
 
-##### 系统架构图
 
+##### 系统架构图
+![系统架构图](https://gitee.com/liangqiding/mind-links-static/raw/master/drawio/systemStructureChart.png)
 
 ##### 业务架构图
 
-
+![业务架构图](https://gitee.com/liangqiding/mind-links-static/raw/master/drawio/BusinessStructureChart.png)
 
 #### 模块介绍
 
