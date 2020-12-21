@@ -15,6 +15,18 @@
 ## 项目介绍
 
 `mind-links`项目是一套分布式的智能家电系统，包括前台监控系统及后台管理系统,采用多种流行技术实现,核心技术如：netty,springCloud,nacos,采用Docker容器化部署。
+### 架构图
+
+
+##### 系统架构图
+![系统架构图](https://gitee.com/liangqiding/mind-links-static/raw/master/drawio/systemStructureChart.png)
+
+##### 业务架构图
+
+![业务架构图](https://gitee.com/liangqiding/mind-links-static/raw/master/drawio/BusinessStructureChart.png)
+
+#### 模块介绍
+
 
 ### 项目演示
 
@@ -73,19 +85,6 @@
 | Js-cookie  | cookie管理工具        | https://github.com/js-cookie/js-cookie |
 | nprogress  | 进度条控件            | https://github.com/rstacruz/nprogress  |
 
-#### 架构图
-
-
-##### 系统架构图
-![系统架构图](https://gitee.com/liangqiding/mind-links-static/raw/master/drawio/systemStructureChart.png)
-
-##### 业务架构图
-
-![业务架构图](https://gitee.com/liangqiding/mind-links-static/raw/master/drawio/BusinessStructureChart.png)
-
-#### 模块介绍
-
-## 环境搭建
 
 ### 开发工具
 
