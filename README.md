@@ -95,9 +95,9 @@
 | RedisDesktop  | redis客户端连接工具 | https://github.com/qishibo/AnotherRedisDesktopManager  |
 | Robo 3T       | mongo客户端连接工具 | https://robomongo.org/download                  |
 | X-shell       | Linux远程连接工具   | http://www.netsarang.com/download/software.html |
-|Navicat Premium15 | 数据库连接工具      |                                              |
+|Navicat Premium15 | 数据库连接工具      | http://www.navicat.com.cn/navicat-15-highlights/      |
 |Navicat Premium15| 数据库设计工具      |                                               |
-| draw.io         | 流程图设计工具        | https://www.axure.com/                          |
+| draw.io         | 流程图设计工具        | https://drawio-app.com/                          |
 | ApiFox        | 已弃用postman,变更为ApiFox,API接口调试工具      | https://www.apifox.cn/                        |
 | VS code       | 做为Markdown编辑器      | https://code.visualstudio.com/                              |
 
@@ -110,7 +110,7 @@
 | Redis         |        | https://redis.io/download                                    |
 | MongoDB       | 4.3    | https://www.mongodb.com/download-center                      |
 | Kafka         |        | http://www.rabbitmq.com/download.html                        |
-| Nginx         |        | http://nginx.org/en/download.html                            |
+| Nginx         | 1.19.x | http://nginx.org/en/download.html                            |
 | Elasticsearch | 7.10.1  | https://www.elastic.co/downloads/elasticsearch               |
 | Logstash      | 7.10.1  | https://www.elastic.co/cn/downloads/logstash                 |
 | Kibana        | 7.10.1  | https://www.elastic.co/cn/downloads/kibana                   |
