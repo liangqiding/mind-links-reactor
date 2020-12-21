@@ -91,21 +91,15 @@
 
 | 工具          | 说明                | 官网                                            |
 | ------------- | ------------------- | ----------------------------------------------- |
-| IDEA          | 开发IDE             | https://www.jetbrains.com/idea/download         |
+| IDEA 2020     | 开发IDE             | https://www.jetbrains.com/idea/download         |
 | RedisDesktop  | redis客户端连接工具 | https://github.com/qishibo/AnotherRedisDesktopManager  |
-| Robomongo     | mongo客户端连接工具 | https://robomongo.org/download                  |
-| SwitchHosts   | 本地host管理        | https://oldj.github.io/SwitchHosts/             |
+| Robo 3T       | mongo客户端连接工具 | https://robomongo.org/download                  |
 | X-shell       | Linux远程连接工具   | http://www.netsarang.com/download/software.html |
-| Navicat       | 数据库连接工具      | http://www.formysql.com/xiazai.html             |
-| PowerDesigner | 数据库设计工具      | http://powerdesigner.de/                        |
-| Axure         | 原型设计工具        | https://www.axure.com/                          |
-| MindMaster    | 思维导图设计工具    | http://www.edrawsoft.cn/mindmaster              |
-| ScreenToGif   | gif录制工具         | https://www.screentogif.com/                    |
-| ProcessOn     | 流程图绘制工具      | https://www.processon.com/                      |
-| PicPick       | 图片处理工具        | https://picpick.app/zh/                         |
-| Snipaste      | 屏幕截图工具        | https://www.snipaste.com/                       |
-| Postman       | API接口调试工具      | https://www.postman.com/                        |
-| Typora        | Markdown编辑器      | https://typora.io/                              |
+|Navicat Premium15 | 数据库连接工具      |                                              |
+|Navicat Premium15| 数据库设计工具      |                                               |
+| draw.io         | 流程图设计工具        | https://www.axure.com/                          |
+| ApiFox        | 已弃用postman,变更为ApiFox,API接口调试工具      | https://www.apifox.cn/                        |
+| VS code       | 做为Markdown编辑器      | https://code.visualstudio.com/                              |
 
 ### 开发环境
 
