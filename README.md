@@ -76,6 +76,7 @@
 
 | 技术       | 说明                  | 官网                                   |
 | ---------- | --------------------- | -------------------------------------- |
+| Node       | 核心引擎             | https://nodejs.org/zh-cn/                    |
 | Vue        | 前端框架              | https://vuejs.org/                     |
 | Vue-router | 路由框架              | https://router.vuejs.org/              |
 | Vuex       | 全局状态管理框架      | https://vuex.vuejs.org/                |

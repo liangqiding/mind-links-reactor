@@ -20,8 +20,8 @@ import java.util.UUID;
  * @author qiding
  */
 @Component
-public class MQTTClientPub {
-    private static final Logger logger = LoggerFactory.getLogger(MQTTClientPub.class);
+public class MqttClientPub {
+    private static final Logger logger = LoggerFactory.getLogger(MqttClientPub.class);
 
 
     @Value("${mqtt.server.host}")
