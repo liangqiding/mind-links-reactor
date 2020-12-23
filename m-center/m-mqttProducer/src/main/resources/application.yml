@@ -1,0 +1,17 @@
+server:
+  port: 30200
+  servlet:
+    context-path: /
+###########################################  mqtt  ###############################################
+mqtt:
+  server:
+#    host: tcp://192.168.188.126:1883
+    host: tcp://210.5.30.194:1883
+  client:
+    username: i2dsp
+    password: i2dsp
+kafka:
+  #订阅的主题
+  topic: topic-test-01
+  #主题消费分组
+  group: group-test-01

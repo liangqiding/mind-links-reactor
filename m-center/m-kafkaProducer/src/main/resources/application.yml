@@ -1,0 +1,63 @@
+server:
+  port: 9012
+  servlet:
+    context-path: /
+
+
+spring:
+  #################################  TIDB  ###############################################
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.188.104:4000/i2dsp_emg_base?useUnicode=true&useSSL=false&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&useServerPrepStmts=true&allowMultiQueries=true
+    username: qiding
+    password: 6UMhV3YvVlpOZZfSEJRQ
+    hikari:
+      maximum-pool-size: 20
+
+##################################  kafka   ##################################################
+#  虚拟机 192.168.60.119:9092
+#  203   192.168.188.126:9092
+#############################################################################################
+  kafka:
+    bootstrap-servers: 192.168.188.126:9092
+    producer:
+      # 每次批量发送消息的数量
+      batch-size: 16
+      # 缓存容量
+      buffer-memory: 33554432
+      #设置大于0的值，则客户端会将发送失败的记录重新发送
+      retries: 0
+      # 指定消息key和消息体的编解码方式 UTF-8
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+##################################### mybatis  ################################################
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: kafka.producer.domain
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 1
+    #驼峰下划线转换
+    #刷新mapper 调试神器
+    refresh-mapper: true
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #配置JdbcTypeForNull
+    jdbc-type-for-null: 'null'
+###########################################  mqtt  ###############################################
+mqtt:
+  server:
+#    host: tcp://192.168.188.126:1883
+    host: tcp://210.5.30.194:1883
+  client:
+    username: i2dsp
+    password: i2dsp
+kafka:
+  #订阅的主题
+  topic: topic-test-01
+  #主题消费分组
+  group: group-test-01

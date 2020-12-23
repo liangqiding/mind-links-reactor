@@ -1,0 +1,48 @@
+#==========================swagger 访问接口==================================
+#           http://${ip}:10131/swagger-ui/index.html                      #
+#==========================================================================
+server:
+  port: 10200
+spring:
+  ##################################################################################################
+  #                               nacos
+  #                           192.168.60.119:8848
+  #                           192.168.188.106:8848
+  #                           210.5.30.195:8848
+  ##################################################################################################
+  application:
+    name: minioService
+  cloud:
+    nacos:
+      discovery:
+        enabled: false
+        server-addr: 192.168.188.106:8848
+        namespace: cc8561c5-2d87-4db8-95fc-ddc0fb03e563
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        file-extension: yaml
+        prefix: AuthSercurity
+  profiles:
+    active: test
+#####################################     MinIo文件服务器    ##############################################
+minio:
+  endpoint: http://192.168.188.118:9000
+  accessKey: i2dsp
+  secretKey: 8qbWHmZqKQtYU4et8g0u
+  secure: false
+  bucketName: map
+  configDir: /home/data/
+############################################################################################
+#                               调试选项(热加载)
+#                path:  路径
+#                maxHistory:   本地打印保存时间
+#                sendKafka： 设置kafka日记收集的级别,如需收集更多的级别,取消注释即可
+#                printFile： 设置本地日记打印的级别,如不需要打印，注释即可
+#############################################################################################
+swagger:
+  enable: true
+#  是否直接在控制台打印异常  true or false
+exception:
+  printStackTrace: true
+# 是否打印数据库语句查询情况 debug  or false

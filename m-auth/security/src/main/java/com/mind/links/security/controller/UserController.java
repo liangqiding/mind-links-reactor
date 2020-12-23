@@ -1,7 +1,7 @@
 package com.mind.links.security.controller;
 
 import com.mind.links.logger.handler.aopLog.CustomAopHandler;
-import com.mind.links.common.utils.ResponseResult;
+import com.mind.links.common.response.ResponseResult;
 import com.mind.links.security.domain.User;
 import com.mind.links.security.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;

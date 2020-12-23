@@ -1,8 +1,11 @@
-package com.mind.links.common.utils;
+package com.mind.links.common.response;
 
 
 import com.mind.links.common.enums.LinksExceptionEnum;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -10,11 +13,24 @@ import java.io.Serializable;
  * @author qiding
  */
 @Data
+@ApiModel("公共响应体")
 public class ResponseResult<T> implements Serializable {
 
     private static final long serialVersionUID = -1L;
 
-    private Integer code;
+    @ApiModelProperty("成功码")
+    public static final Integer OK = 20000;
+
+    @ApiModelProperty("成功消息")
+    public static final String OK_MESSAGE = "操作成功";
+
+    @ApiModelProperty("错误码")
+    public static final Integer ERROR = -1;
+
+    @ApiModelProperty("错误消息")
+    public static final String ERR_MESSAGE = "操作失败";
+
+    private Integer code=OK;
 
     private String message;
 
@@ -30,7 +46,6 @@ public class ResponseResult<T> implements Serializable {
     }
     public ResponseResult(T data) {
         super();
-        this.code = 20000;
         this.data = data;
         this.message = LinksExceptionEnum.getMsgByCode(code);
     }
@@ -68,49 +83,7 @@ public class ResponseResult<T> implements Serializable {
         this.data = data;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((data == null) ? 0 : data.hashCode());
-        result = prime * result + ((message == null) ? 0 : message.hashCode());
-        result = prime * result + ((code == null) ? 0 : code.hashCode());
-        return result;
-    }
+    public void test() {
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        ResponseResult<?> other = (ResponseResult<?>) obj;
-        if (data == null) {
-            if (other.data != null) {
-                return false;
-            }
-        } else if (!data.equals(other.data)) {
-            return false;
-        }
-        if (message == null) {
-            if (other.message != null) {
-                return false;
-            }
-        } else if (!message.equals(other.message)) {
-            return false;
-        }
-        if (code == null) {
-            if (other.code != null) {
-                return false;
-            }
-        } else if (!code.equals(other.code)) {
-            return false;
-        }
-        return true;
-    }
+     }
 }

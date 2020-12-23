@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.po.TableFill;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,9 @@ import java.util.List;
 public class GlobalConfigs {
 
 
+    /**
+     * 配置参考 ： https://baomidou.com/guide/generator.html
+     */
     public static void main(String[] args) {
 
         String dbUrl = "jdbc:mysql://192.168.60.119:3306/mind_links_core?useUnicode=true&useSSL=false&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&useServerPrepStmts=true&allowMultiQueries=true";
@@ -69,7 +73,7 @@ public class GlobalConfigs {
         tableFillList.add(new TableFill("gmt_modified", FieldFill.INSERT_UPDATE));
         tableFillList.add(new TableFill("modifier_id", FieldFill.INSERT_UPDATE));
         tableFillList.add(new TableFill("creator_id", FieldFill.INSERT));
-        tableFillList.add(new TableFill("gmt_creat", FieldFill.INSERT));
+        tableFillList.add(new TableFill("gmt_create", FieldFill.INSERT));
         tableFillList.add(new TableFill("available_flag", FieldFill.INSERT));
         tableFillList.add(new TableFill("deleted_flag", FieldFill.INSERT));
         tableFillList.add(new TableFill("sync_flag", FieldFill.INSERT));

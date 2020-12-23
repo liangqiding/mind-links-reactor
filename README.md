@@ -61,12 +61,12 @@
 | Swagger-UI           |   3.0.0     |文档生产工具        | https://github.com/swagger-api/swagger-ui            |
 | Hibernator-Validator | 6.1.5.Final |验证框架            | http://hibernate.org/validator                       |
 | Elasticsearch        |   7.10.1    |搜索引擎            | https://github.com/elastic/elasticsearch             |
-| Kafka                |             |消息队列            |                                                      |
+| Kafka                |   2.5.x     |消息队列            |                                                      |
 | Redisson             |   3.14.0    |分布式缓存,分布式锁   | https://redis.io/                                    |
-| MongoDB              |             |NoSql数据库         | https://www.mongodb.com                              |
+| MongoDB              |    4.4      |NoSql数据库         | https://www.mongodb.com                              |
 | Docker               |             |应用容器引擎        | https://www.docker.com                               |
-| Druid                |            | 数据库连接池        | https://github.com/alibaba/druid                     |
-| MinIO                |             |对象存储            | https://github.com/minio/minio                       |
+| Druid                |   1.2.3     | 数据库连接池        | https://github.com/alibaba/druid                     |
+| MinIO                |    8.x        |对象存储            | https://github.com/minio/minio                       |
 | JWT                  |             |JWT登录支持         | https://github.com/jwtk/jjwt                         |
 | LogStash             |   7.10.1    |日志收集工具        | https://github.com/logstash/logstash-logback-encoder |
 | Lombok               |             |简化对象封装工具    | https://github.com/rzwitserloot/lombok               |
@@ -186,7 +186,7 @@ docker方式脚本初使化：进入docker-compose目录，执行命令 `docker-
 | m-common |   公共组件  |    ✅          |    公用组件包       |
 | m-auth   |   授权认证  |    🏗          |   登录认证，授权，token管理    |
 | m-service |  TCP核心服务  |    🏗          |     TCP核心服务      |
-| m-center  |总线控制中心   |    🏗           |     消息过滤，分流      |
+| m-center  |总线控制测试中心   |    🏗           |   各种测试集合,程序总监控中心       |
 | m-search |  ES 搜索框架  |    🏗           |       Elasticsearch 搜索引擎    |
 | m-logger | 分布式日记收集  |    🏗           |   设计多模块共用自定义注解，并引入kafka日记统一收集，其它模块导入添加注解即可实现日记生成和收集，实现分布式日记收集分析        |
 | m-gateway |  网关统计    |    🏗           |     网关实现多模块统计授权认证，分流及服务熔断      |

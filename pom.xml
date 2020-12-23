@@ -12,6 +12,7 @@
         <module>m-cache</module>
         <module>m-logger</module>
         <module>m-search</module>
+        <module>m-minio</module>
     </modules>
 
     <groupId>com.mind.links</groupId>
@@ -38,6 +39,8 @@
         <log4j.version>1.2.17</log4j.version>
         <fastjson.version>1.2.75</fastjson.version>
         <logstash-logback-encoder.version>6.5</logstash-logback-encoder.version>
+        <minio.version>8.0.3</minio.version>
+        <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
     </properties>
 
 
@@ -62,6 +65,17 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--        json-->
         <dependency>
@@ -169,6 +183,16 @@
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>
                 <version>${logstash-logback-encoder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>${springfox-boot-starter.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
