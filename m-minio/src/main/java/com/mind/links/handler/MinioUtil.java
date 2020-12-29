@@ -81,7 +81,9 @@ public class MinioUtil {
                                         .headers(headers)
                                         .build());
                         return new ResponseResult<>(bucketName + ":上传成功");
-                    }).subscribeOn(myScheduler);
+                    })
+                            .subscribeOn(myScheduler)
+                            .onErrorResume(LinksExceptionHandler::errorHandler);
                 })
                 .doFinally(signalType -> FileManage.deleteDirAndFileAll(pathTo + uuid));
     }

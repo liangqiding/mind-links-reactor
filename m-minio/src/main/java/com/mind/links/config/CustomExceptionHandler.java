@@ -1,6 +1,7 @@
 package com.mind.links.config;
 
 
+import com.mind.links.common.exception.LinksException;
 import com.mind.links.common.exception.LinksExceptionHandler;
 import com.mind.links.common.response.ResponseResult;
 import org.slf4j.Logger;
@@ -29,6 +30,11 @@ public class CustomExceptionHandler {
     public ResponseResult<String> errorHandler(Exception ex) {
         Optional.ofNullable(printStackTrace).ifPresent(b -> ex.printStackTrace());
         logger.error("************************" + ex.getMessage() + "************************");
+        return LinksExceptionHandler.errorHandler(ex);
+    }
+    @ExceptionHandler(value = LinksException.class)
+    public ResponseResult<String> linksException(Exception ex) {
+        logger.error("***自定义异常：" + ex.getMessage() + "**************************************");
         return LinksExceptionHandler.errorHandler(ex);
     }
 }

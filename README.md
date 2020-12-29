@@ -2,9 +2,10 @@
 
 ## 前言
 
-`mind-links`项目致力于打造一个完整的智能家电系统，每项技术均采用现阶段流行技术实现。
-
-- 后台项目 基于SpringCloud的微服务开发脚手架实现  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)
+`mind-links` 项目致力于打造一个完整的智能家电系统，每项技术均采用现阶段流行技术实现。
+- 后台项目 基于SpringCloud的微服务开发脚手架实现  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)，
+采用 Reactor 3 响应式流的编程风格，打造的中小型分布式后台服务
+> 主要技术包括：  Reactor 3,netty,SpringCloud,Elasticsearch,Kafka,docker,Redisson
 - 前端项目 采用TS.JS形式，基于vue-typescript-admin-template开发脚手架实现 参考地址[https://github.com/Armour/vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
 - TCP测试设备 基于c/c++ 编写的小型测试客户端 
 ## 项目文档
@@ -52,8 +53,9 @@
 
 | 技术                  | 版本         |说明                | 官网                                                 |
 | -------------------- | ---------   |------------------- | ---------------------------------------------------- |
-| SpringCloud          |  Hoxton.SR5 |容器+MVC框架        |                                                       |
+| SpringCloud          |  Hoxton.SR5 |容器+MVC框架        | https://spring.io/projects/spring-cloud             |
 | SpringBoot           |2.3.3.RELEASE|容器+MVC框架        | https://spring.io/projects/spring-boot               |
+| webFlux              |2.3.3.RELEASE|响应式编程          | https://github.com/reactor/reactor-core               |
 | SpringSecurity       |             |认证和授权框架      | https://spring.io/projects/spring-security           |
 | mybatis-plus         |   3.3.1     |ORM框架             |                                                     |
 | mybatis-plus-generator|  3.3.1     |数据层代码生成      | http://www.mybatis.org/generator/index.html          |

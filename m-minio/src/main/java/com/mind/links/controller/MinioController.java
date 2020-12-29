@@ -1,9 +1,5 @@
 package com.mind.links.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.mind.links.common.exception.LinksException;
-import com.mind.links.common.exception.LinksExceptionHandler;
 import com.mind.links.common.response.ResponseResult;
 import com.mind.links.handler.MinioUtil;
 import com.mind.links.logger.handler.aopLog.CustomAopHandler;
@@ -14,12 +10,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
@@ -49,16 +43,16 @@ public class MinioController {
     @PostMapping(value = "/stream/uploadObject", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation("创建存储桶")
     @CustomAopHandler
-    public Mono<ResponseResult<String>> uploadObject(@NotNull(message = "文件参数不能为空") @RequestPart("file") Mono<FilePart> file,
-                                                     @NotNull(message = "存储桶参数不能为空") @RequestPart("bucketName") String bucketName,
-                                                     @NotNull(message = "保存路径参数不能为空") @RequestPart("path") String path
+    public Mono<ResponseResult<String>> uploadObject(@RequestPart("file") @NotNull(message = "文件参数不能为空") Mono<FilePart> file,
+                                                     @RequestPart(value = "bucketName") @NotNull(message = "存储桶参数不能为空") String bucketName,
+                                                     @RequestPart(value = "path") @NotNull(message = "保存路径参数不能为空") String path
     ) {
         System.out.println("json:" + bucketName + "---" + path);
         return minioUtil.uploadObject(file, bucketName, path);
     }
 
 
-    @GetMapping(value = "/delete/bucket", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
+    @GetMapping(value = "/delete/bucket", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ApiOperation("删除存储桶")
     public Flux<String> deleteBucket(String[] bucketName) {
         return null;
@@ -73,6 +67,14 @@ public class MinioController {
     @GetMapping(value = "/", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     public Flux<Object> test() {
         return Flux.interval(Duration.ofSeconds(1)).map(l -> new ResponseResult<>(new SimpleDateFormat("HH:mm:ss").format(new Date())));
+    }
+
+    @PostMapping(value = "/test", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @CustomAopHandler(checkPage = true)
+    public Mono<String> test2(@RequestPart(value = "pageNumber") String pageNumber,
+                              @RequestPart("pageSize") String pageSize) {
+        System.out.println(pageNumber + ":::" + pageSize);
+        return Mono.just("success");
     }
 
 }
