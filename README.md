@@ -7,7 +7,10 @@
 - 后台项目 基于SpringCloud的微服务开发脚手架实现  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)，
 
 - 前端项目 采用TS.JS形式，基于vue-typescript-admin-template开发脚手架实现 参考地址[https://github.com/Armour/vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
+
 - TCP测试设备 基于c/c++ 编写的小型测试客户端 
+
+- 目前项目还在持续更新中
 ## 项目文档
 
 - 文档地址：[http://#暂无](http://#)
@@ -53,12 +56,12 @@
 
 | 技术                  | 版本         |说明                | 官网                                                 |
 | -------------------- | ---------   |------------------- | ---------------------------------------------------- |
-| SpringCloud          |  Hoxton.SR5 |容器+MVC框架        | https://spring.io/projects/spring-cloud             |
-| SpringBoot           |2.3.3.RELEASE|容器+MVC框架        | https://spring.io/projects/spring-boot               |
-| webFlux              |2.3.3.RELEASE|响应式编程          | https://github.com/reactor/reactor-core               |
-| SpringSecurity       |             |认证和授权框架      | https://spring.io/projects/spring-security           |
+| SpringCloud          |  Hoxton.SR5 |微服务容器           | https://spring.io/projects/spring-cloud             |
+| SpringBoot           |2.3.3.RELEASE|SpringBoot容器       | https://spring.io/projects/spring-boot               |
+| webFlux              |2.3.3.RELEASE|响应式编程           | https://github.com/reactor/reactor-core               |
+| SpringSecurity       |             |认证和授权框架       | https://spring.io/projects/spring-security           |
 | mybatis-plus         |   3.3.1     |ORM框架             |                                                     |
-| mybatis-plus-generator|  3.3.1     |数据层代码生成      | http://www.mybatis.org/generator/index.html          |
+| mybatis-plus-generator|  3.3.1     |数据层代码生成       | http://www.mybatis.org/generator/index.html          |
 | PageHelper           |   1.2.13    |MyBatis物理分页插件 | http://git.oschina.net/free/Mybatis_PageHelper       |
 | Swagger-UI           |   3.0.0     |文档生产工具        | https://github.com/swagger-api/swagger-ui            |
 | Hibernator-Validator | 6.1.5.Final |验证框架            | http://hibernate.org/validator                       |
@@ -79,6 +82,7 @@
 | 技术       | 说明                  | 官网                                   |
 | ---------- | --------------------- | -------------------------------------- |
 | Node       | 核心引擎             | https://nodejs.org/zh-cn/                    |
+| ts.js      | 核心语言             | https://www.tslang.cn/                   |
 | Vue        | 前端框架              | https://vuejs.org/                     |
 | Vue-router | 路由框架              | https://router.vuejs.org/              |
 | Vuex       | 全局状态管理框架      | https://vuex.vuejs.org/                |
