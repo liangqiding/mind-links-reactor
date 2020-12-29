@@ -14,13 +14,11 @@
         <module>m-search</module>
         <module>m-minio</module>
     </modules>
-
     <groupId>com.mind.links</groupId>
     <artifactId>links</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>links</name>
     <description>Demo project for Spring Cloud</description>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

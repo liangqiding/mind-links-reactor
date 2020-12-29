@@ -1,11 +1,11 @@
-# mind-links 智能家电系统
+# mind-links 基于Reactor3的大型响应式分布式智能家电管理系统
 
 ## 前言
 
-`mind-links` 项目致力于打造一个完整的智能家电系统，每项技术均采用现阶段流行技术实现。
+`mind-links` 本项目基于netty的大型响应式分布式智能家电管理系统，主要技术包括： Reactor3,netty,SpringCloud,nacos,Elasticsearch,Kafka,docker,Redisson,mqtt，mysql,mongodb,EKL
+
 - 后台项目 基于SpringCloud的微服务开发脚手架实现  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)，
-采用 Reactor 3 响应式流的编程风格，打造的中小型分布式后台服务
-> 主要技术包括：  Reactor 3,netty,SpringCloud,Elasticsearch,Kafka,docker,Redisson
+
 - 前端项目 采用TS.JS形式，基于vue-typescript-admin-template开发脚手架实现 参考地址[https://github.com/Armour/vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
 - TCP测试设备 基于c/c++ 编写的小型测试客户端 
 ## 项目文档
