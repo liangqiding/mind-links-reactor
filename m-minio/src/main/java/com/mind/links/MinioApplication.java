@@ -13,8 +13,9 @@ import org.springframework.web.reactive.config.EnableWebFlux;
  */
 @SpringBootApplication
 @EnableWebFlux
-public class MinioApplication {
+public class MinioApplication  {
     public static void main(String[] args) {
         SpringApplication.run(MinioApplication.class, args);
     }
+
 }

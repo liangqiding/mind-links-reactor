@@ -6,16 +6,21 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
+import reactor.core.publisher.Mono;
+
+import javax.validation.ValidationException;
 
 /**
  * @author qidingliang
- *
+ * <p>
  * 公共异常处理类
  */
 @Slf4j
 public class LinksExceptionHandler {
+
+    public static Mono<ResponseResult<String>> errorHandler(Throwable t) {
+        return Mono.just(errorHandler((Exception) t));
+    }
 
     public static ResponseResult<String> errorHandler(Exception ex) {
         if (ex instanceof LinksException) {
@@ -24,16 +29,18 @@ public class LinksExceptionHandler {
 //            return new ResponseResult<>(20501);
         } else if (ex instanceof DataAccessException) {
             return new ResponseResult<>(20502);
+        } else if (ex instanceof ValidationException) {
+            return validExceptionHandler((ValidationException) ex);
         } else if (ex instanceof BindException) {
             return validExceptionHandler((BindException) ex);
 //        } else if (ex instanceof HttpRequestMethodNotSupportedException) {
 //            return new ResponseResult<>(20503);
         } else if (ex instanceof NullPointerException) {
             return new ResponseResult<>(20506, "空的值");
-        }else if (ex instanceof ArithmeticException) {
+        } else if (ex instanceof ArithmeticException) {
             return new ResponseResult<>(20506, "算术异常");
         }
-        return new ResponseResult<>(20500);
+        return new ResponseResult<>(40000);
     }
 
     public static ResponseResult<String> validExceptionHandler(BindException ex) {
@@ -48,4 +55,10 @@ public class LinksExceptionHandler {
         return new ResponseResult<>(20505, stringBuffer.toString());
     }
 
+    public static ResponseResult<String> validExceptionHandler(ValidationException ex) {
+        String message = ex.getMessage();
+        String[] split = message.split(":");
+        log.error(split[split.length-1]);
+        return new ResponseResult<>(20505, split[split.length-1]);
+    }
 }

@@ -1,22 +1,32 @@
 package com.mind.links.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.mind.links.common.exception.LinksException;
+import com.mind.links.common.exception.LinksExceptionHandler;
 import com.mind.links.common.response.ResponseResult;
 import com.mind.links.handler.MinioUtil;
+import com.mind.links.logger.handler.aopLog.CustomAopHandler;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import javax.validation.constraints.NotNull;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 
 
 /**
- * description : TODO
+ * description : TODO minio文件服务器对内接口
  *
  * @author : qiDing
  * date: 2020-12-21 13:42
@@ -25,45 +35,33 @@ import java.util.Date;
 @RestController
 @RequestMapping("/minio")
 @Api("文件服务器")
+@Validated
 public class MinioController {
     @Autowired
     private MinioUtil minioUtil;
 
     @GetMapping(value = "/create/bucket", produces = {MediaType.APPLICATION_STREAM_JSON_VALUE})
     @ApiOperation("创建存储桶")
-    public Flux<ResponseResult<String>> createBucket(String[] bucketName) {
+    public Flux<ResponseResult<String>> createBucket(@NotNull(message = "bucketName 参数不能为空") String[] bucketName) {
         return minioUtil.createBucketName(bucketName);
     }
+
+    @PostMapping(value = "/stream/uploadObject", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiOperation("创建存储桶")
+    @CustomAopHandler
+    public Mono<ResponseResult<String>> uploadObject(@NotNull(message = "文件参数不能为空") @RequestPart("file") Mono<FilePart> file,
+                                                     @NotNull(message = "存储桶参数不能为空") @RequestPart("bucketName") String bucketName,
+                                                     @NotNull(message = "保存路径参数不能为空") @RequestPart("path") String path
+    ) {
+        System.out.println("json:" + bucketName + "---" + path);
+        return minioUtil.uploadObject(file, bucketName, path);
+    }
+
 
     @GetMapping(value = "/delete/bucket", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
     @ApiOperation("删除存储桶")
     public Flux<String> deleteBucket(String[] bucketName) {
-        return Flux.just("key1", "key2")
-                .flatMap(k -> toString(k)
-                        .onErrorResume(e -> toString2(k))
-                );
-    }
-
-    public Flux<String> test(String bucketName) {
-        return Flux.just("key1", "key2")
-                .flatMap(k -> toString(k)
-                        .onErrorResume(e -> toString2(k))
-                );
-    }
-
-
-    public Flux<String> toString(String key) {
-        return Flux.just(key
-        ).map(s -> {
-            int i = 1 / 0;
-            return "6666";
-        });
-    }
-
-    public Flux<String> toString2(String key) {
-        return Flux.just(key).log().map(s -> {
-            return "777";
-        });
+        return null;
     }
 
     /**
@@ -76,4 +74,5 @@ public class MinioController {
     public Flux<Object> test() {
         return Flux.interval(Duration.ofSeconds(1)).map(l -> new ResponseResult<>(new SimpleDateFormat("HH:mm:ss").format(new Date())));
     }
+
 }

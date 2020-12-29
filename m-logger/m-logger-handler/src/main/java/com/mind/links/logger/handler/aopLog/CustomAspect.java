@@ -11,12 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.util.MultiValueMap;
+import reactor.core.publisher.Mono;
+
 import java.lang.reflect.Method;
-import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author : qiDing
@@ -88,16 +90,21 @@ public class CustomAspect {
      */
     @Around("cutMethod()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        HttpServletRequest request = this.getRequest();
-        Map<String, String[]> parameterMap = request.getParameterMap();
-        JSONObject parameter = JSON.parseObject(JSON.toJSONString(parameterMap));
+        Mono<ServerHttpRequest> request = this.getRequest();
+//        AtomicReference<MultiValueMap<String, String>> q = null;
+//        request.subscribe(req -> q.set(req.getQueryParams()));
         CustomAopHandler customAopHandler = getDeclaredAnnotation(joinPoint);
+//        MultiValueMap<String, String> parameter = q.get();
+        request.map(serverHttpRequest -> {
+            System.out.println(serverHttpRequest.getURI().toString());
+            return serverHttpRequest;
+        });
         if (customAopHandler.checkPage()) {
             // todo check page params
             try {
-                if (!this.checkPage(parameter.getString("pageSize"), parameter.getString("pageNumber"))) {
-                    throw new LinksException(20406, "请检查分页参数是否完整");
-                }
+//                if (!this.checkPage(parameter.getFirst("pageSize"), parameter.getFirst("pageNumber"))) {
+//                    throw new LinksException(20406, "请检查分页参数是否完整");
+//                }
             } catch (Exception e) {
                 throw new LinksException(20406, "请检查分页参数是否完整");
             }
@@ -117,22 +124,23 @@ public class CustomAspect {
         return proceed;
     }
 
-    public JSONObject getRequestInfo(ProceedingJoinPoint joinPoint, HttpServletRequest request) {
+    public JSONObject getRequestInfo(ProceedingJoinPoint joinPoint, Mono<ServerHttpRequest> request) {
+
         JSONObject requestInfo = new JSONObject();
         try {
-            String url = request.getRequestURL().toString();
-            String method = request.getMethod();
-            String remoteIp = request.getRemoteAddr();
-            String servletPath = request.getServletPath();
-            String userId = request.getHeader("userId");
-            Map<String, String[]> parameterMap = request.getParameterMap();
-            JSONObject parameter = JSON.parseObject(JSON.toJSONString(parameterMap));
-            requestInfo.put("user", userId);
-            requestInfo.put("url", url);
-            requestInfo.put("method", method);
-            requestInfo.put("remoteIp", remoteIp);
-            requestInfo.put("servletPath", servletPath);
-            requestInfo.put("parameter", parameter);
+            request.map(req -> {
+                String url = req.getURI().toString();
+                String method = Objects.requireNonNull(req.getMethod()).name();
+                String remoteIp = Objects.requireNonNull(req.getRemoteAddress()).getAddress().getHostAddress();
+                MultiValueMap<String, String> queryParams = req.getQueryParams();
+                String userId = req.getHeaders().getFirst("userId");
+                requestInfo.put("user", userId);
+                requestInfo.put("url", url);
+                requestInfo.put("method", method);
+                requestInfo.put("remoteIp", remoteIp);
+                requestInfo.put("parameter", queryParams);
+                return req;
+            });
             //   aop  方法执行情况
             JSONObject aopAround = new JSONObject();
             String targetName = joinPoint.getTarget().getClass().getName();
@@ -149,7 +157,7 @@ public class CustomAspect {
             aopAround.put("arguments", arguments);
             aopAround.put("targetClass", targetClass);
             requestInfo.put("aopAround", aopAround);
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return requestInfo;
@@ -170,18 +178,13 @@ public class CustomAspect {
         return objMethod.getDeclaredAnnotation(CustomAopHandler.class);
     }
 
-    public HttpServletRequest getRequest() {
-        HttpServletRequest request = null;
+    public Mono<ServerHttpRequest> getRequest() {
         try {
-            RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-            assert requestAttributes != null;
-            request = (HttpServletRequest) requestAttributes
-                    .resolveReference(RequestAttributes.REFERENCE_REQUEST);
+            return ReactiveRequestContextHolder.getRequest();
         } catch (Exception e) {
             logger.error("**************************request is null****************************************");
             throw new LinksException(20600, "请求不存在或不符合要求");
         }
-        return request;
     }
 
     private boolean checkPage(String pageNumber, String pageSize) {

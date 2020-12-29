@@ -3,6 +3,14 @@
 #==========================================================================
 server:
   port: 10200
+#  http2:
+#    enabled: true
+#  ssl:
+#    enabled: true
+#    enabled-protocols: TLSv1.2
+#    key-store: classpath:keystore.p12
+#    key-store-password: 123456
+#    key-store-type: PKCS12
 spring:
   ##################################################################################################
   #                               nacos
@@ -40,9 +48,23 @@ minio:
 #                sendKafka： 设置kafka日记收集的级别,如需收集更多的级别,取消注释即可
 #                printFile： 设置本地日记打印的级别,如不需要打印，注释即可
 #############################################################################################
+mind.links.logger:
+  topic: logger
+  path: ${spring.application.name}
+  maxHistory: 30
+  sendKafka:
+    #level1: DEBUG
+#    level2: INFO
+    #level3: WARN
+#    level4: ERROR
+  printFile:
+  #level1: DEBUG
+  #level2: INFO
+  #level3: WARN
+  #level4: ERROR
+# 是否开始swagger api文档 true or false
 swagger:
   enable: true
 #  是否直接在控制台打印异常  true or false
 exception:
   printStackTrace: true
-# 是否打印数据库语句查询情况 debug  or false

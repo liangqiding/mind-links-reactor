@@ -32,11 +32,36 @@ public class MinioApplicationTest {
                 .expectNext("EMPTY_PHRASE")
                 .verifyComplete();
     }
+
     public Flux<String> processOrFallback(Mono<String> source, Publisher<String> fallback) {
         Flux<String> stringFlux = source
                 .flatMapMany(phrase -> Flux.fromArray(phrase.split("\\s+")))
                 .switchIfEmpty(fallback);
         stringFlux.subscribe(System.out::println);
         return stringFlux;
+    }
+
+    public Flux<String> deleteBucket(String[] bucketName) {
+        return Flux.just("key1", "key2")
+                .flatMap(k -> toString(k)
+                        .onErrorResume(e -> toString(k))
+                );
+    }
+
+
+    public Flux<String> test(String bucketName) {
+        return Flux.just("key1", "key2")
+                .flatMap(k -> toString(k)
+                        .onErrorResume(e -> toString(k))
+                );
+    }
+
+
+    public Flux<String> toString(String key) {
+        return Flux.just(key
+        ).map(s -> {
+            int i = 1 / 0;
+            return "6666";
+        });
     }
 }

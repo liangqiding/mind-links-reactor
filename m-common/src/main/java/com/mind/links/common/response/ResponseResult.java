@@ -43,6 +43,7 @@ public class ResponseResult<T> implements Serializable {
     public ResponseResult(Integer code) {
         super();
         this.code = code;
+        this.message = LinksExceptionEnum.getMsgByCode(code);
     }
     public ResponseResult(T data) {
         super();

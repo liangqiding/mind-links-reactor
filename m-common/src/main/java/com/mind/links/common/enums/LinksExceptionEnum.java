@@ -21,7 +21,7 @@ public enum LinksExceptionEnum {
     HTTP_REQUEST_METHOD_ERROR(30503, "不支持的请求类型"),
     BIND_ERROR(30505, "查询参数异常"),
     SYSTEM_ERROR(-1, "系统异常"),
-    OTHER_ERROR(30000, "未知异常");
+    OTHER_ERROR(40000, "未知异常");
 
     private final Integer code;
     private final String msg;
