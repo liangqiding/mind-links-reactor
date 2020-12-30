@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import java.io.*;
 import java.util.Arrays;
 import java.util.Objects;
@@ -76,7 +75,7 @@ public class FileManage {
      * Description //TODO 删除指定目录下所有目录及文件
      * @date 9:16 2020/7/14 0014
      **/
-    public static boolean deleteDirAndFileAll(String path) {
+    public static void deleteDirAndFileAll(String path) {
         File file = new File(path);
         AtomicBoolean end = new AtomicBoolean(false);
         // 判断待删除目录是否存在
@@ -97,7 +96,7 @@ public class FileManage {
             end.set(new File(path).delete());
             log.info("文件删除成功：" + path);
         });
-        return end.get();
+        end.get();
     }
 
     /**
@@ -125,5 +124,39 @@ public class FileManage {
             return false;
         }
         return end.get();
+    }
+
+    /**
+     * @author 梁其定
+     * Description //TODO 创建目录
+     * @date 9:17 2020/4/14 0014
+     **/
+    public static void fileMkdirs(File file){
+        try {
+            boolean b = file.setWritable(true, false);
+            if (!file.getParentFile().exists()) {
+                //上级目录不存在，创建上级目录
+                boolean mkdirs = file.getParentFile().mkdirs();
+                log.info("==============执行创建文件夹" + file.getPath() + "赋予读写权限" + b);
+            }
+            boolean mkdirs = file.mkdirs();
+            log.info("==============执行创建文件夹" + file.getPath() + "赋予读写权限" + b);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("*********************文件夹创建失败！！********************************");
+        }
+    }
+
+    /**
+     * InputStream转化为byte[]数组
+     */
+    public static byte[] toByteArray(InputStream input) throws IOException {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int n = 0;
+        while (-1 != (n = input.read(buffer))) {
+            output.write(buffer, 0, n);
+        }
+        return output.toByteArray();
     }
 }

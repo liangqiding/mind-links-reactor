@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import reactor.core.publisher.Mono;
 
 import java.io.Serializable;
 
@@ -21,16 +22,17 @@ public class ResponseResult<T> implements Serializable {
     @ApiModelProperty("成功码")
     public static final Integer OK = 20000;
 
+
     @ApiModelProperty("成功消息")
     public static final String OK_MESSAGE = "操作成功";
 
     @ApiModelProperty("错误码")
-    public static final Integer ERROR = -1;
+    public static final Integer ERROR = 40000;
 
     @ApiModelProperty("错误消息")
-    public static final String ERR_MESSAGE = "操作失败";
+    public static final String ERR_MESSAGE = "请求失败";
 
-    private Integer code=OK;
+    private Integer code = OK;
 
     private String message;
 
@@ -38,6 +40,8 @@ public class ResponseResult<T> implements Serializable {
 
     public ResponseResult() {
         super();
+        this.code = ERROR;
+        this.message = LinksExceptionEnum.getMsgByCode(code);
     }
 
     public ResponseResult(Integer code) {
@@ -45,11 +49,13 @@ public class ResponseResult<T> implements Serializable {
         this.code = code;
         this.message = LinksExceptionEnum.getMsgByCode(code);
     }
+
     public ResponseResult(T data) {
         super();
         this.data = data;
         this.message = LinksExceptionEnum.getMsgByCode(code);
     }
+
     public ResponseResult(Integer code, String message) {
         super();
         this.code = code;
@@ -84,7 +90,25 @@ public class ResponseResult<T> implements Serializable {
         this.data = data;
     }
 
-    public void test() {
 
-     }
+    /**
+     * webFlux 下的通用返回
+     */
+    public static <T> Mono<ResponseResult<T>> transform(Mono<T> response) {
+        return transform(OK, LinksExceptionEnum.getMsgByCode(OK), response);
+    }
+
+    public static <T> Mono<ResponseResult<T>> transform(Integer code, Mono<T> response) {
+        return transform(code, LinksExceptionEnum.getMsgByCode(code), response);
+    }
+
+    public static <T> Mono<ResponseResult<T>> transform(Integer code, String message, Mono<T> response) {
+        return response.map(data -> {
+            final ResponseResult<T> rw = new ResponseResult<T>();
+            rw.setData(data);
+            rw.setCode(code);
+            rw.setMessage(message);
+            return rw;
+        });
+    }
 }

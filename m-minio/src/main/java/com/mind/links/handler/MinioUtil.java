@@ -1,21 +1,19 @@
 package com.mind.links.handler;
 
 import com.mind.links.common.enums.LinksContentTypeEnum;
+import com.mind.links.common.exception.LinksException;
 import com.mind.links.common.exception.LinksExceptionHandler;
 import com.mind.links.common.response.ResponseResult;
 import com.mind.links.common.utils.FileManage;
-import com.sun.org.apache.bcel.internal.generic.FMUL;
 import io.minio.*;
 import io.minio.errors.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
@@ -23,13 +21,12 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -48,44 +45,43 @@ public class MinioUtil {
     private MinioClient minioClient;
 
     @Resource(description = "myScheduler")
-    Scheduler myScheduler;
+    private Scheduler myScheduler;
 
 
-    private final String pathTo = "cacheFile/";
+    private final String PATH_TO = "cacheFile/";
 
     /**
-     * 上传文件
+     * @author ：qiDing
+     * @date ：Created in 2020/12/30 13:15
+     * description：TODO 上传文件
      */
-    public Mono<ResponseResult<String>> uploadObject(Mono<FilePart> file, String bucketName, String minIoPathName) {
+    public Mono<String> uploadObject(Mono<FilePart> file, String bucketName, String minIoPathName) {
+        return Mono.just(bucketName)
+                .flatMap(filePart -> this.bucketExist(bucketName, true))
+                .flatMap(filePart -> this.saveFilePart(file, bucketName, minIoPathName));
+    }
+
+    public Mono<String> saveFilePart(Mono<FilePart> file, String bucketName, String minIoPathName) {
         Map<String, String> headers = new HashMap<>(10);
         String uuid = UUID.randomUUID().toString().replace("-", "");
-        return file
-                .filter(filePart -> this.bucketExistsAndCreate(bucketName))
-                .flatMap(filePart -> {
-                    LinksContentTypeEnum.setHeaders(filePart.filename(), headers);
-                    File volatilize = new File(pathTo + uuid + "/");
-                    File savePath = new File(pathTo + uuid + "/" + filePart.filename());
-                    log.info("===filename=" + filePart.filename());
-                    try {
-                        this.fileMkdirs(volatilize);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    filePart.transferTo(savePath);
-                    return Mono.fromCallable(() -> {
-                        minioClient.uploadObject(
-                                UploadObjectArgs.builder()
-                                        .bucket(bucketName)
-                                        .object(FileManage.checkPathAndRepair(minIoPathName) + filePart.filename())
-                                        .filename(pathTo + uuid + "/" + filePart.filename())
-                                        .headers(headers)
-                                        .build());
-                        return new ResponseResult<>(bucketName + ":上传成功");
-                    })
-                            .subscribeOn(myScheduler)
-                            .onErrorResume(LinksExceptionHandler::errorHandler);
-                })
-                .doFinally(signalType -> FileManage.deleteDirAndFileAll(pathTo + uuid));
+        return file.flatMap(filePart -> {
+            LinksContentTypeEnum.setHeaders(filePart.filename(), headers);
+            File volatilize = new File(PATH_TO + uuid + "/");
+            File savePath = new File(PATH_TO + uuid + "/" + filePart.filename());
+            log.info("===filename=" + filePart.filename());
+            FileManage.fileMkdirs(volatilize);
+            filePart.transferTo(savePath);
+            return Mono.fromCallable(() -> {
+                minioClient.uploadObject(
+                        UploadObjectArgs.builder()
+                                .bucket(bucketName)
+                                .object(FileManage.checkPathAndRepair(minIoPathName) + filePart.filename())
+                                .filename(PATH_TO + uuid + "/" + filePart.filename())
+                                .headers(headers)
+                                .build());
+                return bucketName + ":上传成功";
+            }).subscribeOn(myScheduler);
+        }).doFinally(signalType -> FileManage.deleteDirAndFileAll(PATH_TO + uuid));
     }
 
     /**
@@ -132,91 +128,80 @@ public class MinioUtil {
     /**
      * 检查存储桶是否存在
      */
-    @SneakyThrows
-    public boolean bucketExists(String bucketName) {
-        return minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+
+    public Mono<Boolean> bucketExist(String bucketName) {
+        return this.bucketExist(bucketName, false);
     }
 
-    /**
-     * 检查存储桶是否存在 不存在则创建
-     */
-
-//    @SneakyThrows
-//    public <T> Mono<T> bucketExistsAndCreate(T m, String bucketName) {
-//        return Mono.just(m)
-//                .filter(t -> !bucketExists(bucketName))
-//                .map(t -> {
-//                    String[] a = {bucketName};
-//                    createBucketName(a);
-//                    return t;
-//                });
-//    }
     @SneakyThrows
-    public boolean bucketExistsAndCreate(String bucketName) {
-        if (!this.bucketExists(bucketName)) {
-            minioClient.makeBucket(MakeBucketArgs
-                    .builder()
-                    .bucket(bucketName)
-                    .build());
-        }
-        return true;
+    public Mono<Boolean> bucketExist(String bucketName, boolean throwIf) {
+        return Mono.just(false).map(b -> {
+            try {
+                return minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (throwIf) {
+                    throw new LinksException(30406, "存储桶不存在");
+                }
+            }
+            return false;
+        });
     }
 
     /**
      * 以流的形式获取一个文件对象
      */
     @SneakyThrows
-    public InputStream getObject(String objectName) {
-        return bucketExists("bucketName") ? minioClient.getObject(GetObjectArgs.builder().bucket("bucketName").object(objectName).build()) : null;
+    public Mono<InputStream> getObjects(String bucketName, String objectName) {
+        return Mono.fromCallable(() -> (InputStream) minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).build()))
+                .subscribeOn(myScheduler);
     }
+
 
     /**
      * @author ：qiDing
      * @date ：Created in 2020/12/23 09:27
-     * description：TODO 批量创建存储桶
+     * description：TODO 创建存储桶
      */
-    public Flux<ResponseResult<String>> createBucketName(String[] bucketNames) {
-        return Flux.fromIterable(Arrays.asList(bucketNames.clone()))
-                .log()
-                .map(b -> {
-                    try {
-                        if (!this.bucketExists(b)) {
-                            minioClient.makeBucket(MakeBucketArgs
-                                    .builder()
-                                    .bucket(b)
-                                    .build());
-                        } else {
-                            return new ResponseResult<>(b + ":创建失败,存储已存在");
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return new ResponseResult<>(b + ":创建失败");
-                    }
-                    return new ResponseResult<>(b + ":创建成功");
-                }).delayElements(Duration.ofSeconds(1))
-                .onErrorResume(LinksExceptionHandler::errorHandler);
+    public Mono<String> createBucketName(String bucketName) {
+        return Mono.just(bucketName)
+                .flatMap(this::bucketExist)
+                .map(b -> Optional.of(b)
+                        .filter(exist -> !exist)
+                        .map(aBoolean -> {
+                            try {
+                                minioClient.makeBucket(MakeBucketArgs
+                                        .builder()
+                                        .bucket(bucketName)
+                                        .build());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                throw new LinksException(30506, "存储桶：" + bucketName + "-创建失败");
+                            }
+                            return true;
+                        })
+                        .orElseThrow(() -> new LinksException(30406, "存储桶:" + bucketName + "-创建失败,存储桶已存在"))
+                        ? "存储桶:" + bucketName + "-创建成功" : "存储桶:" + bucketName + "-创建失败");
     }
 
-
     /**
-     * @author 梁其定
-     * Description //TODO 创建目录
-     * @date 9:17 2020/4/14 0014
-     **/
-    public void fileMkdirs(File file) throws IOException {
-        try {
-            boolean b = file.setWritable(true, false);
-            if (!file.getParentFile().exists()) {
-                //上级目录不存在，创建上级目录
-                boolean mkdirs = file.getParentFile().mkdirs();
-                log.info("==============执行创建文件夹" + file.getPath() + "赋予读写权限" + b);
-            }
-            boolean mkdirs = file.mkdirs();
-            log.info("==============执行创建文件夹" + file.getPath() + "赋予读写权限" + b);
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("*********************文件夹创建失败！！********************************");
-            throw new IOException("*********************文件夹创建失败！！********************************");
-        }
+     * @author ：qiDing
+     * @date ：Created in 2020/12/30 13:49
+     * description：TODO 获取文件字节流
+     */
+    public Mono<byte[]> getFile(String bucketName, String imagesPath) {
+        return Mono.just(bucketName)
+                .flatMap(o -> this.getObjects(bucketName, imagesPath))
+                .map(bytes -> {
+                    byte[] imageContent = new byte[0];
+                    try {
+                        imageContent = FileManage.toByteArray(bytes);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        log.error("***minio 没有找到文件>>>" + imagesPath);
+                        throw new LinksException(30607, "没有该文件");
+                    }
+                    return imageContent;
+                });
     }
 }

@@ -33,7 +33,7 @@
         <redisson.version>3.14.0</redisson.version>
         <pagehelper.version>1.2.13</pagehelper.version>
         <druid.version>1.2.3</druid.version>
-        <hutool-all.version>4.6.3</hutool-all.version>
+        <hutool-all.version>5.5.6</hutool-all.version>
         <log4j.version>1.2.17</log4j.version>
         <fastjson.version>1.2.75</fastjson.version>
         <logstash-logback-encoder.version>6.5</logstash-logback-encoder.version>
@@ -93,6 +93,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
     </dependencies>
 
@@ -169,11 +173,6 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>${ch.qos.logback.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-access</artifactId>
                 <version>${ch.qos.logback.version}</version>
             </dependency>
             <!--日记编码器-->
