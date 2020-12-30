@@ -35,6 +35,7 @@ public class MinioController {
 
     @GetMapping(value = "/create/bucket", produces = {MediaType.APPLICATION_STREAM_JSON_VALUE})
     @ApiOperation("创建存储桶")
+    @CustomAopHandler(module = "minio", desc = "创建存储桶")
     public Mono<ResponseResult<String>> createBucket(@NotBlank(message = "存储桶名称不能为空") String bucketName) {
         return ResponseResult.transform(minioUtil.createBucketName(bucketName));
     }
@@ -52,6 +53,7 @@ public class MinioController {
 
     @GetMapping(value = "/delete/bucket", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ApiOperation("删除存储桶")
+    @CustomAopHandler(module = "minio", desc = "删除存储桶")
     public Flux<String> deleteBucket(String[] bucketName) {
         return null;
     }
@@ -62,7 +64,8 @@ public class MinioController {
      * description：TODO 获取图片，可直接显示
      */
     @GetMapping(value = "/images/get", produces = MediaType.IMAGE_PNG_VALUE)
-    @CustomAopHandler(module = "file", desc = "获取图片")
+    @ApiOperation("获取图片")
+    @CustomAopHandler(module = "minio", desc = "获取图片")
     public Mono<byte[]> getFiles(@NotBlank(message = "保存路径参数不能为空") String filePath,
                                  @NotBlank(message = "存储桶参数不能为空") String bucketName) {
         Mono<byte[]> file = minioUtil.getFile(bucketName, filePath);
@@ -76,7 +79,8 @@ public class MinioController {
      * description：TODO 获取文件,下载方式
      */
     @GetMapping(value = "/file/get", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @CustomAopHandler(module = "file", desc = "获取图片")
+    @ApiOperation("下载文件")
+    @CustomAopHandler(module = "minio", desc = "下载文件")
     public Mono<byte[]> getFile(@NotBlank(message = "保存路径参数不能为空") String filePath,
                                 @NotBlank(message = "存储桶参数不能为空") String bucketName,
                                 final ServerHttpResponse response

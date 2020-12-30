@@ -16,14 +16,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
-
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -180,8 +178,7 @@ public class MinioUtil {
                             }
                             return true;
                         })
-                        .orElseThrow(() -> new LinksException(30406, "存储桶:" + bucketName + "-创建失败,存储桶已存在"))
-                        ? "存储桶:" + bucketName + "-创建成功" : "存储桶:" + bucketName + "-创建失败");
+                        .orElseThrow(() -> new LinksException(30406, "存储桶:" + bucketName + "-创建失败,存储桶已存在")) ? "存储桶:" + bucketName + "-创建成功" : "存储桶:" + bucketName + "-创建失败");
     }
 
     /**

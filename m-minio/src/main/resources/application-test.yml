@@ -2,4 +2,4 @@
 #                                #
 #                          210.5.30.195:8848
 #==========================================================================
-spring.cloud.nacos.discovery.server-addr
+#spring.cloud.nacos.discovery.server-addr
