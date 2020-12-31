@@ -7,10 +7,8 @@ import io.minio.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import javax.annotation.Resource;
@@ -82,26 +80,6 @@ public class MinioUtils implements MinioUtil {
                         return minioPathName;
                     })
                     .subscribeOn(myScheduler);
-        });
-    }
-
-    @SneakyThrows
-    public Flux<InputStream> putInputStreamObject(Flux<DataBuffer> content) {
-        return content.map(DataBuffer::asInputStream).subscribeOn(myScheduler);
-    }
-
-    public Flux<String> putObject(Flux<DataBuffer> content, Map<String, String> headers, String bucketName, String path) {
-        return this.putInputStreamObject(content).flatMap(inputStream -> {
-            return Mono.fromCallable(() -> {
-                minioClient.putObject(PutObjectArgs
-                        .builder()
-                        .bucket(bucketName)
-                        .object(path)
-                        .stream(inputStream, inputStream.available(), -1)
-                        .headers(headers)
-                        .build());
-                return "";
-            });
         });
     }
 
