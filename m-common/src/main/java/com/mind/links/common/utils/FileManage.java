@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.Objects;
@@ -64,7 +65,16 @@ public class FileManage {
      * description：TODO 检查路径是否完整，自动补全/  修复
      */
     public static String checkPathAndRepair(String path) {
-        if (!"/".equals(path.substring(path.length() - 1)) || !"\\".equals(path.substring(path.length() - 1))) {
+        // 以 / 结尾
+        boolean one = "/".equals(path.substring(path.length() - 1));
+        // 以 \\ 结尾
+        boolean two = "\\".equals(path.substring(path.length() - 1));
+        // 长度为1
+        boolean three = path.length() == 1;
+        if (one && three) {
+            return "";
+        }
+        if (!one || !two) {
             return path + "/";
         }
         return path;
@@ -131,7 +141,7 @@ public class FileManage {
      * Description //TODO 创建目录
      * @date 9:17 2020/4/14 0014
      **/
-    public static void fileMkdirs(File file){
+    public static void fileMkdirs(File file) {
         try {
             boolean b = file.setWritable(true, false);
             if (!file.getParentFile().exists()) {

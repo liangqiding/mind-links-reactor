@@ -10,7 +10,7 @@ spring:
   #                         http://192.168.60.119:8848/nacos/index.html
   ##################################################################################################
   application:
-    name: AuthSercurity
+    name: redisService
   cloud:
     nacos:
       discovery:
@@ -21,7 +21,7 @@ spring:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         namespace: ${spring.cloud.nacos.discovery.namespace}
         file-extension: yaml
-        prefix: AuthSercurity
+        prefix: ${application.name}
   profiles:
     active: test
   ##################################################################################################

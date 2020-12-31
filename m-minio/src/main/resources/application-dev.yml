@@ -1,8 +1,9 @@
 #==========================swagger 访问接口==================================
-#           http://${ip}:10131/swagger-ui/index.html                      #
+#           http://${ip}:10131/swagger-ui/index.html
+#           开发环境
 #==========================================================================
 server:
-  port: 10200
+  port: 10201
 spring:
   ##################################################################################################
   #                               nacos
@@ -14,20 +15,21 @@ spring:
   cloud:
     nacos:
       discovery:
+        enabled: false
         server-addr: 192.168.188.106:8848
         namespace: cc8561c5-2d87-4db8-95fc-ddc0fb03e563
       config:
-        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        server-addr: 192.168.188.106:8848
         namespace: ${spring.cloud.nacos.discovery.namespace}
         file-extension: yaml
-        prefix: ${application.name}
+        prefix: AuthSercurity
   profiles:
     active: test
 #####################################     MinIo文件服务器    ##############################################
 minio:
-  endpoint: http://localhost:9000
-  accessKey: root
-  secretKey: 123456
+  endpoint: http://192.168.188.118:9000
+  accessKey: i2dsp
+  secretKey: 8qbWHmZqKQtYU4et8g0u
   secure: false
   bucketName: map
   configDir: /home/data/
@@ -43,10 +45,10 @@ mind.links.logger:
   path: ${spring.application.name}
   maxHistory: 30
   sendKafka:
-    #level1: DEBUG
-#    level2: INFO
-    #level3: WARN
-#    level4: ERROR
+  #level1: DEBUG
+  #    level2: INFO
+  #level3: WARN
+  #    level4: ERROR
   printFile:
   #level1: DEBUG
   #level2: INFO
@@ -58,3 +60,4 @@ swagger:
 #  是否直接在控制台打印异常  true or false
 exception:
   printStackTrace: true
+

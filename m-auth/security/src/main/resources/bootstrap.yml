@@ -14,13 +14,13 @@ spring:
     nacos:
       discovery:
         enabled: false
-        server-addr: 210.5.30.195:8848
+        server-addr: 192.168.60.119:8848
         namespace: cc8561c5-2d87-4db8-95fc-ddc0fb03e563
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         namespace: ${spring.cloud.nacos.discovery.namespace}
         file-extension: yaml
-        prefix: AuthSercurity
+        prefix: ${application.name}
   profiles:
     active: test
   ##################################################################################################
