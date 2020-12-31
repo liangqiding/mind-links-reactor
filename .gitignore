@@ -3,7 +3,6 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-**/src/main/resources/application-dev.yml
 ### STS ###
 .apt_generated
 .classpath
@@ -18,7 +17,6 @@ target/
 *.iws
 *.iml
 *.ipr
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -31,3 +29,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### my ####
+logs/
+**/src/main/resources/application-dev.yml
