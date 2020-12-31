@@ -22,7 +22,6 @@ public class ResponseResult<T> implements Serializable {
     @ApiModelProperty("成功码")
     public static final Integer OK = 20000;
 
-
     @ApiModelProperty("成功消息")
     public static final String OK_MESSAGE = "操作成功";
 
@@ -32,10 +31,13 @@ public class ResponseResult<T> implements Serializable {
     @ApiModelProperty("错误消息")
     public static final String ERR_MESSAGE = "请求失败";
 
+    @ApiModelProperty("状态码")
     private Integer code = OK;
 
+    @ApiModelProperty("操作反馈")
     private String message;
 
+    @ApiModelProperty("内容")
     private T data;
 
     public ResponseResult() {
@@ -79,14 +81,6 @@ public class ResponseResult<T> implements Serializable {
         super();
         this.code = code;
         this.message = message;
-        this.data = data;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
         this.data = data;
     }
 

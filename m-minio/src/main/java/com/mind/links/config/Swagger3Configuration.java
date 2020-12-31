@@ -82,7 +82,6 @@ public class Swagger3Configuration {
                                 Collections.singletonList(new SecurityReference("BASE_TOKEN",
                                         new AuthorizationScope[]{new AuthorizationScope("global", "")}
                                 )))
-                        //.forPaths(PathSelectors.any())
                         .build()
         );
     }

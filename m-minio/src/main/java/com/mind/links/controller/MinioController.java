@@ -1,7 +1,7 @@
 package com.mind.links.controller;
 
 import com.mind.links.common.response.ResponseResult;
-import com.mind.links.handler.MinioUtil;
+import com.mind.links.handler.MinioUtils;
 import com.mind.links.logger.handler.aopLog.CustomAopHandler;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,9 +11,9 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -31,53 +31,49 @@ import javax.validation.constraints.NotNull;
 @Validated
 public class MinioController {
     @Autowired
-    private MinioUtil minioUtil;
+    private MinioUtils minioUtils;
 
     @GetMapping(value = "/create/bucket", produces = {MediaType.APPLICATION_STREAM_JSON_VALUE})
     @ApiOperation("创建存储桶")
     @CustomAopHandler(module = "minio", desc = "创建存储桶")
     public Mono<ResponseResult<String>> createBucket(@NotBlank(message = "存储桶名称不能为空") String bucketName) {
-        return ResponseResult.transform(minioUtil.createBucketName(bucketName));
+        return ResponseResult.transform(minioUtils.createBucketName(bucketName));
     }
 
     @PostMapping(value = "/stream/uploadObject", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ApiOperation("上传文件")
+    @ApiOperation(value = "上传文件",notes = "先缓存本地，再上传至minio")
     @CustomAopHandler
     public Mono<ResponseResult<String>> uploadObject(@NotNull(message = "文件参数不能为空") @RequestPart(value = "file") Mono<FilePart> file,
                                                      @NotBlank(message = "存储桶参数不能为空") @RequestPart(value = "bucketName") String bucketName,
                                                      @NotBlank(message = "保存路径参数不能为空") @RequestPart(value = "path") String path
     ) {
-        return ResponseResult.transform(minioUtil.uploadObject(file, bucketName, path));
+        return ResponseResult.transform(minioUtils.uploadObject(file, bucketName, path));
     }
 
-
-    @GetMapping(value = "/delete/bucket", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @DeleteMapping(value = "/bucket/delete", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     @ApiOperation("删除存储桶")
     @CustomAopHandler(module = "minio", desc = "删除存储桶")
-    public Flux<String> deleteBucket(String[] bucketName) {
-        return null;
+    public Mono<ResponseResult<String>> deleteBucket(@NotBlank(message = "存储桶参数不能为空") String bucketName) {
+        return ResponseResult.transform(minioUtils.deleteBucket(bucketName));
     }
 
-    /**
-     * @author ：qiDing
-     * @date ：Created in 2020/12/30 14:32
-     * description：TODO 获取图片，可直接显示
-     */
+    @DeleteMapping(value = "/file/delete", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    @ApiOperation("删除文件")
+    @CustomAopHandler(module = "minio", desc = "删除文件")
+    public Mono<ResponseResult<String>> deleteObject(@NotBlank(message = "存储桶参数不能为空")  String bucketName,
+                                                     @NotBlank(message = "保存路径参数不能为空") String path
+    ) {
+        return ResponseResult.transform(minioUtils.deleteObject(bucketName, path));
+    }
+
     @GetMapping(value = "/images/get", produces = MediaType.IMAGE_PNG_VALUE)
     @ApiOperation("获取图片")
     @CustomAopHandler(module = "minio", desc = "获取图片")
     public Mono<byte[]> getFiles(@NotBlank(message = "保存路径参数不能为空") String filePath,
                                  @NotBlank(message = "存储桶参数不能为空") String bucketName) {
-        Mono<byte[]> file = minioUtil.getFile(bucketName, filePath);
-        System.out.println("=================异步测试===================================");
-        return file;
+        return minioUtils.getFile(bucketName, filePath);
     }
 
-    /**
-     * @author ：qiDing
-     * @date ：Created in 2020/12/30 14:32
-     * description：TODO 获取文件,下载方式
-     */
     @GetMapping(value = "/file/get", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ApiOperation("下载文件")
     @CustomAopHandler(module = "minio", desc = "下载文件")
@@ -87,7 +83,7 @@ public class MinioController {
     ) {
         String filename = filePath.substring(filePath.lastIndexOf("/") + 1);
         response.getHeaders().set("Content-Disposition", "attachment;fileName=" + filename);
-        return minioUtil.getFile(bucketName, filePath);
+        return minioUtils.getFile(bucketName, filePath);
     }
 
 }

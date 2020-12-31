@@ -20,9 +20,9 @@ spring:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         namespace: ${spring.cloud.nacos.discovery.namespace}
         file-extension: yaml
-        prefix: ${application.name}
+        prefix: ${spring.application.name}
   profiles:
-    active: test
+    active: dev
 #####################################     MinIo文件服务器    ##############################################
 minio:
   endpoint: http://localhost:9000
