@@ -10,6 +10,8 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -36,8 +38,11 @@ import java.util.Map;
 @Lazy(false)
 public class CustomAspect {
 
-    @Value("${server.port}")
+    @Value("${server.port:}")
     private String port;
+
+    @Value("${netty.port:}")
+    private String NettyPort;
 
     private static String IP;
 
@@ -135,7 +140,7 @@ public class CustomAspect {
         Map<String, Object> requestMaps = getParameters(joinPoint);
         requestMaps.put("model", customAopHandler.module());
         requestMaps.put("desc", customAopHandler.desc());
-        requestMaps.put("port", port);
+        requestMaps.put("port", port+NettyPort);
         requestMaps.put("ip", IP);
         try {
             String targetName = joinPoint.getTarget().getClass().getName();
@@ -201,5 +206,11 @@ public class CustomAspect {
             }
         }
         return paramsMap;
+    }
+
+    @Configuration
+    @ConditionalOnProperty(name = "port",prefix = "enable",havingValue = "true")
+    public static class LinksEnvironment {
+        public static String port;
     }
 }

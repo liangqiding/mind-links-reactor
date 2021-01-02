@@ -14,13 +14,13 @@ spring:
     nacos:
       discovery:
         enabled: false
-        server-addr: 192.168.60.119:8848
+        server-addr: 192.168.188.106:8848
         namespace: cc8561c5-2d87-4db8-95fc-ddc0fb03e563
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         namespace: ${spring.cloud.nacos.discovery.namespace}
         file-extension: yaml
-        prefix: ${application.name}
+        prefix: ${spring.application.name}
   profiles:
     active: test
   ##################################################################################################
@@ -106,29 +106,15 @@ mybatis-plus:
 #                               调试选项(热加载)
 #                path:  路径
 #                maxHistory:   本地打印保存时间
-#                sendKafka： 设置kafka日记收集的级别,如需收集更多的级别,取消注释即可
-#                printFile： 设置本地日记打印的级别,如不需要打印，注释即可
+#                output.level: INFO  本地打印级别   （打印大于或等于该级别，false 不打印）
+#                kafka.level: INFO  kafka统一收集级别 （打印大于或等于该级别，false 不打印）
 #############################################################################################
-mind.links.logger:
+output.level: INFO
+kafka.level: INFO
+logger:
   topic: logger
   path: ${spring.application.name}
   maxHistory: 30
-  sendKafka:
-    #level1: DEBUG
-    level2: INFO
-    #level3: WARN
-    level4: ERROR
-  printFile:
-    #level1: DEBUG
-    #level2: INFO
-    #level3: WARN
-    #level4: ERROR
-# 是否开始swagger api文档 true or false
-swagger:
-  enable: true
-#  是否直接在控制台打印异常  true or false
-exception:
-  printStackTrace: true
 # 是否打印数据库语句查询情况 debug  or false
 logging.level:
   com.i2dsp.data.dao: debug

@@ -5,7 +5,6 @@ import com.mind.links.common.enums.LinksExceptionEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import reactor.core.publisher.Mono;
 
 import java.io.Serializable;

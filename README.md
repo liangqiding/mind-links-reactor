@@ -1,8 +1,8 @@
-# mind-links 基于Reactor3的大型响应式分布式智能家电管理系统
+# mind-links 基于Reactor3的大型响应式分布式物联网智能家电系统
 
 ## 前言
 
-`mind-links` 本项目基于netty的大型响应式分布式智能家电管理系统，主要技术包括： Reactor3,netty,SpringCloud,nacos,Elasticsearch,Kafka,docker,Redisson,mqtt，mysql,mongodb,EKL
+`mind-links` 本项目基于netty的大型响应式分布式物联网智能家电系统，主要技术包括： Reactor3,netty,SpringCloud,nacos,Elasticsearch,Kafka,docker,Redisson,mqtt，mysql,mongodb,EKL
 
 - 后台项目 基于SpringCloud的微服务开发脚手架实现  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)，
 
@@ -59,6 +59,7 @@
 | SpringCloud          |  Hoxton.SR5 |微服务容器           | https://spring.io/projects/spring-cloud             |
 | SpringBoot           |2.3.3.RELEASE|SpringBoot容器       | https://spring.io/projects/spring-boot               |
 | webFlux              |2.3.3.RELEASE|响应式编程           | https://github.com/reactor/reactor-core               |
+| reactor-core         |3.3.9.RELEASE|reactor核心          | https://github.com/reactor/reactor-core               |
 | SpringSecurity       |             |认证和授权框架       | https://spring.io/projects/spring-security           |
 | mybatis-plus         |   3.3.1     |ORM框架             |                                                     |
 | mybatis-plus-generator|  3.3.1     |数据层代码生成       | http://www.mybatis.org/generator/index.html          |

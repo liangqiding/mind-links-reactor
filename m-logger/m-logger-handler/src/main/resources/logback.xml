@@ -12,28 +12,10 @@
                     defaultValue="192.168.188.126:9092"/>
     <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="springCloud"/>
 
-    <springProperty scope="context" name="TOPIC" source="mind.links.logger.path.topic" defaultValue="logger"/>
+    <springProperty scope="context" name="TOPIC" source="logger.path.topic" defaultValue="logger"/>
 
     <springProperty scope="context" name="PORT" source="server.port" defaultValue="logger"/>
 
-    <!--    配置本地打印级别-->
-    <springProperty scope="context" name="FILE_LEVEL_1" source="mind.links.logger.printFile.level1"
-                    defaultValue=""/>
-    <springProperty scope="context" name="FILE_LEVEL_2" source="mind.links.logger.printFile.level2"
-                    defaultValue=""/>
-    <springProperty scope="context" name="FILE_LEVEL_3" source="mind.links.logger.printFile.level3"
-                    defaultValue=""/>
-    <springProperty scope="context" name="FILE_LEVEL_4" source="mind.links.logger.printFile.level4"
-                    defaultValue=""/>
-    <!--    配置远程kafka收集级别-->
-    <springProperty scope="context" name="KAFKA_LEVEL_1" source="mind.links.logger.sendKafka.level1"
-                    defaultValue=""/>
-    <springProperty scope="context" name="KAFKA_LEVEL_2" source="mind.links.logger.sendKafka.level2"
-                    defaultValue=""/>
-    <springProperty scope="context" name="KAFKA_LEVEL_3" source="mind.links.logger.sendKafka.level3"
-                    defaultValue=""/>
-    <springProperty scope="context" name="KAFKA_LEVEL_4" source="mind.links.logger.sendKafka.level4"
-                    defaultValue=""/>
     <!-- 控制台输出日志 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -258,18 +240,65 @@
 
     <!-- 指定项目中的logger -->
     <!-- root级别  DEBUG -->
+    <property scope="context" resource="bootstrap.yml" />
+
     <root level="INFO">
         <!-- 控制台输出 -->
         <appender-ref ref="STDOUT"/>
         <!-- 文件输出 -->
-        <appender-ref ref="FILE_${FILE_LEVEL_1}"/>
-        <appender-ref ref="FILE_${FILE_LEVEL_2}"/>
-        <appender-ref ref="FILE_${FILE_LEVEL_3}"/>
-        <appender-ref ref="FILE_${FILE_LEVEL_4}"/>
-        <!-- kafka统一收集-->
-        <appender-ref ref="KAFKA_${KAFKA_LEVEL_1}"/>
-        <appender-ref ref="KAFKA_${KAFKA_LEVEL_2}"/>
-        <appender-ref ref="KAFKA_${KAFKA_LEVEL_3}"/>
-        <appender-ref ref="KAFKA_${KAFKA_LEVEL_4}"/>
+        <if condition='property("output.level").equals("DEBUG")'>
+            <then>
+                <appender-ref ref="FILE_DEBUG"/>
+                <appender-ref ref="FILE_INFO"/>
+                <appender-ref ref="FILE_WARN"/>
+                <appender-ref ref="FILE_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("output.level").equals("INFO")'>
+            <then>
+                <appender-ref ref="FILE_INFO"/>
+                <appender-ref ref="FILE_WARN"/>
+                <appender-ref ref="FILE_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("output.level").equals("WARN")'>
+            <then>
+                <appender-ref ref="FILE_INFO"/>
+                <appender-ref ref="FILE_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("output.level").equals("ERROR")'>
+            <then>
+                <appender-ref ref="FILE_ERROR"/>
+            </then>
+        </if>
+
+        <!-- kafka输出 -->
+        <if condition='property("kafka.level").equals("DEBUG")'>
+            <then>
+                <appender-ref ref="KAFKA_DEBUG"/>
+                <appender-ref ref="KAFKA_INFO"/>
+                <appender-ref ref="KAFKA_WARN"/>
+                <appender-ref ref="KAFKA_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("kafka.level").equals("INFO")'>
+            <then>
+                <appender-ref ref="KAFKA_INFO"/>
+                <appender-ref ref="KAFKA_WARN"/>
+                <appender-ref ref="KAFKA_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("kafka.level").equals("WARN")'>
+            <then>
+                <appender-ref ref="KAFKA_INFO"/>
+                <appender-ref ref="KAFKA_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("kafka.level").equals("ERROR")'>
+            <then>
+                <appender-ref ref="KAFKA_ERROR"/>
+            </then>
+        </if>
     </root>
 </configuration>

@@ -1,0 +1,3 @@
+# Auto Configure factories
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.mind.links.common.config.LinksCommonClientConfig

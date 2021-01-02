@@ -12,9 +12,19 @@
     <artifactId>m-service</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>netty</module>
-        <module>mqtt</module>
+        <module>nettyService</module>
+        <module>mqttService</module>
     </modules>
-
-
+    <dependencies>
+        <dependency>
+            <groupId>com.mind.links</groupId>
+            <artifactId>m-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mind.links</groupId>
+            <artifactId>m-logger-handler</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

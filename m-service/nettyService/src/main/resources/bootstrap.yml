@@ -1,0 +1,46 @@
+#==========================swagger 访问接口==================================
+#           http://${ip}:10131/swagger-ui/index.html                      #
+#==========================================================================
+netty:
+  port: 20000
+spring:
+  ##################################################################################################
+  #                               nacos
+  #                           192.168.60.119:8848
+  #                           192.168.188.106:8848
+  ##################################################################################################
+  application:
+    name: nettyService
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.188.106:8848
+        namespace: cc8561c5-2d87-4db8-95fc-ddc0fb03e563
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        file-extension: yaml
+        prefix: ${spring.application.name}
+  profiles:
+    active: dev
+#####################################     zookeeper 服务器    ##############################################
+#                 enable 是否启用zookeeper 注册
+#                 新版集群已废弃zookeeper 模式,变更为nginx 1.19.x
+###########################################################################################################
+zookeeper:
+  enable: false
+  address: 192.168.60.119:2181
+  timeout: 4000
+############################################################################################
+#                               调试选项(热加载)
+#                path:  路径
+#                maxHistory:   本地打印保存时间
+#                output.level: INFO  本地打印级别   （打印大于或等于该级别，false 不打印）
+#                kafka.level: INFO  kafka统一收集级别 （打印大于或等于该级别，false 不打印）
+#############################################################################################
+output.level: false
+kafka.level: false
+logger:
+  topic: logger
+  path: ${spring.application.name}
+  maxHistory: 30

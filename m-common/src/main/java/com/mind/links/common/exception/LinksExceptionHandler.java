@@ -1,14 +1,12 @@
 package com.mind.links.common.exception;
 
-import com.mind.links.common.enums.LinksExceptionEnum;
 import com.mind.links.common.response.ResponseResult;
+import com.mind.links.common.enums.LinksExceptionEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
