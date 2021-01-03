@@ -23,6 +23,30 @@ spring:
         prefix: ${spring.application.name}
   profiles:
     active: dev
+  ##################################  kafka   ##################################################
+  #  虚拟机 192.168.60.119:9092
+  #
+  #############################################################################################
+  kafka:
+    bootstrap-servers: 192.168.188.126:9092
+    producer:
+      # 每次批量发送消息的数量
+      batch-size: 16
+      # 缓存容量
+      buffer-memory: 33554432
+      #设置大于0的值，则客户端会将发送失败的记录重新发送
+      retries: 0
+      # 指定消息key和消息体的编解码方式 UTF-8
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    listener:
+      type: batch
+      #      并发连接池
+      concurrency: 5
+      #消费监听接口监听的主题不存在时，默认会报错
+      missing-topics-fatal: false
+    consumer:
+      max-poll-records: 100
 #####################################     zookeeper 服务器    ##############################################
 #                 enable 是否启用zookeeper 注册
 #                 新版集群已废弃zookeeper 模式,变更为nginx 1.19.x

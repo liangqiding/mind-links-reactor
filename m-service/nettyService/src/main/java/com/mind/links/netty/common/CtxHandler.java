@@ -20,8 +20,8 @@ public class CtxHandler {
     public static Mono<HashMap<String, Object>> getMsgMap(ChannelHandlerContext ctx) {
         final HashMap<String, Object> msgMap = new HashMap<>(2 << 1);
         return Mono.just(ctx).map(ctx0 -> {
-            final InetSocketAddress inSocket = (InetSocketAddress) ctx.channel().remoteAddress();
-            msgMap.put("channelId", ctx.channel().id().asLongText());
+            final InetSocketAddress inSocket = (InetSocketAddress) ctx0.channel().remoteAddress();
+            msgMap.put("channelId", ctx0.channel().id().asLongText());
             msgMap.put("ip", inSocket.getAddress().getHostAddress());
             msgMap.put("port", inSocket.getPort());
             msgMap.put("connected", ConcurrentContext.CHANNEL_MAP.size());

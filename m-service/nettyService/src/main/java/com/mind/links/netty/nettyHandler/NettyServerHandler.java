@@ -2,9 +2,9 @@ package com.mind.links.netty.nettyHandler;
 
 import com.alibaba.fastjson.JSON;
 import com.mind.links.common.response.ResponseResult;
-import com.mind.links.common.utils.LinksDateUtils;
 import com.mind.links.netty.common.ConcurrentContext;
 import com.mind.links.netty.common.CtxHandler;
+import com.mind.links.netty.kafka.KafkaProducers;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
@@ -14,14 +14,13 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.ConnectableFlux;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
@@ -42,9 +41,22 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
     @ApiModelProperty("服务器端口")
     private static String port;
 
+    @ApiModelProperty("socket TOPIC")
+    private static final String SOCKET_TOPIC = "socket";
+
+    @ApiModelProperty("webSocket TOPIC")
+    private static final String WEB_SOCKET_TOPIC = "webSocket";
+
     @Value("${netty.port}")
     private void setPort(String p) {
         port = p;
+    }
+
+    private static KafkaProducers kafkaProducer;
+
+    @Autowired
+    public void setKafkaProducer(KafkaProducers k) {
+        kafkaProducer = k;
     }
 
     static {
@@ -69,7 +81,9 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
                 TextWebSocketFrame msgText = (TextWebSocketFrame) msg;
                 m.put("message", msgText.text());
                 m.put("netType", "webSocket");
+                m.put("event", "consume");
                 log.info(JSON.toJSONString(m));
+                kafkaProducer.send(WEB_SOCKET_TOPIC, JSON.toJSONString(m));
                 this.okReplyWebSocket(ctx);
             }
         }, Throwable::printStackTrace);
@@ -80,7 +94,9 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
                 String socketInfo = buff.toString(CharsetUtil.UTF_8).trim();
                 m.put("message", socketInfo);
                 m.put("netType", "socket");
+                m.put("event", "consume");
                 log.info(JSON.toJSONString(m));
+                kafkaProducer.send(SOCKET_TOPIC, JSON.toJSONString(m));
                 this.okReplySocket(ctx);
             }
         }, Throwable::printStackTrace);
@@ -109,7 +125,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
      * description：TODO socket 回复
      */
     public void okReplySocket(ChannelHandlerContext ctx) {
-        ctx.writeAndFlush(Unpooled.copiedBuffer(new ResponseResult<>(20000).getBytes()))
+        ctx.writeAndFlush(Unpooled.copiedBuffer(new ResponseResult<>("请求成功").getBytes()))
                 .addListeners((ChannelFutureListener) future -> {
                     if (!future.isSuccess()) {
                         future.cause().printStackTrace();

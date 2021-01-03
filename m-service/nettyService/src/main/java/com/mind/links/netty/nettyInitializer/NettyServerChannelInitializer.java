@@ -21,23 +21,14 @@ public class NettyServerChannelInitializer extends ChannelInitializer<SocketChan
 
     @Override
     protected void initChannel(SocketChannel channel) {
-
         NettyInitializerProperties nip = new NettyInitializerProperties();
-
-        ChannelPipeline pipeline = channel.pipeline();
-
-        pipeline.addLast(NettyInitializerProperties.CHANNEL_ACTIVE_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.CHANNEL_ACTIVE_HANDLER);
-
-        pipeline.addLast(NettyInitializerProperties.CHANNEL_INACTIVE_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.CHANNEL_INACTIVE_HANDLER);
-
-        pipeline.addLast(nip.socketChooseHandler.getClass().getSimpleName(), nip.socketChooseHandler);
-
-        pipeline.addLast(nip.idleStateHandler.getClass().getSimpleName(), nip.idleStateHandler);
-
-        pipeline.addLast(NettyInitializerProperties.NETTY_SERVER_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.NETTY_SERVER_HANDLER);
-
-        pipeline.addLast(NettyInitializerProperties.EXCEPTION_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.EXCEPTION_HANDLER);
-
+        channel.pipeline()
+                .addLast(NettyInitializerProperties.CHANNEL_ACTIVE_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.CHANNEL_ACTIVE_HANDLER)
+                .addLast(NettyInitializerProperties.CHANNEL_INACTIVE_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.CHANNEL_INACTIVE_HANDLER)
+                .addLast(nip.socketChooseHandler.getClass().getSimpleName(), nip.socketChooseHandler)
+                .addLast(nip.idleStateHandler.getClass().getSimpleName(), nip.idleStateHandler)
+                .addLast(NettyInitializerProperties.NETTY_SERVER_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.NETTY_SERVER_HANDLER)
+                .addLast(NettyInitializerProperties.EXCEPTION_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.EXCEPTION_HANDLER);
     }
 
     /**

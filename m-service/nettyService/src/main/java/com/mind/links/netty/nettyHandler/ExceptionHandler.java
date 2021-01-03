@@ -5,9 +5,11 @@ import com.mind.links.common.enums.LinksExceptionEnum;
 import com.mind.links.netty.common.ConcurrentContext;
 import com.mind.links.netty.common.CtxHandler;
 import io.netty.channel.*;
+import io.netty.util.concurrent.Future;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
 import java.net.SocketAddress;
 
 
@@ -30,24 +32,32 @@ public class ExceptionHandler extends ChannelDuplexHandler {
                 .subscribe(msgMap -> {
                     System.out.println();
                     if (LinksExceptionEnum.RECONNECTION.getMsg().equals(cause.getMessage())) {
-                        log.info("===触发重连===");
+                        msgMap.put("event", "重连");
+                        log.info(JSON.toJSONString(msgMap));
                         return;
                     }
                     cause.printStackTrace();
                     ctx.close();
-                    log.error("***连接异常,已断开连接:{}", JSON.toJSONString(msgMap));
-                    log.info("===连接通道数量: {}", ConcurrentContext.CHANNEL_MAP.size());
+                    msgMap.put("event", "全局异常");
+                    msgMap.put("error", cause);
+                    log.error(JSON.toJSONString(msgMap), cause);
                 });
     }
 
     @Override
-    public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception  {
+    public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception {
         ctx.connect(remoteAddress, localAddress, promise.addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) {
-                if (!future.isSuccess()) {
-                    log.error("***连接异常: ", future.cause());
-                }
+                Mono.just(future)
+                        .filter(channelFuture -> !channelFuture.isSuccess())
+                        .flatMap(f -> CtxHandler.getMsgMap(ctx))
+                        .subscribe(msgMap -> {
+                            System.out.println();
+                            msgMap.put("event", "连接异常");
+                            msgMap.put("error", future.cause());
+                            log.info(JSON.toJSONString(msgMap));
+                        });
             }
         }));
     }
@@ -55,9 +65,15 @@ public class ExceptionHandler extends ChannelDuplexHandler {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         ctx.write(msg, promise.addListener((ChannelFutureListener) future -> {
-            if (!future.isSuccess()) {
-                log.error("***消息发送异常: ", future.cause());
-            }
+            Mono.just(future)
+                    .filter(channelFuture -> !channelFuture.isSuccess())
+                    .flatMap(f -> CtxHandler.getMsgMap(ctx))
+                    .subscribe(msgMap -> {
+                        System.out.println();
+                        msgMap.put("event", "发送异常");
+                        msgMap.put("error", future.cause());
+                        log.info(JSON.toJSONString(msgMap));
+                    });
         }));
     }
 }

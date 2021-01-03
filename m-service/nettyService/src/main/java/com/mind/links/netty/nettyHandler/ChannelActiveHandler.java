@@ -29,12 +29,11 @@ public class ChannelActiveHandler extends ChannelInboundHandlerAdapter {
                 .subscribe(msgMap -> {
                     System.out.println();
                     if (ConcurrentContext.CHANNEL_MAP.containsKey(ctx.channel().id())) {
-                        log.info("===是已连接的:{}", JSON.toJSONString(msgMap));
+                        msgMap.put("event","已连接的");
                     } else {
                         ConcurrentContext.CHANNEL_MAP.put(ctx.channel().id(), ctx);
-                        log.info("===:{}", JSON.toJSONString(msgMap));
+                        msgMap.put("event","新的连接");
                     }
-                    log.info("===连接通道数量: {}" , ConcurrentContext.CHANNEL_MAP.size());
                 });
     }
 }
