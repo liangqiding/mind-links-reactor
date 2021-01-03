@@ -9,8 +9,6 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import java.net.InetSocketAddress;
-import java.util.HashMap;
 
 
 /**
@@ -21,8 +19,8 @@ import java.util.HashMap;
  * @version v1.0.0
  */
 @Component
-@ChannelHandler.Sharable
 @Slf4j
+@ChannelHandler.Sharable
 public class ChannelActiveHandler extends ChannelInboundHandlerAdapter {
 
     @Override

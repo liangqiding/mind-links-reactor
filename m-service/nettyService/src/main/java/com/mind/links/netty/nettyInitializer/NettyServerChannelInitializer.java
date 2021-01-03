@@ -1,10 +1,6 @@
 package com.mind.links.netty.nettyInitializer;
 
-import com.mind.links.netty.nettyHandler.ChannelActiveHandler;
-import com.mind.links.netty.nettyHandler.ChannelInactiveHandler;
-import com.mind.links.netty.nettyHandler.NettyServerHandler;
-import com.mind.links.netty.nettyHandler.SocketChooseHandler;
-import io.netty.channel.ChannelHandler;
+import com.mind.links.netty.nettyHandler.*;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -15,55 +11,59 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * Netty获取、发送数据及处理
+ * Netty编码解码器
  *
  * @author qiding
  */
 @ApiModel("编码解码器")
 @Component
-
 public class NettyServerChannelInitializer extends ChannelInitializer<SocketChannel> {
 
-
-    @ApiModelProperty("心跳机制")
-    volatile IdleStateHandler idleStateHandler= new IdleStateHandler(60, 0, 0);
-
-    @ApiModelProperty("通道主动处理程序")
-    volatile ChannelActiveHandler channelActiveHandler= new ChannelActiveHandler();
-
-    @ApiModelProperty("频道无效的处理程序")
-    volatile ChannelInactiveHandler channelInactiveHandler= new ChannelInactiveHandler();
-
-    @ApiModelProperty("协议选择处理程序")
-    volatile SocketChooseHandler socketChooseHandler= new SocketChooseHandler();
-
-    @ApiModelProperty("IO处理程序")
-    volatile NettyServerHandler nettyServerHandler= new NettyServerHandler();
-
-
     @Override
-    protected void initChannel(SocketChannel channel) throws Exception {
-        this.init();
+    protected void initChannel(SocketChannel channel) {
+
+        NettyInitializerProperties nip = new NettyInitializerProperties();
 
         ChannelPipeline pipeline = channel.pipeline();
 
-        pipeline.addLast(idleStateHandler.getClass().getSimpleName(), idleStateHandler);
+        pipeline.addLast(NettyInitializerProperties.CHANNEL_ACTIVE_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.CHANNEL_ACTIVE_HANDLER);
 
-        pipeline.addLast(channelActiveHandler.getClass().getSimpleName(), channelActiveHandler);
+        pipeline.addLast(NettyInitializerProperties.CHANNEL_INACTIVE_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.CHANNEL_INACTIVE_HANDLER);
 
-        pipeline.addLast(channelInactiveHandler.getClass().getSimpleName(), channelInactiveHandler);
+        pipeline.addLast(nip.socketChooseHandler.getClass().getSimpleName(), nip.socketChooseHandler);
 
-        pipeline.addLast(socketChooseHandler.getClass().getSimpleName(), socketChooseHandler);
+        pipeline.addLast(nip.idleStateHandler.getClass().getSimpleName(), nip.idleStateHandler);
 
-        channel.pipeline().addLast(nettyServerHandler.getClass().getSimpleName(), nettyServerHandler);
+        pipeline.addLast(NettyInitializerProperties.NETTY_SERVER_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.NETTY_SERVER_HANDLER);
+
+        pipeline.addLast(NettyInitializerProperties.EXCEPTION_HANDLER.getClass().getSimpleName(), NettyInitializerProperties.EXCEPTION_HANDLER);
+
     }
 
-    private  void init() {
-        this.idleStateHandler = new IdleStateHandler(60, 0, 0);
-        this.channelActiveHandler = new ChannelActiveHandler();
-        this.channelInactiveHandler = new ChannelInactiveHandler();
-        this.socketChooseHandler = new SocketChooseHandler();
-        this.nettyServerHandler = new NettyServerHandler();
+    /**
+     * 为了最大程度地减少对象的创建
+     */
+    @ApiModel("通用编码解码器配置")
+    public static class NettyInitializerProperties {
+
+        @ApiModelProperty("心跳机制(多例)")
+        volatile IdleStateHandler idleStateHandler = new IdleStateHandler(60, 0, 0);
+
+        @ApiModelProperty("协议选择处理程序(多例)")
+        volatile SocketChooseHandler socketChooseHandler = new SocketChooseHandler();
+
+        @ApiModelProperty("通道主动处理程序(单例)")
+        private final static ChannelActiveHandler CHANNEL_ACTIVE_HANDLER = new ChannelActiveHandler();
+
+        @ApiModelProperty("频道无效的处理程序(单例)")
+        private final static ChannelInactiveHandler CHANNEL_INACTIVE_HANDLER = new ChannelInactiveHandler();
+
+        @ApiModelProperty("IO处理程序(单例)")
+        private final static NettyServerHandler NETTY_SERVER_HANDLER = new NettyServerHandler();
+
+        @ApiModelProperty("异常处理程序(单例)")
+        private final static ExceptionHandler EXCEPTION_HANDLER = new ExceptionHandler();
+
     }
 }
 

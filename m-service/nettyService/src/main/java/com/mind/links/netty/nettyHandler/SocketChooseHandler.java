@@ -3,13 +3,14 @@ package com.mind.links.netty.nettyHandler;
 import com.mind.links.common.context.SpringBeanFactory;
 import com.mind.links.netty.nettyConfig.WebSocketPipeline;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ import java.util.List;
  */
 @Component
 @ApiModel("协议选择器")
+@Slf4j
 public class SocketChooseHandler extends ByteToMessageDecoder {
 
     @ApiModelProperty("协议最大长度")
@@ -35,7 +37,6 @@ public class SocketChooseHandler extends ByteToMessageDecoder {
         String protocol = getBufStart(in);
         if (protocol.startsWith(WEB_SOCKET_PREFIX)) {
             SpringBeanFactory.getBean(WebSocketPipeline.class).webSocketPipelineAdd(ctx);
-            //对于 webSocket ，不设置超时断开
             ctx.pipeline().remove(IdleStateHandler.class);
         }
         in.resetReaderIndex();

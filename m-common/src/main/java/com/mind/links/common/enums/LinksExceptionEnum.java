@@ -31,6 +31,7 @@ public enum LinksExceptionEnum {
     ARITHMETIC_EXCEPTION(30507, "算术异常"),
     SERVER_WEB_INPUT_EXCEPTION(30508, "缺少必要的请求参数"),
     HTTP_REQUEST_METHOD_ERROR(30509, "不支持的请求类型"),
+    RECONNECTION(30000, "尝试重连"),
     SYSTEM_ERROR(-1, "系统异常"),
     OTHER_ERROR(-200, "未知异常");
 
@@ -46,6 +47,10 @@ public enum LinksExceptionEnum {
 
     public Integer getCode() {
         return code;
+    }
+
+    public String getMsg() {
+        return msg;
     }
 
 
