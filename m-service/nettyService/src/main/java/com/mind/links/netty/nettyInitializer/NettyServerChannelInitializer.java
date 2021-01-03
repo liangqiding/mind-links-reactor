@@ -2,7 +2,6 @@ package com.mind.links.netty.nettyInitializer;
 
 import com.mind.links.netty.nettyHandler.*;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.swagger.annotations.ApiModel;

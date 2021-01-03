@@ -38,13 +38,4 @@ public final class SpringBeanFactory implements ApplicationContextAware {
         CONTENT = applicationContext;
     }
 
-    /**
-     * 注册Bean
-     */
-    public void registerBean(Class<?> cl) {
-        ConfigurableApplicationContext context = (ConfigurableApplicationContext) SpringBeanFactory.CONTENT;
-        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
-        BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(cl);
-        beanFactory.registerBeanDefinition(cl.getName(), beanDefinitionBuilder.getBeanDefinition());
-    }
 }

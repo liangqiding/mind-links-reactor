@@ -12,7 +12,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class LinksException extends RuntimeException {
+
     private Integer code;
+
     private String msg;
 
     public LinksException(Integer code, String msg){

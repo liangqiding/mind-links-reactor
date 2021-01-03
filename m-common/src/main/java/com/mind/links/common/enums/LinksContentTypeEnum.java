@@ -25,6 +25,7 @@ public enum LinksContentTypeEnum {
 
     @ApiModelProperty("文件后缀")
     private final String suffix;
+
     @ApiModelProperty("ContentType值")
     private final String headers;
 
@@ -46,7 +47,6 @@ public enum LinksContentTypeEnum {
                 .ifPresent(s ->
                         Arrays.stream(values())
                                 .filter(e -> (s.toLowerCase()).contains(e.suffix))
-                                .forEach(e -> headers.put("Content-Type", e.headers))
-                );
+                                .forEach(e -> headers.put("Content-Type", e.headers)));
     }
 }

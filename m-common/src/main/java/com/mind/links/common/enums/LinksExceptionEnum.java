@@ -37,6 +37,7 @@ public enum LinksExceptionEnum {
 
     @ApiModelProperty("状态码")
     private final Integer code;
+
     @ApiModelProperty("消息")
     private final String msg;
 

@@ -1,9 +1,8 @@
 package com.mind.links.netty.nettyHandler;
 
 import com.mind.links.common.context.SpringBeanFactory;
-import com.mind.links.netty.nettyConfig.WebSocketPipeline;
+import com.mind.links.netty.nettyInitializer.WebSocketPipeline;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -48,7 +47,6 @@ public class SocketChooseHandler extends ByteToMessageDecoder {
         if (length > MAX_LENGTH) {
             length = MAX_LENGTH;
         }
-
         // 标记读位置
         in.markReaderIndex();
         byte[] content = new byte[length];

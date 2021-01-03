@@ -67,10 +67,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
             e.printStackTrace();
         }
     }
-
-    int i = 0;
-
-
+    
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
 
