@@ -1,7 +1,6 @@
 package com.mind.links.common.response;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.mind.links.common.enums.LinksExceptionEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel("公共响应体")
-public class ResponseResult<T> implements WebFluxResponse, NettyResponse, Serializable {
+public class ResponseResult<T> implements Serializable {
 
     private static final long serialVersionUID = -1L;
 
@@ -22,11 +21,41 @@ public class ResponseResult<T> implements WebFluxResponse, NettyResponse, Serial
     private Integer code = LinksExceptionEnum.OK.getCode();
 
     @ApiModelProperty("操作反馈")
-    private String message=LinksExceptionEnum.OK.getMsg();
+    private String message = LinksExceptionEnum.OK.getMsg();
 
     @ApiModelProperty("响应内容")
     private T data;
 
+    /**
+     * webFlux 下的通用返回
+     */
+    public static <T> Mono<ResponseResult<T>> transform(Mono<T> response) {
+        return ((WebFluxResponse<T>) r -> r).transform(response);
+    }
+
+    public static <T> Mono<ResponseResult<T>> transform(Integer code, Mono<T> response) {
+        return ((WebFluxResponse<T>) r -> r).transform(code, response);
+    }
+
+    public static <T> Mono<ResponseResult<T>> transform(Integer code, String message, Mono<T> response) {
+        return ((WebFluxResponse<T>) r -> r).transform(code, message, response);
+    }
+
+    /**
+     * netty 服务临时通用返回
+     */
+
+    public byte[] getBytes() {
+        return ((NettyResponse<T>) o -> o).getBytes(this.code, this.message, this.data);
+    }
+
+    public String toJsonString() {
+        return ((NettyResponse<T>) o -> o).toJsonString(this.code, this.message, this.data);
+    }
+
+    /**
+     * http默认构造
+     */
     public ResponseResult() {
         super();
     }
@@ -60,41 +89,5 @@ public class ResponseResult<T> implements WebFluxResponse, NettyResponse, Serial
         this.code = code;
         this.message = message;
         this.data = data;
-    }
-
-
-    /**
-     * webFlux 下的通用返回
-     */
-    public static <T> Mono<ResponseResult<T>> transform(Mono<T> response) {
-        return transform(LinksExceptionEnum.OK.getCode(), LinksExceptionEnum.OK.getMsg(), response);
-    }
-
-    public static <T> Mono<ResponseResult<T>> transform(Integer code, Mono<T> response) {
-        return transform(code, LinksExceptionEnum.getMsgByCode(code), response);
-    }
-
-    public static <T> Mono<ResponseResult<T>> transform(Integer code, String message, Mono<T> response) {
-        return response.map(data -> {
-            final ResponseResult<T> rw = new ResponseResult<T>();
-            rw.setData(data);
-            rw.setCode(code);
-            rw.setMessage(message);
-            return rw;
-        });
-    }
-
-    @Override
-    public byte[] getBytes() {
-        return this.toJsonString().getBytes();
-    }
-
-    @Override
-    public String toJsonString() {
-        JSONObject response = new JSONObject();
-        response.put("code", this.code);
-        response.put("message", this.message);
-        response.put("data", this.data);
-        return response.toJSONString();
     }
 }

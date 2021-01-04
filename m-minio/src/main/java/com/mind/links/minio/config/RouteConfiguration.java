@@ -1,5 +1,7 @@
 package com.mind.links.minio.config;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -20,12 +22,25 @@ import reactor.core.publisher.Mono;
  * @author qiding
  */
 @Configuration
+@ApiModel("跨域配置")
 public class RouteConfiguration {
+    @ApiModelProperty("允许的请求头字段")
     private static final String ALLOWED_HEADERS = "*";
+
+    @ApiModelProperty("允许的请求类型")
     private static final String ALLOWED_METHODS = "*";
+
+    @ApiModelProperty("指定允许其他域名访问")
     private static final String ALLOWED_ORIGIN = "*";
+
+    @ApiModelProperty("允许的来源")
     private static final String ALLOWED_EXPOSE = "*";
+
+    @ApiModelProperty("预检结果缓存时间")
     private static final String MAX_AGE = "18000L";
+
+    @ApiModelProperty("是否允许后续请求携带认证信息（cookies）,该值只能是true,否则不返回")
+    private static final String ALLOW_CREDENTIALS = "true";
 
     @Bean
     public WebFilter corsFilter() {
@@ -39,7 +54,7 @@ public class RouteConfiguration {
                 headers.add("Access-Control-Max-Age", MAX_AGE);
                 headers.add("Access-Control-Allow-Headers", ALLOWED_HEADERS);
                 headers.add("Access-Control-Expose-Headers", ALLOWED_EXPOSE);
-                headers.add("Access-Control-Allow-Credentials", "true");
+                headers.add("Access-Control-Allow-Credentials", ALLOW_CREDENTIALS);
                 if (request.getMethod() == HttpMethod.OPTIONS) {
                     response.setStatusCode(HttpStatus.OK);
                     return Mono.empty();

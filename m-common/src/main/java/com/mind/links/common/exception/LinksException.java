@@ -2,6 +2,8 @@ package com.mind.links.common.exception;
 
 
 import com.mind.links.common.enums.LinksExceptionEnum;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 /**
@@ -11,10 +13,13 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@ApiModel("自定义异常")
 public class LinksException extends RuntimeException {
 
+    @ApiModelProperty("错误码")
     private Integer code;
 
+    @ApiModelProperty("错误反馈")
     private String msg;
 
     public LinksException(Integer code, String msg){

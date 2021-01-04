@@ -14,12 +14,10 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -67,7 +65,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
             e.printStackTrace();
         }
     }
-    
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
 

@@ -16,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class NettyLinksApplication implements ApplicationRunner {
+
     @Autowired
     NettyServer nettyServer;
 

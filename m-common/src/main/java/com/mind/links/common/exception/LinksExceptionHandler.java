@@ -59,23 +59,6 @@ public class LinksExceptionHandler {
         return new ResponseResult<>(40000);
     }
 
-    public static Integer errorHandlers(Exception ex) {
-        if (ex instanceof DataAccessException) {
-            return 30502;
-        } else if (ex instanceof ValidationException) {
-            return 30503;
-        } else if (ex instanceof BindException) {
-            return 30504;
-        } else if (ex instanceof NullPointerException) {
-            return 30506;
-        } else if (ex instanceof ArithmeticException) {
-            return 30507;
-        } else if (ex instanceof ServerWebInputException) {
-            return 30508;
-        }
-        return 40000;
-    }
-
     public static ResponseResult<String> validExceptionHandler(BindException ex) {
         StringBuilder stringBuffer = new StringBuilder();
         Optional.of(ex.getBindingResult())

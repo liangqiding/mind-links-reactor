@@ -2,6 +2,8 @@ package com.mind.links.logger.handler.aopLog;
 
 import com.alibaba.fastjson.JSON;
 import com.mind.links.common.exception.LinksException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.Producer;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -16,12 +18,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 
 /**
@@ -36,13 +41,14 @@ import java.util.Map;
 @Aspect
 @Component
 @Lazy(false)
+@Slf4j
 public class CustomAspect {
 
     @Value("${server.port:}")
     private String port;
 
     @Value("${netty.port:}")
-    private String NettyPort;
+    private String nettyPort;
 
     private static String IP;
 
@@ -51,14 +57,13 @@ public class CustomAspect {
             IP = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
             e.printStackTrace();
+            IP = "Unknown";
         }
     }
 
     public CustomAspect() {
-        logger.info("=== com.mind.links.logger.handler.aopLog  实例化成功=====================================");
+        log.info("=== com.mind.links.logger.handler.aopLog  实例化成功=====================================");
     }
-
-    private final Logger logger = LoggerFactory.getLogger(CustomAspect.class);
 
     @Pointcut("@annotation(com.mind.links.logger.handler.aopLog.CustomAopHandler)")
     private void cutMethod() {
@@ -92,9 +97,9 @@ public class CustomAspect {
      */
     @AfterThrowing(value = "cutMethod()", throwing = "ex")
     public void afterThrowing(JoinPoint joinPoint, RuntimeException ex) throws NoSuchMethodException {
-        Map<String, Object> requestInfo = this.getRequestInfo(((ProceedingJoinPoint) joinPoint));
-        requestInfo.put("error", ex.getMessage());
-        logger.error("***" + JSON.toJSONString(requestInfo));
+        Mono.fromCallable(() -> this.getRequestInfo(((ProceedingJoinPoint) joinPoint)))
+                .map(map0 -> map0.put("error", ex.getMessage()))
+                .subscribe(map0 -> log.error(JSON.toJSONString(map0)));
     }
 
     /**
@@ -105,9 +110,9 @@ public class CustomAspect {
      */
     @Around("cutMethod()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        CustomAopHandler customAopHandler = getDeclaredAnnotation(joinPoint);
-        Map<String, Object> parameters = this.getParameters(joinPoint);
-        Map<String, Object> requestInfo = this.getRequestInfo(joinPoint, customAopHandler, parameters);
+        final CustomAopHandler customAopHandler = getDeclaredAnnotation(joinPoint);
+        final Map<String, Object> parameters = this.getParameters(joinPoint);
+        final Map<String, Object> requestInfo = this.getRequestInfo(joinPoint, customAopHandler, parameters);
         // 是否检查分页参数
         if (customAopHandler.checkPage()) {
             this.checkPage(parameters.get("pageNumber").toString(), parameters.get("pageSize").toString());
@@ -118,7 +123,7 @@ public class CustomAspect {
         // 是否生成日记
         if (customAopHandler.log()) {
             requestInfo.put("executionTime", (end - start) + "ms");
-            logger.info("###" + JSON.toJSONString(requestInfo));
+            log.info(JSON.toJSONString(requestInfo));
         }
         return proceed;
     }
@@ -140,7 +145,7 @@ public class CustomAspect {
         Map<String, Object> requestMaps = getParameters(joinPoint);
         requestMaps.put("model", customAopHandler.module());
         requestMaps.put("desc", customAopHandler.desc());
-        requestMaps.put("port", port+NettyPort);
+        requestMaps.put("port", port + nettyPort);
         requestMaps.put("ip", IP);
         try {
             String targetName = joinPoint.getTarget().getClass().getName();
@@ -180,8 +185,7 @@ public class CustomAspect {
                 || pageSize == null
                 || ("").equals(pageSize)
                 || !pageNumber.matches(".*[0-9].*")
-                || !pageSize.matches(".*[0-9].*"))
-        {
+                || !pageSize.matches(".*[0-9].*")) {
             throw new LinksException(30506, "请检查分页参数是否完整");
         }
     }
@@ -209,8 +213,12 @@ public class CustomAspect {
     }
 
     @Configuration
-    @ConditionalOnProperty(name = "port",prefix = "enable",havingValue = "true")
+    @ConditionalOnProperty(name = "port", prefix = "enable", havingValue = "true")
     public static class LinksEnvironment {
-        public static String port;
+
+        public static void main(String[] args) {
+            Object apply = ((Function<Object, Object>) o -> o).apply(66666);
+            System.out.println(apply);
+        }
     }
 }

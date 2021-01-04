@@ -11,6 +11,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
+ * 获取 SpringBeanFactory
+ *
  * @author qiding
  */
 @Component
