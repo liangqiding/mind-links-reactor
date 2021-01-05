@@ -25,8 +25,8 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
     private static MessageHandlerImpl messageHandler;
 
     @Autowired
-    public void setMessageHandler(MessageHandlerImpl m) {
-        messageHandler = m;
+    public void setMessageHandler(MessageHandlerImpl mh) {
+        messageHandler = mh;
     }
 
     @Override
