@@ -162,7 +162,7 @@ public class MinioUtils implements MinioUtil {
         return Mono.fromCallable(() -> {
             minioClient.removeObject(RemoveObjectArgs
                     .builder()
-                    .bucket("bucketName")
+                    .bucket(bucketName)
                     .object(minIoPathName)
                     .build()
             );

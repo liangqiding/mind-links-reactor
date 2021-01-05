@@ -15,6 +15,7 @@ import reactor.test.StepVerifier;
  * @version v1.0.0
  */
 public class NettyLinksApplicationTest {
+
     @Test
     public void testSplitPathIsUsed() {
         System.out.println("11111");

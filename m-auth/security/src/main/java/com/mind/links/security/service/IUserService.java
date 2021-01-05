@@ -1,6 +1,6 @@
 package com.mind.links.security.service;
 
-import com.mind.links.security.domain.User;
+import com.mind.links.security.domain.MyUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -13,6 +13,6 @@ import java.util.List;
  * @author qiDing
  * @since 2020-12-09
  */
-public interface IUserService extends IService<User> {
-    List<User> listUsers(Long id);
+public interface IUserService extends IService<MyUser> {
+    List<MyUser> listUsers(Long id);
 }

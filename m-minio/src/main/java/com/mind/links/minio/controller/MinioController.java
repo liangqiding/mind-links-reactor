@@ -84,5 +84,4 @@ public class MinioController {
         response.getHeaders().set("Content-Disposition", "attachment;fileName=" + filename);
         return minioUtils.getFile(bucketName, filePath);
     }
-
 }

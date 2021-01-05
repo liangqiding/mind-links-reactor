@@ -23,6 +23,6 @@ public class KafkaProducers {
      * description：TODO kafka 提供者
      */
     public void send(String topic, Object o) {
-        Mono.just(o).map(o0 -> kafkaTemplate.send(topic, o0)).subscribe();
+        Mono.fromCallable(() -> kafkaTemplate.send(topic, o)).subscribe();
     }
 }

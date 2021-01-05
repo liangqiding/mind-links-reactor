@@ -4,7 +4,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -18,6 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConcurrentContext {
 
     @ApiModelProperty("管理一个全局map，保存连接进服务端的通道数量")
-    public static final ConcurrentHashMap<ChannelId, ChannelHandlerContext> CHANNEL_MAP = new ConcurrentHashMap<>(2 << 5);
+    public static final ConcurrentHashMap<ChannelId, ChannelHandlerContext> CHANNEL_MAP = new ConcurrentHashMap<>(2 << 4);
 
 }

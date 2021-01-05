@@ -5,6 +5,7 @@ import com.mind.links.common.enums.LinksExceptionEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import reactor.core.publisher.Mono;
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel("公共响应体")
+@Accessors(chain = true)
 public class ResponseResult<T> implements Serializable {
 
     private static final long serialVersionUID = -1L;
@@ -42,10 +44,10 @@ public class ResponseResult<T> implements Serializable {
     }
 
     /**
-     * netty 服务临时通用返回
+     * netty 服务（临时）通用返回
      */
 
-    public byte[] getBytes() {
+    public byte[] toBytes() {
         return ((NettyResponse<T>) o -> o).getBytes(this.code, this.message, this.data);
     }
 

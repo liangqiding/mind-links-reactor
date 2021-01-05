@@ -1,6 +1,6 @@
 package com.mind.links.netty.security;
 
-import com.mind.links.security.domain.User;
+import com.mind.links.security.domain.MyUser;
 import com.mind.links.security.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ class SecurityApplicationTest {
 
     @Test
      void test() {
-        List<User> list = userService.list();
+        List<MyUser> list = userService.list();
         System.out.println(list);
     }
 }

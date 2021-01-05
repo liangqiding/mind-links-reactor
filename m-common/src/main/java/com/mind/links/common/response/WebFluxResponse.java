@@ -15,7 +15,7 @@ public interface WebFluxResponse<T> {
      * 接受一个响应的值
      *
      * @param t response 响应的值
-     * @return Mono<ResponseResult<T>>
+     * @return Mono<ResponseResult < T>>
      */
     T apply(T t);
 
@@ -36,7 +36,7 @@ public interface WebFluxResponse<T> {
      * @param response 异步序列
      * @return Mono<ResponseResult < T>>
      */
-    default  Mono<ResponseResult<T>> transform(Integer code, Mono<T> response) {
+    default Mono<ResponseResult<T>> transform(Integer code, Mono<T> response) {
         return transform(code, LinksExceptionEnum.getMsgByCode(code), response);
     }
 
@@ -49,13 +49,7 @@ public interface WebFluxResponse<T> {
      * @return Mono<ResponseResult < T>>
      */
     default Mono<ResponseResult<T>> transform(Integer code, String message, Mono<T> response) {
-        return response.map(data -> {
-            final ResponseResult<T> rw = new ResponseResult<T>();
-            rw.setData(data);
-            rw.setCode(code);
-            rw.setMessage(message);
-            return rw;
-        });
+        return response.map(data -> new ResponseResult<T>().setData(data).setCode(code).setMessage(message));
     }
 
 }

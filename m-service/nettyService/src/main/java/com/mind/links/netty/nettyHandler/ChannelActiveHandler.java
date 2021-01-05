@@ -25,15 +25,20 @@ public class ChannelActiveHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        Mono.just(ctx).flatMap(CtxHandler::getMsgMap)
-                .subscribe(msgMap -> {
-                    System.out.println();
+        Mono.just(ctx)
+                .flatMap(CtxHandler::getMsgMap)
+                .map(msgMap -> {
                     if (ConcurrentContext.CHANNEL_MAP.containsKey(ctx.channel().id())) {
-                        msgMap.put("event","已连接的");
+                        msgMap.put("event", "已连接的");
                     } else {
                         ConcurrentContext.CHANNEL_MAP.put(ctx.channel().id(), ctx);
-                        msgMap.put("event","新的连接");
+                        msgMap.put("event", "新的连接");
                     }
+                    return msgMap;
+                })
+                .subscribe(msgMap -> {
+                    System.out.println();
+                    log.info(JSON.toJSONString(msgMap));
                 });
     }
 }

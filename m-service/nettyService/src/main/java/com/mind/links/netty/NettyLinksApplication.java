@@ -28,4 +28,5 @@ public class NettyLinksApplication implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         nettyServer.start();
     }
+
 }

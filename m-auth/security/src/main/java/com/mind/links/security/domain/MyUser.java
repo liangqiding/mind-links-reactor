@@ -2,12 +2,14 @@ package com.mind.links.security.domain;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.io.Serializable;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * <p>
@@ -20,7 +22,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class User extends Model<User> {
+public class MyUser {
 
     private static final long serialVersionUID = 1L;
 
@@ -59,9 +61,5 @@ public class User extends Model<User> {
     private Boolean enable;
 
 
-    @Override
-    protected Serializable pkVal() {
-        return this.userId;
-    }
 
 }

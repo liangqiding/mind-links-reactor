@@ -3,7 +3,7 @@
 <mapper namespace="com.mind.links.security.dao.UserMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.mind.links.security.domain.User">
+    <resultMap id="BaseResultMap" type="com.mind.links.security.domain.MyUser">
         <id column="user_id" property="userId" />
         <result column="username" property="username" />
         <result column="password" property="password" />
