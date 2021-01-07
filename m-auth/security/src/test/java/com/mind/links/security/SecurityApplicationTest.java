@@ -1,12 +1,12 @@
-package com.mind.links.netty.security;
+package com.mind.links.security;
 
-import com.mind.links.security.domain.MyUser;
+
 import com.mind.links.security.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
 
 /**
  * description : TODO
@@ -15,14 +15,19 @@ import java.util.List;
  * date: 2020-12-08 15:22
  * @version v1.0.0
  */
-@SpringBootTest
-class SecurityApplicationTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class SecurityApplicationTest {
+
     @Autowired
     private UserServiceImpl userService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     @Test
      void test() {
-        List<MyUser> list = userService.list();
-        System.out.println(list);
+        String encode = passwordEncoder.encode("123456");
+        System.out.println(encode);
     }
+
 }

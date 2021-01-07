@@ -17,11 +17,11 @@ import java.util.List;
  * @since 2020-12-09
  */
 @Service
-@CacheConfig(cacheNames = "user")
+//@CacheConfig(cacheNames = "user")
 public class UserServiceImpl extends ServiceImpl<UserMapper, MyUser> implements IUserService {
 
     @Override
-    @Cacheable(key = "#root.methodName+'-'+#p0")
+//    @Cacheable(key = "#root.methodName+'-'+#p0")
     public List<MyUser> listUsers(Long id) {
         return list();
     }

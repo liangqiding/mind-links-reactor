@@ -55,6 +55,43 @@ spring:
     useGlobalDataSourceStat: true
     #通过connectProperties属性来打开mergeSql功能；慢SQL记录
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  ##################################  kafka   ##################################################
+  #  虚拟机 192.168.60.119:9092
+  #        192.168.188.126:9092
+  #############################################################################################
+  kafka:
+    bootstrap-servers: 192.168.188.126:9092
+    producer:
+      # 每次批量发送消息的数量
+      batch-size: 16
+      # 缓存容量
+      buffer-memory: 33554432
+      #设置大于0的值，则客户端会将发送失败的记录重新发送
+      retries: 0
+      # 指定消息key和消息体的编解码方式 UTF-8
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    listener:
+      type: batch
+      #      并发连接池
+      concurrency: 5
+      #消费监听接口监听的主题不存在时，默认会报错
+      missing-topics-fatal: false
+    consumer:
+      max-poll-records: 100
+#################################################################################################
+    #   redis
+#################################################################################################
+
+  redis:
+    database: 11
+    host: 192.168.188.104
+    password: NXMz5MpQ8BTTQ4wRPTk7
+    port: 6379
+    jedis:
+      pool:
+        max-idle: 8
+        min-idle: 0
   ##################################################################################################
   #                               redis
   #
@@ -116,5 +153,9 @@ logger:
   path: ${spring.application.name}
   maxHistory: 30
 # 是否打印数据库语句查询情况 debug  or false
-logging.level:
-  com.i2dsp.data.dao: debug
+logging:
+  level:
+    com.mind.links.security: DEBUG
+    org.springframework.security: DEBUG
+    com.adeliosys: DEBUG
+    com.i2dsp.data.dao: debug

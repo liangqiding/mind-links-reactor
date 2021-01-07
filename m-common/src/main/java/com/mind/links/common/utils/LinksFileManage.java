@@ -25,9 +25,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class LinksFileManage {
 
     /**
-     * @author ：qiDing
      * @date ：Created in 2020/12/29 11:23
-     * description：TODO 检查路径是否完整，自动补全/  修复
+     * description： 检查路径是否完整，自动补全/  修复
      */
     public static String checkPathAndRepair(String path) {
         // 以 / 结尾
@@ -46,8 +45,7 @@ public class LinksFileManage {
     }
 
     /**
-     * @author 梁其定
-     * Description //TODO 删除指定目录下所有目录及文件
+     * Description  删除指定目录下所有目录及文件
      * @date 9:16 2020/7/14 0014
      **/
     public static void deleteDirAndFileAll(String path) {
@@ -79,9 +77,8 @@ public class LinksFileManage {
     }
 
     /**
-     * @author ：qiDing
      * @date ：Created in 2019/10/07 上午10:46
-     * description：TODO ``删除单个文件
+     * description： 删除单个文件
      */
     public static boolean delFileOne(String path) {
         File file = new File(path);
@@ -106,8 +103,7 @@ public class LinksFileManage {
     }
 
     /**
-     * @author 梁其定
-     * Description //TODO 创建目录
+     * Description  创建目录
      * @date 9:17 2020/4/14 0014
      **/
     public static void fileMkdirs(File file) {
@@ -160,4 +156,6 @@ public class LinksFileManage {
     public static String getFileSuffix(String p) {
         return p.substring(p.lastIndexOf(".") + 1);
     }
+
+
 }

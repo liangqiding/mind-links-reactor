@@ -46,7 +46,6 @@ public class MessageHandlerImpl implements MessageHandler {
     @Override
     public Mono<HashMap<String, Object>> socketHandler(HashMap<String, Object> hashMap, ChannelHandlerContext ctx, Object msg) {
         return Mono.just(hashMap)
-                .flatMap(o -> Mono.just(hashMap)
                         .map(msgMap -> {
                             if (!(msg instanceof TextWebSocketFrame)){
                                 ByteBuf buff = (ByteBuf) msg;
@@ -58,7 +57,7 @@ public class MessageHandlerImpl implements MessageHandler {
                                 okReplySocket(ctx);
                             }
                             return msgMap;
-                        }));
+                        });
     }
 
     @Override

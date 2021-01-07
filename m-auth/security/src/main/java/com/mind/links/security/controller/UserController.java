@@ -1,6 +1,5 @@
 package com.mind.links.security.controller;
 
-import com.mind.links.logger.handler.aopLog.CustomAopHandler;
 import com.mind.links.common.response.ResponseResult;
 import com.mind.links.security.domain.MyUser;
 import com.mind.links.security.service.impl.UserServiceImpl;
@@ -25,7 +24,6 @@ public class UserController {
     private UserServiceImpl userService;
 
     @GetMapping("/")
-    @CustomAopHandler(log = true,module = "user",desc = "用户查询")
     public ResponseResult<List<MyUser>> test() {
         return new ResponseResult<>(userService.listUsers(666L));
     }
