@@ -22,7 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class MyUser {
+public class LinksUser {
 
     private static final long serialVersionUID = 1L;
 

@@ -8,13 +8,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * @author qiding
+ */
 @Data
 public class MyUserDetail implements UserDetails, CredentialsContainer {
 
     private static final long serialVersionUID = 3497935890426858541L;
-    private final MyUser myUser;
+    private final LinksUser myUser;
     private final User user;
-    public MyUserDetail(MyUser baseUser, User user) {
+    public MyUserDetail(LinksUser baseUser, User user) {
         this.myUser = baseUser;
         this.user = user;
     }

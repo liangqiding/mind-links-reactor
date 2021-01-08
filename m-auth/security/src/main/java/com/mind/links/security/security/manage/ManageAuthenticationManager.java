@@ -42,7 +42,7 @@ public class ManageAuthenticationManager extends AbstractUserDetailsReactiveAuth
         }
         return retrieveUser(authentication.getName())
                 .publishOn(SCHEDULER)
-                .filter(u -> passwordEncoder.matches(String.valueOf(authentication.getCredentials()), passwordEncoder.encode(u.getPassword())))
+                .filter(u -> passwordEncoder.matches(String.valueOf(authentication.getCredentials()), u.getPassword()))
                 .switchIfEmpty(Mono.defer(() -> Mono.error(new BadCredentialsException("账号或密码错误！"))))
                 .map(u -> new UsernamePasswordAuthenticationToken(u, u.getPassword(),u.getAuthorities()));
     }

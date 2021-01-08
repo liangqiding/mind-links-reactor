@@ -23,8 +23,9 @@ import java.util.*;
 
 /**
  * @author ：qiDing
+ *
  * @date ：Created in 2020/10/20 16:53
- * description：TODO swagger: description
+ * description：  swagger api 文档配置
  */
 @Configuration
 @EnableOpenApi

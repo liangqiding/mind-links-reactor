@@ -1,28 +1,32 @@
 package com.mind.links.security.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mind.links.security.dao.UserMapper;
-import com.mind.links.security.domain.MyUser;
+import com.mind.links.security.domain.LinksUser;
 import com.mind.links.security.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
+ *
  * @author qiDing
  * @since 2020-12-09
  */
 @Service
-//@CacheConfig(cacheNames = "user")
-public class UserServiceImpl extends ServiceImpl<UserMapper, MyUser> implements IUserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, LinksUser> implements IUserService {
+
+    @Resource
+    Scheduler myScheduler;
 
     @Override
-//    @Cacheable(key = "#root.methodName+'-'+#p0")
-    public List<MyUser> listUsers(Long id) {
-        return list();
+    public Mono<LinksUser> getUserByUsername(String account) {
+        return Mono.fromCallable(() -> this.getOne(new QueryWrapper<LinksUser>().eq("account", account))).subscribeOn(myScheduler);
     }
 }

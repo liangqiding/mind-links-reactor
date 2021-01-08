@@ -1,7 +1,7 @@
 package com.mind.links.security.controller;
 
 import com.mind.links.common.response.ResponseResult;
-import com.mind.links.security.domain.MyUser;
+import com.mind.links.security.domain.LinksUser;
 import com.mind.links.security.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +23,5 @@ public class UserController {
     @Autowired
     private UserServiceImpl userService;
 
-    @GetMapping("/")
-    public ResponseResult<List<MyUser>> test() {
-        return new ResponseResult<>(userService.listUsers(666L));
-    }
 }
 

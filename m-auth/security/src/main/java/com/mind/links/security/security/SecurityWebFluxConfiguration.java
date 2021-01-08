@@ -1,9 +1,9 @@
 package com.mind.links.security.security;
 
 
+import com.mind.links.security.jwt.JwtHeadersExchangeMatcher;
 import com.mind.links.security.security.handler.FailureHandler;
 import com.mind.links.security.security.handler.SuccessHandler;
-import com.mind.links.security.security.manage.ManageAuthenticationFilter;
 import com.mind.links.security.security.manage.ManageAuthenticationManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,8 +33,7 @@ public class SecurityWebFluxConfiguration {
     private FailureHandler failureHandler;
     @Resource
     private ManageAuthenticationManager manageAuthenticationManager;
-    @Resource
-    private ManageAuthenticationFilter manageAuthenticationFilter;
+
     /**
      * 白名单
      */
@@ -64,6 +63,7 @@ public class SecurityWebFluxConfiguration {
 
     private AuthenticationWebFilter bearerAuthenticationFilter() {
         AuthenticationWebFilter bearerAuthenticationFilter = new AuthenticationWebFilter(manageAuthenticationManager);
+        bearerAuthenticationFilter.setRequiresAuthenticationMatcher(new JwtHeadersExchangeMatcher());
         bearerAuthenticationFilter.setServerAuthenticationConverter(new MyServerAuthenticationConverter());
         bearerAuthenticationFilter.setAuthenticationSuccessHandler(successHandler);
         bearerAuthenticationFilter.setAuthenticationFailureHandler(failureHandler);

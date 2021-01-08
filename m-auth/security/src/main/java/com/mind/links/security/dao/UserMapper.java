@@ -1,6 +1,6 @@
 package com.mind.links.security.dao;
 
-import com.mind.links.security.domain.MyUser;
+import com.mind.links.security.domain.LinksUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author qiDing
  * @since 2020-12-09
  */
-public interface UserMapper extends BaseMapper<MyUser> {
+public interface UserMapper extends BaseMapper<LinksUser> {
 
 }

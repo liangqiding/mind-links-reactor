@@ -1,6 +1,7 @@
 package com.mind.links.security.security;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
@@ -14,6 +15,7 @@ import reactor.core.publisher.Mono;
  *
  * @author qiDing
  */
+@Slf4j
 public class MyServerAuthenticationConverter implements ServerAuthenticationConverter {
 
 
@@ -33,7 +35,7 @@ public class MyServerAuthenticationConverter implements ServerAuthenticationConv
         String password = queryParams.getFirst("password");
         Authentication authRequest = new UsernamePasswordAuthenticationToken(
                 username, password);
-        System.out.println("ServerHttpBearerAuthenticationConverter----" + JSON.toJSONString(authRequest));
+        log.debug("create----" + JSON.toJSONString(authRequest));
         return Mono.justOrEmpty(authRequest);
     }
 }

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "redisson.single")
 @Component
 @ApiModel("redisson配置")
-public class RedisProperties {
+public class RedissonProperties {
 
     @ApiModelProperty("连接空闲超时，单位：毫秒")
     private Integer idleConnectionTimeout;

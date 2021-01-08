@@ -3,6 +3,7 @@ package com.mind.links.logger.handler.aopLog;
 import com.alibaba.fastjson.JSON;
 import com.mind.links.common.exception.LinksException;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.kafka.clients.producer.Producer;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -168,11 +170,9 @@ public class CustomAspect {
      * @throws NoSuchMethodException ·
      */
     public CustomAopHandler getDeclaredAnnotation(ProceedingJoinPoint joinPoint) throws NoSuchMethodException {
-        String methodName = joinPoint.getSignature().getName();
-        Class<?> targetClass = joinPoint.getTarget().getClass();
-        Class<?>[] parameterTypes = ((MethodSignature) joinPoint.getSignature()).getParameterTypes();
-        Method objMethod = targetClass.getMethod(methodName, parameterTypes);
-        return objMethod.getDeclaredAnnotation(CustomAopHandler.class);
+        val signature = (MethodSignature) joinPoint.getSignature();
+        val method = signature.getMethod();
+        return AnnotationUtils.findAnnotation(method, CustomAopHandler.class);
     }
 
     public Mono<ServerHttpRequest> getRequest() {

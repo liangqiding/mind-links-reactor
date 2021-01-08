@@ -29,7 +29,7 @@ spring:
   ##################################################################################################
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.60.119:3306/mind_links_core?useUnicode=true&useSSL=false&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&useServerPrepStmts=true&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/mind_links_core?useUnicode=true&useSSL=false&characterEncoding=utf8&useTimezone=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true&useServerPrepStmts=true&allowMultiQueries=true
     username: root
     password: 123456
     #####################################  druid #####################################################
@@ -79,19 +79,6 @@ spring:
       missing-topics-fatal: false
     consumer:
       max-poll-records: 100
-#################################################################################################
-    #   redis
-#################################################################################################
-
-  redis:
-    database: 11
-    host: 192.168.188.104
-    password: NXMz5MpQ8BTTQ4wRPTk7
-    port: 6379
-    jedis:
-      pool:
-        max-idle: 8
-        min-idle: 0
   ##################################################################################################
   #                               redis
   #

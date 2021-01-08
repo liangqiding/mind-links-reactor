@@ -1,7 +1,8 @@
 package com.mind.links.security.security.handler;
 
-import com.alibaba.fastjson.JSONObject;
+import com.mind.links.common.enums.LinksExceptionEnum;
 import com.mind.links.common.response.ResponseResult;
+import com.mind.links.security.config.LinksAuthException;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,12 +13,11 @@ import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
 import java.nio.charset.StandardCharsets;
 
 /**
  * date: 2021-01-07 09:00
- * description
+ * description 失败处理程序
  *
  * @author qiDing
  */
@@ -26,26 +26,19 @@ public class FailureHandler implements ServerAuthenticationFailureHandler {
     @Override
     public Mono<Void> onAuthenticationFailure(WebFilterExchange webFilterExchange, AuthenticationException exception) {
         ServerHttpResponse response = webFilterExchange.getExchange().getResponse();
-        ResponseResult<String> result = new ResponseResult<>();
+        ResponseResult<String> result;
         if (exception instanceof UsernameNotFoundException) {
-            // 用户不存在
-            result.setCode(46001);
-            result.setMessage(exception.getMessage());
+            result = new ResponseResult<>(LinksExceptionEnum.USER_NOT_FOUND.getCode());
         } else if (exception instanceof BadCredentialsException) {
-            // 密码错误
-            result.setCode(46002);
-            result.setMessage(exception.getMessage());
+            result = new ResponseResult<>(LinksExceptionEnum.BAD_CREDENTIALS.getCode());
         } else if (exception instanceof LockedException) {
-            // 用户被锁
-            result.setCode(46003);
-            result.setMessage(exception.getMessage());
-        } else {
-            // 系统错误
-            result.setCode(46004);
-            result.setMessage(exception.getMessage());
+            result = new ResponseResult<>(LinksExceptionEnum.USER_LOCKED.getCode());
+        } else if (exception instanceof LinksAuthException){
+            result = new ResponseResult<>(LinksExceptionEnum.BAD_REQUEST.getCode(),exception.getMessage());
+        }else {
+            result = new ResponseResult<>(LinksExceptionEnum.OTHER_ERROR.getCode());
         }
-        String body = result.toJsonString();
-        DataBuffer buffer = response.bufferFactory().wrap(body.getBytes(StandardCharsets.UTF_8));
+        DataBuffer buffer = response.bufferFactory().wrap(result.toJsonString().getBytes(StandardCharsets.UTF_8));
         return response.writeWith(Mono.just(buffer));
     }
 

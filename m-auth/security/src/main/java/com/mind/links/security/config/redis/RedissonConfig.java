@@ -1,4 +1,4 @@
-package com.mind.links.redisson.config;
+package com.mind.links.security.config.redis;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -25,7 +25,6 @@ import java.util.Map;
  */
 @Configuration
 @ComponentScan
-@EnableCaching
 public class RedissonConfig {
     @Autowired
     RedissonProperties redissonProperties;

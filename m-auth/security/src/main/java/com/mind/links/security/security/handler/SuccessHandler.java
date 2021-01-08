@@ -2,10 +2,6 @@ package com.mind.links.security.security.handler;
 
 
 import com.alibaba.fastjson.JSON;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.mind.links.common.response.ResponseResult;
 import com.mind.links.security.jwt.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * date: 2021-01-07 08:48
- * description
+ * description 验证成功处理程序
  *
  * @author qiDing
  */
@@ -35,7 +31,7 @@ public class SuccessHandler implements ServerAuthenticationSuccessHandler {
     TokenProvider tokenProvider;
 
     @Override
-    public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange, Authentication authentication) {
+    public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange,final Authentication authentication) {
         ServerHttpResponse response = webFilterExchange.getExchange().getResponse();
         response.setStatusCode(HttpStatus.OK);
         String token = tokenProvider.createToken(authentication);
