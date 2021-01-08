@@ -2,6 +2,7 @@ package com.mind.links.security.security.manage;
 
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AbstractUserDetailsReactiveAuthenticationManager;
@@ -23,25 +24,27 @@ import reactor.core.scheduler.Schedulers;
  */
 @Component
 @Primary
+@Slf4j
 public class ManageAuthenticationManager extends AbstractUserDetailsReactiveAuthenticationManager {
-    private Scheduler scheduler = Schedulers.boundedElastic();
+
+    private final static Scheduler SCHEDULER = Schedulers.boundedElastic();
+
     @Autowired
     private ManageDetailsServiceImpl manageDetailsService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Mono<Authentication> authenticate(Authentication authentication) {
-        System.out.println("authentication:"+JSON.toJSONString(authentication));
-        String username = authentication.getName();
-        String password = String.valueOf(authentication.getCredentials());
-        System.out.println("3-username:"+username);
-        System.out.println("4-password:"+password);
-        return retrieveUser(username)
-                .publishOn(scheduler)
-                .filter(u -> passwordEncoder.matches(password, passwordEncoder.encode(u.getPassword())))
+    public Mono<Authentication> authenticate(final Authentication authentication) {
+        logger.debug("authentication:" + JSON.toJSONString(authentication));
+        if (authentication.isAuthenticated()) {
+            return Mono.just(authentication);
+        }
+        return retrieveUser(authentication.getName())
+                .publishOn(SCHEDULER)
+                .filter(u -> passwordEncoder.matches(String.valueOf(authentication.getCredentials()), passwordEncoder.encode(u.getPassword())))
                 .switchIfEmpty(Mono.defer(() -> Mono.error(new BadCredentialsException("账号或密码错误！"))))
-                .map(u-> new UsernamePasswordAuthenticationToken(u, u.getPassword()));
+                .map(u -> new UsernamePasswordAuthenticationToken(u, u.getPassword(),u.getAuthorities()));
     }
 
     @Override

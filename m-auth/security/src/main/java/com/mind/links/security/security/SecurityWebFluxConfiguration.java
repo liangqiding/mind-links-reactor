@@ -64,7 +64,7 @@ public class SecurityWebFluxConfiguration {
 
     private AuthenticationWebFilter bearerAuthenticationFilter() {
         AuthenticationWebFilter bearerAuthenticationFilter = new AuthenticationWebFilter(manageAuthenticationManager);
-        bearerAuthenticationFilter.setAuthenticationConverter(new ServerHttpBearerAuthenticationConverter());
+        bearerAuthenticationFilter.setServerAuthenticationConverter(new MyServerAuthenticationConverter());
         bearerAuthenticationFilter.setAuthenticationSuccessHandler(successHandler);
         bearerAuthenticationFilter.setAuthenticationFailureHandler(failureHandler);
         return bearerAuthenticationFilter;

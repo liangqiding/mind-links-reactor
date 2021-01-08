@@ -32,9 +32,7 @@ public class ManageDetailsServiceImpl implements ReactiveUserDetailsService {
         userAccess.add("ROLE_USER");
         userAccess.add("ROLE_ADMIN");
         userAccess.forEach(auth -> authorities.add(new SimpleGrantedAuthority(auth)));
-        String encode = passwordEncoder.encode("123456");
-        User user = new User(username, "123456", authorities);
-        return Mono.just(user);
+        return Mono.just(new User(username, "123456", authorities));
     }
 }
 

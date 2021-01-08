@@ -32,4 +32,5 @@ build/
 
 ### my ####
 logs/
+*-dev.yml
 **/src/main/resources/application-dev.yml

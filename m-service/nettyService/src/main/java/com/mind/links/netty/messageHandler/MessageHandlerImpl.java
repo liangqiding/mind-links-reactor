@@ -108,7 +108,7 @@ public class MessageHandlerImpl implements MessageHandler {
     public void channelWrite(ChannelId channelId, Object msg) throws Exception {
         ChannelHandlerContext ctx = ConcurrentContext.CHANNEL_MAP.get(channelId);
         if (ctx == null) {
-            log.info("通道【" + channelId + "】不存在");
+            log.error("通道【" + channelId + "】不存在");
             return;
         }
         ctx.write(msg);
