@@ -1,5 +1,6 @@
 package com.mind.links.security.jwt;
 
+import com.mind.links.security.config.LinksAuthException;
 import io.jsonwebtoken.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -53,7 +54,7 @@ public class TokenProvider {
         this.tokenValidityInMilliseconds = 1000 * TOKEN_VALIDITY;
     }
 
-    public String createToken(Authentication authentication) {
+    public String createToken(Authentication authentication,String clientId) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
@@ -70,7 +71,7 @@ public class TokenProvider {
 
     public Authentication getAuthentication(String token) {
         if (StringUtils.isEmpty(token) || !validateToken(token)) {
-            throw new BadCredentialsException("Invalid token");
+            throw new LinksAuthException("无效的token");
         }
         Claims claims = Jwts.parser()
                 .setSigningKey(secretKey)

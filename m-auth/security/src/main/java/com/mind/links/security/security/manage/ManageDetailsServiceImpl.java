@@ -2,6 +2,7 @@ package com.mind.links.security.security.manage;
 
 import com.mind.links.security.config.LinksAuthException;
 import com.mind.links.security.domain.LinksUser;
+import com.mind.links.security.domain.MyUserDetail;
 import com.mind.links.security.service.impl.UserServiceImpl;
 import io.swagger.annotations.ApiModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,7 @@ public class ManageDetailsServiceImpl implements ReactiveUserDetailsService {
         return Mono.just(username)
                 .flatMap(s -> userService.getUserByUsername(username))
                 .switchIfEmpty(LinksAuthException.errors("账号不存在"))
-                .zipWith(getAuthorities(),(linksUser,authorities) -> new User(linksUser.getAccount(),linksUser.getPassword(),authorities))
-                ;
+                .zipWith(getAuthorities(),(linksUser,authorities) -> new MyUserDetail(new User(linksUser.getUsername(), linksUser.getPassword(), authorities), linksUser.getUserId()));
     }
 
     /**
@@ -57,9 +57,6 @@ public class ManageDetailsServiceImpl implements ReactiveUserDetailsService {
 
     }
 
-    private <T> Mono<T> raiseBadCredentials() {
-        return Mono.error(new BadCredentialsException("账号不存在"));
-    }
 }
 
 

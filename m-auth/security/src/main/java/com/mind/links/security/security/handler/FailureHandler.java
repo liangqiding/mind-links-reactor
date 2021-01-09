@@ -13,16 +13,18 @@ import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
 import java.nio.charset.StandardCharsets;
 
 /**
  * date: 2021-01-07 09:00
- * description 失败处理程序
+ * description Authentication 失败处理程序
  *
  * @author qiDing
  */
 @Component
 public class FailureHandler implements ServerAuthenticationFailureHandler {
+
     @Override
     public Mono<Void> onAuthenticationFailure(WebFilterExchange webFilterExchange, AuthenticationException exception) {
         ServerHttpResponse response = webFilterExchange.getExchange().getResponse();
@@ -33,9 +35,9 @@ public class FailureHandler implements ServerAuthenticationFailureHandler {
             result = new ResponseResult<>(LinksExceptionEnum.BAD_CREDENTIALS.getCode());
         } else if (exception instanceof LockedException) {
             result = new ResponseResult<>(LinksExceptionEnum.USER_LOCKED.getCode());
-        } else if (exception instanceof LinksAuthException){
-            result = new ResponseResult<>(LinksExceptionEnum.BAD_REQUEST.getCode(),exception.getMessage());
-        }else {
+        } else if (exception instanceof LinksAuthException) {
+            result = new ResponseResult<>(LinksExceptionEnum.BAD_REQUEST.getCode(), exception.getMessage());
+        } else {
             result = new ResponseResult<>(LinksExceptionEnum.OTHER_ERROR.getCode());
         }
         DataBuffer buffer = response.bufferFactory().wrap(result.toJsonString().getBytes(StandardCharsets.UTF_8));

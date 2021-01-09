@@ -1,5 +1,7 @@
 package com.mind.links.security.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,14 +14,23 @@ import java.util.Collection;
  * @author qiding
  */
 @Data
+@ApiModel("自定义用户类")
 public class MyUserDetail implements UserDetails, CredentialsContainer {
 
     private static final long serialVersionUID = 3497935890426858541L;
-    private final LinksUser myUser;
+
+    @ApiModelProperty("SECURITY 默认的用户类")
     private final User user;
-    public MyUserDetail(LinksUser baseUser, User user) {
-        this.myUser = baseUser;
+
+    @ApiModelProperty("用户id")
+    private Long userId;
+
+    @ApiModelProperty("客户端id")
+    private String clientId;
+
+    public MyUserDetail(User user, Long userId) {
         this.user = user;
+        this.userId = userId;
     }
 
     @Override
