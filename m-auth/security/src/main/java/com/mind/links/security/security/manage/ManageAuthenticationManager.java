@@ -31,6 +31,7 @@ public class ManageAuthenticationManager extends AbstractUserDetailsReactiveAuth
 
     @Autowired
     private ManageDetailsServiceImpl manageDetailsService;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 

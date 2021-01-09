@@ -1,13 +1,11 @@
 package com.mind.links.security.security;
 
-import com.alibaba.fastjson.JSON;
 import com.mind.links.security.config.LinksAuthException;
 import com.mind.links.security.jwt.TokenCommon;
 import com.mind.links.security.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.stereotype.Component;
