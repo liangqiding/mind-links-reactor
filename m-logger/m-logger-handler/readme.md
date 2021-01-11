@@ -55,7 +55,7 @@ public class LinksCommonClientConfig {
 
 
 # 3 切面配置
-> 用到的pom包  | [版本号参考](../pom.xml)
+> 用到的pom包  | [版本号参考](../../pom.xml)
 
 ```xml
         <dependency>
