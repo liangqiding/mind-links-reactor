@@ -14,7 +14,8 @@
 ## 项目文档
 
 - 文档地址：
-   1  | [security登录服务](./m-auth/security/readme.md)
+   m-security  | [security登录服务](./m-auth/security/readme.md)
+   m-logger    | [全局日记收集](./m-logger/m-logger-handler/readme.md)
 
 - 备用地址：[http://#暂无](https://#)
 

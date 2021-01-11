@@ -23,6 +23,32 @@
    对于效率而言，要是每个服务都配置一个日记收集程序，显然徒增很多无用重复的代码，所有这里选择制作成pom依赖，供其它服务导入使用。
 
 # 2 核心配置
+流程图
+
+![日记收集流程](https://gitee.com/liangqiding/mind-links-static/raw/master/logger/logger.png)
+
+
+> 用到的pom包  | [版本号参考](../pom.xml)
+
+```xml
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+        </dependency>
+         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.danielwegener</groupId>
+            <artifactId>logback-kafka-appender</artifactId>
+        </dependency>
+
+```
 
 ####  2.1 pom依赖的形式自动加载bean
 >   2.1.1 配置spring.factories文件
@@ -55,29 +81,6 @@ public class LinksCommonClientConfig {
 
 
 # 3 切面配置
-> 用到的pom包  | [版本号参考](../../pom.xml)
-
-```xml
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
-        </dependency>
-         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.janino</groupId>
-            <artifactId>janino</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.danielwegener</groupId>
-            <artifactId>logback-kafka-appender</artifactId>
-        </dependency>
-
-```
-
-
 
 >  2.1.1 我们创建一个触发注解
 
@@ -172,7 +175,342 @@ public class CustomAspect {
 这里通过public Object around()方法进行日记捕获生成即刻，具体逻辑参考本项目代码
 
 # 4 logback 配置
+# Logstash Logback编码器
+配置参考文档：
+```
+https://github.com/logstash/logstash-logback-encoder#java-version-requirements
+```
 
+这里贴上我的配置
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+<!--    <include resource="org/springframework/boot/logging/logback/base.xml"/>-->
+    <logger name="org.springframework.web" level="debug"/>
+
+    <!-- 定义日志文件 输出位置 不指定前/ 表示项目路径 -->
+    <property name="LOG_PATH" value="logs"/>
+    <property name="MAX_HISTORY" value="30"/>
+    <property name="MAX_TOTAL_SIZE" value="30GB"/>
+
+    <springProperty scope="context" name="SERVICE" source="spring.kafka.bootstrap-servers"
+                    defaultValue="192.168.188.126:9092"/>
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="springCloud"/>
+
+    <springProperty scope="context" name="TOPIC" source="logger.path.topic" defaultValue="logger"/>
+
+    <springProperty scope="context" name="PORT" source="server.port" defaultValue="logger"/>
+
+    <!-- 控制台输出日志 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger -%msg%n</pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--    KAFKA 发送级别定义start-->
+    <appender name="KAFKA_DEBUG" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers class="net.logstash.logback.composite.loggingevent.LoggingEventJsonProviders">
+                <pattern>
+                    <pattern>
+                        {
+                        "topic": "${TOPIC}",
+                        "service":"${APP_NAME}:${PORT}",
+                        "date":"%d{yyyy-MM-dd HH:mm:ss.SSS}",
+                        "level":"%level",
+                        "thread": "%thread",
+                        "logger": "%logger{36}",
+                        "msg":"%msg",
+                        "exception":"%exception"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+        <topic>${TOPIC}</topic>
+        <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy"/>
+        <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
+        <producerConfig>acks=0</producerConfig>
+        <producerConfig>linger.ms=1000</producerConfig>
+        <producerConfig>max.block.ms=0</producerConfig>
+        <producerConfig>bootstrap.servers=${SERVICE}</producerConfig>
+    </appender>
+    <appender name="KAFKA_INFO" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers class="net.logstash.logback.composite.loggingevent.LoggingEventJsonProviders">
+                <pattern>
+                    <pattern>
+                        {
+                        "topic": "${TOPIC}",
+                        "service":"${APP_NAME}:${PORT}",
+                        "date":"%d{yyyy-MM-dd HH:mm:ss.SSS}",
+                        "level":"%level",
+                        "thread": "%thread",
+                        "logger": "%logger{36}",
+                        "msg":"%msg",
+                        "exception":"%exception"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+        <topic>${TOPIC}</topic>
+        <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy"/>
+        <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
+        <producerConfig>acks=0</producerConfig>
+        <producerConfig>linger.ms=1000</producerConfig>
+        <producerConfig>max.block.ms=0</producerConfig>
+        <producerConfig>bootstrap.servers=${SERVICE}</producerConfig>
+    </appender>
+    <appender name="KAFKA_WARN" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers class="net.logstash.logback.composite.loggingevent.LoggingEventJsonProviders">
+                <pattern>
+                    <pattern>
+                        {
+                        "topic": "${TOPIC}",
+                        "service":"${APP_NAME}:${PORT}",
+                        "date":"%d{yyyy-MM-dd HH:mm:ss.SSS}",
+                        "level":"%level",
+                        "thread": "%thread",
+                        "logger": "%logger{36}",
+                        "msg":"%msg",
+                        "exception":"%exception"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+        <topic>${TOPIC}</topic>
+        <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy"/>
+        <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
+        <producerConfig>acks=0</producerConfig>
+        <producerConfig>linger.ms=1000</producerConfig>
+        <producerConfig>max.block.ms=0</producerConfig>
+        <producerConfig>bootstrap.servers=${SERVICE}</producerConfig>
+    </appender>
+    <appender name="KAFKA_ERROR" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers class="net.logstash.logback.composite.loggingevent.LoggingEventJsonProviders">
+                <pattern>
+                    <pattern>
+                        {
+                        "topic": "${TOPIC}",
+                        "service":"${APP_NAME}:${PORT}",
+                        "date":"%d{yyyy-MM-dd HH:mm:ss.SSS}",
+                        "level":"%level",
+                        "thread": "%thread",
+                        "logger": "%logger{36}",
+                        "msg":"%msg",
+                        "exception":"%exception"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+        <topic>${TOPIC}</topic>
+        <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy"/>
+        <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
+        <producerConfig>acks=0</producerConfig>
+        <producerConfig>linger.ms=1000</producerConfig>
+        <producerConfig>max.block.ms=0</producerConfig>
+        <producerConfig>bootstrap.servers=${SERVICE}</producerConfig>
+    </appender>
+    <appender name="KAFKA_" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    </appender>
+    <!--    KAFKA 发送级别定义 end-->
+
+    <!-- 本地打印级别定义 start-->
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}\%d{yyyyMMdd}\error.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${MAX_TOTAL_SIZE}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+        <append>false</append>
+        <prudent>false</prudent>
+    </appender>
+
+    <appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}\%d{yyyyMMdd}\warn.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${MAX_TOTAL_SIZE}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+        <append>false</append>
+        <prudent>false</prudent>
+    </appender>
+
+    <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}\%d{yyyyMMdd}\info.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${MAX_TOTAL_SIZE}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+        <append>false</append>
+        <prudent>false</prudent>
+    </appender>
+
+    <appender name="FILE_DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}\%d{yyyyMMdd}\debug.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${MAX_TOTAL_SIZE}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+            <charset class="java.nio.charset.Charset">UTF-8</charset>
+        </encoder>
+        <append>false</append>
+        <prudent>false</prudent>
+    </appender>
+
+    <appender name="FILE_" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    </appender>
+    <!-- 本地打印级别定义 end -->
+
+    <!-- 指定项目中的logger -->
+    <!-- root级别  DEBUG -->
+    <property scope="context" resource="bootstrap.yml" />
+
+    <root level="INFO">
+        <!-- 控制台输出 -->
+        <appender-ref ref="STDOUT"/>
+        <!-- 文件输出 -->
+        <if condition='property("output.level").equals("DEBUG")'>
+            <then>
+                <appender-ref ref="FILE_DEBUG"/>
+                <appender-ref ref="FILE_INFO"/>
+                <appender-ref ref="FILE_WARN"/>
+                <appender-ref ref="FILE_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("output.level").equals("INFO")'>
+            <then>
+                <appender-ref ref="FILE_INFO"/>
+                <appender-ref ref="FILE_WARN"/>
+                <appender-ref ref="FILE_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("output.level").equals("WARN")'>
+            <then>
+                <appender-ref ref="FILE_INFO"/>
+                <appender-ref ref="FILE_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("output.level").equals("ERROR")'>
+            <then>
+                <appender-ref ref="FILE_ERROR"/>
+            </then>
+        </if>
+
+        <!-- kafka输出 -->
+        <if condition='property("kafka.level").equals("DEBUG")'>
+            <then>
+                <appender-ref ref="KAFKA_DEBUG"/>
+                <appender-ref ref="KAFKA_INFO"/>
+                <appender-ref ref="KAFKA_WARN"/>
+                <appender-ref ref="KAFKA_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("kafka.level").equals("INFO")'>
+            <then>
+                <appender-ref ref="KAFKA_INFO"/>
+                <appender-ref ref="KAFKA_WARN"/>
+                <appender-ref ref="KAFKA_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("kafka.level").equals("WARN")'>
+            <then>
+                <appender-ref ref="KAFKA_INFO"/>
+                <appender-ref ref="KAFKA_ERROR"/>
+            </then>
+        </if>
+        <if condition='property("kafka.level").equals("ERROR")'>
+            <then>
+                <appender-ref ref="KAFKA_ERROR"/>
+            </then>
+        </if>
+    </root>
+</configuration>
+```
+
+需要配置spring 的配置文件使用
+```
+#######################################kafka###############################################
+spring:
+  application:
+    name: loggerHandler
+  kafka:
+    bootstrap-servers: 192.168.188.126:9092
+############################################################################################
+#                               调试选项(热加载)
+#                path:  路径
+#                maxHistory:   本地打印保存时间
+#                output.level: INFO  本地打印级别   （打印大于或等于该级别，false 不打印）
+#                kafka.level: INFO  kafka统一收集级别 （打印大于或等于该级别，false 不打印）
+#############################################################################################
+output.level: INFO
+kafka.level: INFO
+logger:
+  topic: logger
+  path: ${spring.application.name}
+  maxHistory: 30
+```
 
 # 总结
-
+ 到这里日记服务就已经搭建完成了，其它组件选择都比较自由，比如kafka可以自行替换其他mq消息队列，日记收集分析的程序也可以根据自己业务选择搭建。
