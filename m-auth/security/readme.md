@@ -1,14 +1,35 @@
-# 基于reactor的security jwt 配置
+# 基于reactor的security jwt 授权服务器搭建
 
 #### 前言
 
 为了充分利用 Webflux 的吞吐和响应能力，为了更好的应用于分布式系统，所以放弃了一部分 Security 的能力，更好发挥reactor能力的同时还保留了security的大部分功能，所以更加灵活。
 
-放弃的这部分功能，在分布式系统中几乎毫无用处
+# 1 需求分析
+
+##### 1.1 登录功能
+    首先我们得需要一个登录系统，帮助我们完成对账号密码的校验。
+
+##### 1.2 jwt实现token认证
+    在分布式系统中，内部会有很多服务，各个服务根据业务的需求往往会集群部署多个，security的session 登录机制，就不适合我们了。我们只需要security的认证功能，并整合jwt取代session.
+	
+##### 1.3 单点登录
+    我们需要一次性登录后，就可以自由浏览内部的所有服务，通过权限去限制访问，而不是每切换一个服务就需要登录一次。这里我们选择整合gateway 网关进行统一认证，详情可以参考本项目的gateway服务。简单来讲就是 gateway作为服务对外的统一端点，所有请求都将由gateway进行统一拦截转发，把security作为认证服务器，通过调用security的jwt效验，完成授权。
+   
+##### 1.4 整合缓存实现token存储
+    我们还需要把token和一些用户的登录状态存储进缓存中，比如token的刷新机制，access_token 及 refresh_token的实现等，更方便管理及强制离线用户等功能的实现，本服务选择整合redisson，redisson有较好的分布式支持，而且也支持响应式的编写方式。
+
+##### 1.5 模拟session
+    由于单机的session并不适合我们分布式的系统，我们需要构建一个分布式的session机制，以减轻授权服务器的压力，比如某用户登录成功后，下一次即可通过模拟session跳过验证，直接访问。
+ 
+
+# 2  核心配置
+本服务核心流程如图，这是我根据自己业务以及使用到的过滤器画的流程图
+
+![系统架构图](https://gitee.com/liangqiding/mind-links-static/raw/master/security/flowChart.png)
 
 
-# 1  核心配置
-
+#### 2.1 针对核心配置进行说明： 
+配置代码：
 ```java
 @Configuration
 @EnableWebFluxSecurity
@@ -62,8 +83,8 @@ public class SecurityWebFluxConfiguration {
 
 }
 ```
-#### 1.1 针对核心配置进行说明： 
- 1 首先关闭security 自带的表单登录登出 和 开启跨域支持，我们用自己实现的reactor 登录 api进行登录
+
+#####  2.1.1 首先关闭security 自带的表单登录登出 和 开启跨域支持，我们用自己实现的reactor 登录 api进行登录
 ```java
  http
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
@@ -72,7 +93,7 @@ public class SecurityWebFluxConfiguration {
                 .logout(ServerHttpSecurity.LogoutSpec::disable);
 ```
 
-2 security 灵活就在于它可以让你自由的配置各个授权过滤器
+##### 2.1.2 security 灵活就在于它可以让你自由的配置各个授权过滤器
 ```java
 http
                  // 授权失败处理  不配做默认返回空白的 401响应
@@ -85,7 +106,7 @@ http
 				// 添加我们默认放行的请求
                 .authorizeExchange(n -> n.pathMatchers(AUTH_WHITELIST).permitAll().anyExchange().authenticated());
 ```
-3 我们的授权过滤器
+##### 2.1.3 我们的授权过滤器
 ```java
  private AuthenticationWebFilter bearerAuthenticationFilter() {
         // 1 创建我们自定义的授权过滤器 
@@ -100,7 +121,7 @@ http
     }
 ```
 说明： 
-  3.1 ManageAuthenticationManager  自定义的授权过滤器
+#####   2.1.4 ManageAuthenticationManager  自定义的授权过滤器
   首先我们看看security 的源码
   源码：
   ```java
@@ -137,5 +158,84 @@ http
     }
 	... 省略
   ```
-  从源码中我们可以看出 security 提供很多默认的过滤器，从源码filter方法中我们可以很直观的看出security 认证的执行顺序，我们要做的就是替换我们自己的过滤器进去，并且源码中也提供了构造方法和set方法，所有我们可以很容易的进行设置，然后再利用.addFilterAt 启用即可。
+  从源码中我们可以看出 security 提供很多默认的过滤器，从源码filter方法中我们可以很直观的看出security 认证的执行顺序，我们要做的就是替换我们自己的过滤器进去，并且源码中也提供了构造方法和set方法，所有我们可以很容易的进行设置，然后再利用.addFilterAt 添加过滤器即可。
   
+# 3 根据需求实现功能
+
+#####  3.1 实现登录功能
+我们参考security的源码，实现一个响应式的登录服务
+
+首先我们得先配置一个 ManageAuthenticationManager 进行账号密码校验，从上面的流程图中可知，ManageAuthenticationManager 属于认证流程最后一步（在流程图中）。
+
+> 我们实现的ManageAuthenticationManager
+
+  ```java
+@Component
+@Primary
+@Slf4j
+public class ManageAuthenticationManager extends AbstractUserDetailsReactiveAuthenticationManager {
+
+    private final static Scheduler SCHEDULER = Schedulers.boundedElastic();
+
+    @Autowired
+    private ManageDetailsServiceImpl manageDetailsService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public Mono<Authentication> authenticate(final Authentication authentication) {
+        logger.debug("authentication:" + JSON.toJSONString(authentication));
+        if (authentication.isAuthenticated()) {
+            return Mono.just(authentication);
+        }
+        return retrieveUser(authentication.getName())
+                .publishOn(SCHEDULER)
+                .filter(u -> passwordEncoder.matches(String.valueOf(authentication.getCredentials()), u.getPassword()))
+                .switchIfEmpty(Mono.defer(() -> Mono.error(new BadCredentialsException("账号或密码错误！"))))
+                .map(u -> new UsernamePasswordAuthenticationToken(u, u.getPassword(),u.getAuthorities()));
+    }
+
+    @Override
+    protected Mono<UserDetails> retrieveUser(String username) {
+        return manageDetailsService.findByUsername(username);
+    }
+}
+  ```
+
+
+    我们需要继承 AbstractUserDetailsReactiveAuthenticationManager 继承 authenticate 方法，并重新我们自己的逻辑，再通过security的配置替换默认的ManageAuthenticationManager。
+    我们可看到这个方法传入的是一个authentication 返回一个 Mono<Authentication>。所有我们要调用这个方法，得先有一个authentication对象。authentication对象可以通过 new UsernamePasswordAuthenticationToken(username, u.getPassword(),u.getAuthorities()) 获得。
+
+>  接下来我们就可以写我们的登录服务了
+------------
+
+  ```java
+
+@Component
+@RequiredArgsConstructor
+@Slf4j
+public class AuthHandler {
+
+    private final TokenProvider tokenProvider;
+
+    private final ManageAuthenticationManager manageAuthenticationManager;
+
+    public Mono<String> loginAuth(String username, String password,String clientId) {
+        log.debug("clientId:"+clientId);
+        return manageAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password))
+                .map(auth -> {
+                    log.debug(JSON.toJSONString(auth));
+                    ReactiveSecurityContextHolder.withAuthentication(auth);
+                    return tokenProvider.createToken(auth,clientId);
+                });
+    }
+
+}
+
+```
+# 总结
+  其它功能的实现这里就不写了，各个过滤器根据自己的业务进行编写就行，具体实现可以参考本项目代码，代码有完整的备注及解释
+
+
+
