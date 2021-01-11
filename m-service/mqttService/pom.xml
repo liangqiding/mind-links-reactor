@@ -11,5 +11,43 @@
 
     <artifactId>mqtt</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.nutz/nutzboot-core -->
+        <dependency>
+            <groupId>org.nutz</groupId>
+            <artifactId>nutzboot-core</artifactId>
+            <version>2.4.1.v20201014</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.nutz/nutzboot-starter-nutz-mvc -->
+        <dependency>
+            <groupId>org.nutz</groupId>
+            <artifactId>nutzboot-starter-nutz-mvc</artifactId>
+            <version>2.4.2.v20201205</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
 
+
+    </dependencies>
 </project>

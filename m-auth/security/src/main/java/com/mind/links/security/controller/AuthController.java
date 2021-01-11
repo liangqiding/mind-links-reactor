@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -36,7 +37,14 @@ public class AuthController {
     public Mono<ResponseResult<String>> login(@NotBlank(message = "账号不能为空") @RequestPart(value = "username") String username,
                                               @NotBlank(message = "密码不能为空") @RequestPart(value = "password") String password,
                                               final ServerHttpRequest request) {
-        return ResponseResult.transform(authHandler.loginAuth(username, password,request.getHeaders().getFirst("Authorization")));
+        return ResponseResult.transform(authHandler.loginAuth(username, password, request.getHeaders().getFirst("Authorization")));
+    }
+
+    @PostMapping(value = "/checkToken")
+    @ApiOperation("用户登录")
+    public Mono<ResponseResult<Authentication>> authToken(@NotBlank(message = "token不能为空") @RequestPart(value = "token") String token
+    ) {
+        return ResponseResult.transform(authHandler.checkToken(token));
     }
 }
 

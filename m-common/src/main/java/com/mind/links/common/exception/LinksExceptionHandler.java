@@ -9,6 +9,8 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 import javax.validation.ValidationException;
 import java.util.Optional;
@@ -25,7 +27,7 @@ public class LinksExceptionHandler {
     public static final Integer ERROR = 40000;
 
     public static Mono<ResponseResult<String>> errorHandler(Throwable t) {
-        return Mono.just(errorHandler((Exception) t));
+        return Mono.fromCallable(() -> errorHandler((Exception) t));
     }
 
     public static void throwLinksException(Throwable t) {

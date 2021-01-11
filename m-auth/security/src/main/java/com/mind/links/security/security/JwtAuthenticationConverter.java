@@ -6,12 +6,14 @@ import com.mind.links.security.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
 import java.util.Objects;
 
 
@@ -33,12 +35,10 @@ public class JwtAuthenticationConverter implements ServerAuthenticationConverter
 
         return Mono.justOrEmpty(serverWebExchange)
                 .map(ServerWebExchange::getRequest)
-                .map(request -> request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION))
-                .map(TokenCommon.ISOLATE_BEARER_VALUE)
-                .filter(Objects::nonNull)
+                .flatMap(TokenCommon::getToken)
                 .filter(token -> !StringUtils.isEmpty(token))
                 .switchIfEmpty(LinksAuthException.errors("无效的token"))
-                .map(tokenProvider::getAuthentication)
+                .flatMap(tokenProvider::getAuthentication)
                 .filter(Objects::nonNull);
     }
 

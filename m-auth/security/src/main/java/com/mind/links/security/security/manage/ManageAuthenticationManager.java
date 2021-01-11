@@ -16,6 +16,8 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
+import javax.annotation.Resource;
+
 /**
  * date: 2021-01-07 08:44
  * description
@@ -32,7 +34,7 @@ public class ManageAuthenticationManager extends AbstractUserDetailsReactiveAuth
     @Autowired
     private ManageDetailsServiceImpl manageDetailsService;
 
-    @Autowired
+    @Resource
     private PasswordEncoder passwordEncoder;
 
     @Override

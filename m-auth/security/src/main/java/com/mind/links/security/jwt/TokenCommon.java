@@ -1,7 +1,12 @@
 package com.mind.links.security.jwt;
 
+import com.mind.links.security.config.LinksAuthException;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import reactor.core.publisher.Mono;
+
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -22,5 +27,15 @@ public class TokenCommon {
 
     @ApiModelProperty("隔离前缀后获取token")
     public static final Function<String, String> ISOLATE_BEARER_VALUE = authValue -> authValue.substring(BEARER.length());
+
+    /**
+     * 获取请求头中的token
+     */
+    public static Mono<String> getToken(ServerHttpRequest request) {
+        return Mono.justOrEmpty(request)
+                .map(r -> r.getHeaders().getFirst(HttpHeaders.AUTHORIZATION))
+                .map(ISOLATE_BEARER_VALUE)
+                .switchIfEmpty(LinksAuthException.errors("无效的token"));
+    }
 
 }

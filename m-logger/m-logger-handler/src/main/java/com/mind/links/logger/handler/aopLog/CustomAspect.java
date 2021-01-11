@@ -99,9 +99,6 @@ public class CustomAspect {
      */
     @AfterThrowing(value = "cutMethod()", throwing = "ex")
     public void afterThrowing(JoinPoint joinPoint, RuntimeException ex) throws NoSuchMethodException {
-        Mono.fromCallable(() -> this.getRequestInfo(((ProceedingJoinPoint) joinPoint)))
-                .map(map0 -> map0.put("error", ex.getMessage()))
-                .subscribe(map0 -> log.error(JSON.toJSONString(map0)));
     }
 
     /**
@@ -136,6 +133,7 @@ public class CustomAspect {
      * description：TODO 获取方法各种参数
      */
     public Map<String, Object> getRequestInfo(ProceedingJoinPoint joinPoint) throws NoSuchMethodException {
+        log.debug("----");
         return this.getRequestInfo(joinPoint, this.getDeclaredAnnotation((ProceedingJoinPoint) joinPoint), getParameters(joinPoint));
     }
 
