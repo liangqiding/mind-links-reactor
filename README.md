@@ -14,7 +14,7 @@
 ## 项目文档
 
 - 文档地址：
-   1  | [security登录服务](./m-auth/m-security/readme.md)
+   1  | [security登录服务](./m-auth/security/readme.md)
 
 - 备用地址：[http://#暂无](https://#)
 
