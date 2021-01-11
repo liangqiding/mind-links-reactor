@@ -28,7 +28,7 @@
 ![日记收集流程](https://gitee.com/liangqiding/mind-links-static/raw/master/logger/logger.png)
 
 
-> 用到的pom包  | [版本号参考](../pom.xml)
+> 用到的pom包  | [版本号参考](../../pom.xml)
 
 ```xml
         <dependency>
@@ -489,7 +489,7 @@ https://github.com/logstash/logstash-logback-encoder#java-version-requirements
 </configuration>
 ```
 
-需要配置spring 的配置文件使用
+需要配合spring 的配置文件，达成动态收集日记的目的
 ```
 #######################################kafka###############################################
 spring:
