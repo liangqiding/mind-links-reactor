@@ -13,7 +13,9 @@
 - 目前项目还在持续更新中
 ## 项目文档
 
-- 文档地址：[http://#暂无](http://#)
+- 文档地址：
+   1  | [security登录服务](./m-auth/m-security/readme.md)
+
 - 备用地址：[http://#暂无](https://#)
 
 ## 项目介绍
