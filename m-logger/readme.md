@@ -1,5 +1,24 @@
-# Logstash Logback编码器
-参考文档：
-```
-https://github.com/logstash/logstash-logback-encoder#java-version-requirements
-```
+# 分布式日记系统搭建
+
+#### 前言
+
+
+
+# 1 需求分析
+
+#### 1.1
+
+
+#### 1.2 
+	
+#### 1.3
+    
+   
+#### 1.4 
+   
+#### 1.5
+   
+# 2 核心配置
+
+
+# 总结

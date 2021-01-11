@@ -2,7 +2,7 @@
 
 #### 前言
 
-为了充分利用 Webflux 的吞吐和响应能力，为了更好的应用于分布式系统，所以放弃了一部分 Security 的能力，更好发挥reactor能力的同时还保留了security的大部分功能，所以更加灵活。
+为了充分利用 Webflux 的吞吐和响应能力，并且更好的应用于分布式系统中，所以放弃了一部分 Security 的功能。本服务的目的是搭建一个授权服务器，更好发挥reactor能力的同时还能保留了security的大部分功能，并且使授权更加灵活。
 
 # 1 需求分析
 
@@ -204,7 +204,7 @@ public class ManageAuthenticationManager extends AbstractUserDetailsReactiveAuth
   ```
 
 
-    我们需要继承 AbstractUserDetailsReactiveAuthenticationManager 继承 authenticate 方法，并重新我们自己的逻辑，再通过security的配置替换默认的ManageAuthenticationManager。
+    我们需要继承 AbstractUserDetailsReactiveAuthenticationManager 重写 authenticate 方法，编写我们自己的逻辑，再通过security的配置替换默认的ManageAuthenticationManager。
     我们可看到这个方法传入的是一个authentication 返回一个 Mono<Authentication>。所有我们要调用这个方法，得先有一个authentication对象。authentication对象可以通过 new UsernamePasswordAuthenticationToken(username, u.getPassword(),u.getAuthorities()) 获得。
 
 >  接下来我们就可以写我们的登录服务了
@@ -235,7 +235,7 @@ public class AuthHandler {
 
 ```
 # 总结
-  其它功能的实现这里就不写了，各个过滤器根据自己的业务进行编写就行，具体实现可以参考本项目代码，代码有完整的备注及解释
+  其它功能的实现这里就不写了，各个过滤器根据自己的业务进行编写即可，如jwt等其它实现可以参考本项目代码，代码有完整的备注及解释
 
 
 

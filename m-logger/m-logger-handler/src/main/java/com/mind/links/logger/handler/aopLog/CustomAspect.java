@@ -211,14 +211,4 @@ public class CustomAspect {
         }
         return paramsMap;
     }
-
-    @Configuration
-    @ConditionalOnProperty(name = "port", prefix = "enable", havingValue = "true")
-    public static class LinksEnvironment {
-
-        public static void main(String[] args) {
-            Object apply = ((Function<Object, Object>) o -> o).apply(66666);
-            System.out.println(apply);
-        }
-    }
 }
