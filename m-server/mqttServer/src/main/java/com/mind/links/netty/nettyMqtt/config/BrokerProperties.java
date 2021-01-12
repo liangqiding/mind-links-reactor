@@ -1,18 +1,20 @@
-/**
- * Copyright (c) 2018, Mr.Wang (recallcode@aliyun.com) All rights reserved.
- */
-
-package com.mind.links.netty.nettyMqtt;
+package com.mind.links.netty.nettyMqtt.config;
 
 import org.nutz.boot.annotation.PropDoc;
 import org.nutz.ioc.impl.PropertiesProxy;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 /**
  * 服务配置
  */
 @Component
 public class BrokerProperties {
+
+    public BrokerProperties() {
+        this.init();
+    }
 
     private final PropertiesProxy conf=new PropertiesProxy();
 
@@ -116,14 +118,15 @@ public class BrokerProperties {
     public static final String PROP_KAFKA_BROKER_ENABLED = PRE + "kafka.broker-enabled";
 
 
+    @PostConstruct
     public void init() {
         this.id = conf.get(_id, "mqttwk");
         this.host = conf.get(PROP_HOST, "127.0.0.1");
         this.port = conf.getInt(PROP_PORT, 8885);
         this.websocketPort = conf.getInt(PROP_WEBSOCKETPORT, 9995);
-        this.websocketEnabled = conf.getBoolean(PROP_WEBSOCKETENABLED, false);
+        this.websocketEnabled = conf.getBoolean(PROP_WEBSOCKETENABLED, true);
         this.websocketPath = conf.get(PROP_WEBSOCKETPATH, "/mqtt");
-        this.sslEnabled = conf.getBoolean(PROP_SSLENABLED, true);
+        this.sslEnabled = conf.getBoolean(PROP_SSLENABLED, false);
         this.sslPassword = conf.get(PROP_SSLPASSWORD);
         this.keepAlive = conf.getInt(PROP_KEEPALIVE, 60);
         this.producerTopic = conf.get(PROP_KAFKA_PRODUCERTOPIC, "mqtt_publish");

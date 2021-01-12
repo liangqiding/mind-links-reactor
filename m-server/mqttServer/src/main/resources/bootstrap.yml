@@ -110,3 +110,6 @@ logger:
   topic: logger
   path: ${spring.application.name}
   maxHistory: 30
+logging:
+  level:
+    com.mind.links.netty: DEBUG

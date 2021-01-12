@@ -3,15 +3,25 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>m-service</artifactId>
+        <artifactId>m-server</artifactId>
         <groupId>com.mind.links</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>mqtt</artifactId>
+    <artifactId>netty</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.mind.links</groupId>
+            <artifactId>m-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mind.links</groupId>
+            <artifactId>m-logger-handler</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
@@ -29,25 +39,5 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.nutz/nutzboot-core -->
-        <dependency>
-            <groupId>org.nutz</groupId>
-            <artifactId>nutzboot-core</artifactId>
-            <version>2.4.1.v20201014</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.nutz/nutzboot-starter-nutz-mvc -->
-        <dependency>
-            <groupId>org.nutz</groupId>
-            <artifactId>nutzboot-starter-nutz-mvc</artifactId>
-            <version>2.4.2.v20201205</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
-        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-
     </dependencies>
 </project>

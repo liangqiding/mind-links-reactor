@@ -1,47 +1,61 @@
 
-package com.mind.links.netty.nettyMqtt;
+package com.mind.links.netty.nettyMqtt.handler;
 
+import com.mind.links.netty.nettyMqtt.config.BrokerProperties;
+import com.mind.links.netty.nettyMqtt.BrokerServer;
+import com.mind.links.netty.nettyMqtt.config.ProtocolProcess;
 import io.netty.channel.*;
-import io.netty.channel.group.ChannelGroup;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.nutz.ioc.loader.annotation.Inject;
-import org.nutz.ioc.loader.annotation.IocBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
-import java.util.Map;
+
 
 /**
  * MQTT消息处理
  */
-@IocBean
 @ChannelHandler.Sharable
 @Slf4j
+@Component
 public class BrokerHandler extends SimpleChannelInboundHandler<MqttMessage> {
 
-    @Inject
-    private BrokerProperties brokerProperties;
-    @Inject
-    private ChannelGroup channelGroup;
-    @Inject
-    private Map<String, ChannelId> channelIdMap;
+    private static BrokerProperties brokerProperties;
+    private static ProtocolProcess protocolProcess;
+
+
+    @Autowired
+    public void setBrokerProperties(BrokerProperties b) {
+        brokerProperties = b;
+    }
+
+    @Autowired
+    public void setProtocolProcess(ProtocolProcess p) {
+        protocolProcess = p;
+    }
+
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        this.channelGroup.add(ctx.channel());
-        this.channelIdMap.put(brokerProperties.getId() + "_" + ctx.channel().id().asLongText(), ctx.channel().id());
+        log.debug("channelActive:" + ctx.name());
+        BrokerServer.channelGroup.add(ctx.channel());
+        BrokerServer.channelIdMap.put(brokerProperties.getId() + "_" + ctx.channel().id().asLongText(), ctx.channel().id());
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.debug("channelInactive:" + ctx.name());
         super.channelInactive(ctx);
-        this.channelGroup.remove(ctx.channel());
-        this.channelIdMap.remove(brokerProperties.getId() + "_" + ctx.channel().id().asLongText());
+        BrokerServer.channelGroup.remove(ctx.channel());
+        BrokerServer.channelIdMap.remove(brokerProperties.getId() + "_" + ctx.channel().id().asLongText());
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MqttMessage msg) throws Exception {
+        log.debug("channelInactive:" + ctx.name());
         if (msg.decoderResult().isFailure()) {
             Throwable cause = msg.decoderResult().cause();
             if (cause instanceof MqttUnacceptableProtocolVersionException) {
@@ -56,17 +70,18 @@ public class BrokerHandler extends SimpleChannelInboundHandler<MqttMessage> {
                         null));
             }
             ctx.close();
-            return;
         }
 
         switch (msg.fixedHeader().messageType()) {
             case CONNECT:
                 log.info("CONNECT");
+                protocolProcess.connect().processConnect(ctx.channel(), (MqttConnectMessage) msg);
                 break;
             case CONNACK:
                 break;
             case PUBLISH:
                 log.info("PUBLISH");
+                this.debug((MqttPublishMessage)msg);
                 break;
             case PUBACK:
                 log.info("PUBACK");
@@ -104,6 +119,15 @@ public class BrokerHandler extends SimpleChannelInboundHandler<MqttMessage> {
         }
     }
 
+    public void debug(MqttPublishMessage mqttPublishMessage) {
+        String name = mqttPublishMessage.variableHeader().topicName();
+        byte[] messageBytes = new byte[mqttPublishMessage.payload().readableBytes()];
+        mqttPublishMessage.payload().getBytes(mqttPublishMessage.payload().readerIndex(), messageBytes);
+        String msg = new String(messageBytes);
+
+        log.info("topic:"+name+",msg:"+msg);
+    }
+
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (cause instanceof IOException) {
@@ -128,7 +152,7 @@ public class BrokerHandler extends SimpleChannelInboundHandler<MqttMessage> {
 //                        this.protocolProcess.publish().processPublish(ctx.channel(), sessionStore.getWillMessage());
 //                    }
 //                }
-                ctx.close();
+            ctx.close();
 //            }
         } else {
             super.userEventTriggered(ctx, evt);

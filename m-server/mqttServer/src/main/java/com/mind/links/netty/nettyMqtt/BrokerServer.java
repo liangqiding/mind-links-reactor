@@ -1,5 +1,7 @@
 package com.mind.links.netty.nettyMqtt;
 
+import com.mind.links.netty.nettyMqtt.config.BrokerProperties;
+import com.mind.links.netty.nettyMqtt.handler.BrokerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.epoll.EpollEventLoopGroup;
@@ -23,7 +25,6 @@ import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.nutz.boot.starter.ServerFace;
-import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +34,12 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLEngine;
 import java.io.InputStream;
 import java.security.KeyStore;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * t-io启动Broker
+ *
  * @author qidingliang
  */
 @Component
@@ -52,14 +54,13 @@ public class BrokerServer implements ServerFace {
     private SslContext sslContext;
     private Channel channel;
     private Channel websocketChannel;
-    private ChannelGroup channelGroup;
-    private Map<String, ChannelId> channelIdMap;
+    public static ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    public static Map<String, ChannelId> channelIdMap = new ConcurrentHashMap<>();
 
     @Override
     public void start() throws Exception {
         LOGGER.info("Initializing {} MQTT Broker ...", "[" + brokerProperties.getId() + "]");
-        channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-        channelIdMap = new HashMap<>();
+
         bossGroup = brokerProperties.getUseEpoll() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
         workerGroup = brokerProperties.getUseEpoll() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
         if (brokerProperties.getSslEnabled()) {
@@ -95,16 +96,8 @@ public class BrokerServer implements ServerFace {
         LOGGER.info("MQTT Broker {} shutdown finish.", "[" + brokerProperties.getId() + "]");
     }
 
-    @IocBean(name = "channelGroup")
-    public ChannelGroup getChannels() {
-        return this.channelGroup;
-    }
-
-    @IocBean(name = "channelIdMap")
-    public Map<String, ChannelId> getChannelIdMap() {
-        return this.channelIdMap;
-    }
-
+    @Autowired
+    BrokerHandler brokerHandler;
     private void mqttServer() throws Exception {
         ServerBootstrap sb = new ServerBootstrap();
         sb.group(bossGroup, workerGroup)
@@ -127,7 +120,7 @@ public class BrokerServer implements ServerFace {
                         }
                         channelPipeline.addLast("decoder", new MqttDecoder());
                         channelPipeline.addLast("encoder", MqttEncoder.INSTANCE);
-                        channelPipeline.addLast("broker", new BrokerHandler());
+                        channelPipeline.addLast("broker", brokerHandler);
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, brokerProperties.getSoBacklog())

@@ -27,7 +27,7 @@ public class ScheduleConfig {
     private final static Integer QUEUED_TASK_CAP = THREAD_CAP * 300;
 
     @ApiModelProperty("线程名")
-    private final static String NAME = "minioService-";
+    private final static String NAME = "securityService-";
 
     @Bean
     public Scheduler myScheduler() {

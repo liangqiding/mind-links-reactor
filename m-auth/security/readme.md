@@ -30,7 +30,7 @@
 > 用到的pom包  | [版本号参考](../../pom.xml)
 
 ```xml
- <dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
