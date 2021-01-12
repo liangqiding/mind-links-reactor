@@ -6,6 +6,7 @@ import com.mind.links.netty.messageHandler.MessageHandlerImpl;
 import io.netty.channel.*;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,14 +20,10 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @ChannelHandler.Sharable
 @Component
+@RequiredArgsConstructor
 public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
 
-    private static MessageHandlerImpl messageHandler;
-
-    @Autowired
-    public void setMessageHandler(MessageHandlerImpl mh) {
-        messageHandler = mh;
-    }
+    private final MessageHandlerImpl messageHandler;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {

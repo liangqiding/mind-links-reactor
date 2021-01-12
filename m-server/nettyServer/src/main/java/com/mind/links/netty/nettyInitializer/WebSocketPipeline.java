@@ -1,5 +1,6 @@
 package com.mind.links.netty.nettyInitializer;
 
+import com.mind.links.netty.nettyHandler.NettyServerHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
@@ -19,13 +20,16 @@ import org.springframework.stereotype.Component;
 @ApiModel("webSocket解码器")
 public class WebSocketPipeline {
 
+    @ApiModelProperty("netty消息处理类")
+    private static final String HANDLER_NAME = NettyServerHandler.class.getSimpleName();
+
     public void webSocketPipelineAdd(ChannelHandlerContext ctx) {
         WebSocketPipelineProperties wp = new WebSocketPipelineProperties();
-        ctx.pipeline().addBefore(wp.HANDLER_NAME, wp.httpServerCodec.getClass().getSimpleName(), wp.httpServerCodec)
-                .addBefore(wp.HANDLER_NAME, wp.chunkedWriteHandler.getClass().getSimpleName(), wp.chunkedWriteHandler)
-                .addBefore(wp.HANDLER_NAME, wp.httpObjectAggregator.getClass().getSimpleName(), wp.httpObjectAggregator)
-                .addBefore(wp.HANDLER_NAME, wp.webSocketFrameAggregator.getClass().getSimpleName(), wp.webSocketFrameAggregator)
-                .addBefore(wp.HANDLER_NAME, wp.webSocketServerProtocolHandler.getClass().getSimpleName(), wp.webSocketServerProtocolHandler);
+        ctx.pipeline().addBefore(HANDLER_NAME, wp.httpServerCodec.getClass().getSimpleName(), wp.httpServerCodec)
+                .addBefore(HANDLER_NAME, wp.chunkedWriteHandler.getClass().getSimpleName(), wp.chunkedWriteHandler)
+                .addBefore(HANDLER_NAME, wp.httpObjectAggregator.getClass().getSimpleName(), wp.httpObjectAggregator)
+                .addBefore(HANDLER_NAME, wp.webSocketFrameAggregator.getClass().getSimpleName(), wp.webSocketFrameAggregator)
+                .addBefore(HANDLER_NAME, wp.webSocketServerProtocolHandler.getClass().getSimpleName(), wp.webSocketServerProtocolHandler);
     }
 
     @ApiModel("webSocket解码器配置(多例)")
@@ -45,9 +49,6 @@ public class WebSocketPipeline {
 
         @ApiModelProperty("webSocket支持,设置路由")
         volatile WebSocketServerProtocolHandler webSocketServerProtocolHandler = new WebSocketServerProtocolHandler("/ws");
-
-        @ApiModelProperty("netty消息处理类")
-        private final String HANDLER_NAME = "NettyServerHandler";
 
     }
 }

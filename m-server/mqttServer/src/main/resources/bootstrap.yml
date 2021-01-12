@@ -1,14 +1,41 @@
-#==========================swagger 访问接口==================================
-#           http://${ip}:10131/swagger-ui/index.html                      #
-#==========================================================================
+#####################################     mqtt 服务器    ##############################################
+#
+#
+###########################################################################################################
+jetty:
+  contextPath: /
+  threadpool:
+    idleTimeout: 60000
+    maxThreads: 200
+    minThreads: 10
+links.mqtt:
+  broker:
+    cluster-on: false
+    host: 127.0.0.1
+    id: m-links-mqtt
+    keep-alive: 60
+    mqtt-password-must: true
+    port: 8885
+    so-backlog: 511
+    so-keep-alive: true
+    ssl-enabled: false
+    ssl-password: 123456
+    use-epoll: false
+    webSocket-enabled: true
+    webSocket-port: 9995
+nutz:
+  application:
+    name: mqtt
+  propdoc:
+    packages: cn.wizzer.iot.mqtt.server.broker
 netty:
   port: 21000
-spring:
   ##################################################################################################
   #                               nacos
   #                           192.168.60.119:8848
   #                           192.168.188.106:8848
   ##################################################################################################
+spring:
   application:
     name: mqttService
   cloud:
@@ -47,56 +74,6 @@ spring:
       missing-topics-fatal: false
     consumer:
       max-poll-records: 100
-#####################################     mqtt 服务器    ##############################################
-#
-#
-###########################################################################################################
-jetty:
-  contextPath: /
-  threadpool:
-    idleTimeout: 60000
-    maxThreads: 200
-    minThreads: 10
-mqttwk:
-  broker:
-    cluster-on: false
-    host: ''
-    id: mqttwk
-    kafka:
-      acks: -1
-      batch:
-        size: 16384
-      bootstrap:
-        servers: 127.0.0.1:9092
-      broker-enabled: false
-      buffer:
-        memory: 33554432
-      key:
-        serializer: org.apache.kafka.common.serialization.StringSerializer
-      linger:
-        ms: 1
-      partitioner:
-        class: cn.wizzer.iot.mqtt.server.store.kafka.SimplePartitioner
-      producer:
-        topic: mqtt_publish
-      retries: 3
-      value:
-        serializer: org.apache.kafka.common.serialization.StringSerializer
-    keep-alive: 60
-    mqtt-password-must: true
-    port: 8885
-    so-backlog: 511
-    so-keep-alive: true
-    ssl-enabled: false
-    ssl-password: 123456
-    use-epoll: false
-    websocket-enabled: true
-    websocket-port: 9995
-nutz:
-  application:
-    name: mqttwk
-  propdoc:
-    packages: cn.wizzer.iot.mqtt.server.broker
 ############################################################################################
 #                               调试选项(热加载)
 #                path:  路径
