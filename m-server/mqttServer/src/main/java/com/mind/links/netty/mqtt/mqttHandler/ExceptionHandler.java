@@ -21,7 +21,6 @@ public class ExceptionHandler extends ChannelDuplexHandler {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
         log.error("exceptionCaught:",cause);
     }
 
@@ -31,7 +30,6 @@ public class ExceptionHandler extends ChannelDuplexHandler {
             @Override
             public void operationComplete(ChannelFuture future) {
                 if(!future.isSuccess()){
-                    future.cause().printStackTrace();
                     log.error("connect exceptionCaught",future.cause());
                 }
             }
@@ -42,7 +40,6 @@ public class ExceptionHandler extends ChannelDuplexHandler {
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         ctx.write(msg, promise.addListener((ChannelFutureListener) future -> {
             if(!future.isSuccess()){
-                future.cause().printStackTrace();
                 log.error("write exceptionCaught{}",future);
             }
         }));

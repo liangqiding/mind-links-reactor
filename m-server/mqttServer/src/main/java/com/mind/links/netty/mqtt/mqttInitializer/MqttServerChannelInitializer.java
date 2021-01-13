@@ -56,7 +56,7 @@ public class MqttServerChannelInitializer extends ChannelInitializer<SocketChann
     }
 
 
-    @ApiModel("通用编码解码器配置")
+    @ApiModel("通用编码解码器配置（多例）")
     public static class NettyInitializerProperties {
 
         @ApiModelProperty("心跳机制(多例)")

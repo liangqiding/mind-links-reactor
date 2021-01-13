@@ -14,7 +14,7 @@ links.mqtt:
     host: 127.0.0.1
     id: m-links-mqtt
     keep-alive: 60
-    mqtt-password-must: true
+    mqtt-password-must: false
     port: 8885
     so-backlog: 511
     so-keep-alive: true

@@ -1,9 +1,12 @@
 package com.mind.links.netty.mqtt.mqttHandler;
 
-import com.mind.links.netty.mqtt.mqttStore.Connect;
+import com.mind.links.netty.mqtt.mqttHandler.protocolHandler.ConnectHandler;
+import com.mind.links.netty.mqtt.mqttHandler.protocolHandler.PingRegHandler;
 import io.netty.channel.*;
 import io.netty.handler.codec.mqtt.*;
+import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.util.AttributeKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -20,7 +23,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MqttBrokerHandler extends SimpleChannelInboundHandler<MqttMessage> {
 
-    private final Connect connect;
+    private final ConnectHandler connectHandler;
+
+    private final PingRegHandler pingRegHandler;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MqttMessage msg) throws Exception {
@@ -44,7 +49,7 @@ public class MqttBrokerHandler extends SimpleChannelInboundHandler<MqttMessage> 
         switch (msg.fixedHeader().messageType()) {
             case CONNECT:
                 log.info("CONNECT");
-                connect.processConnect(ctx.channel(), (MqttConnectMessage) msg);
+                connectHandler.connect(ctx.channel(), (MqttConnectMessage) msg);
                 break;
             case CONNACK:
                 break;
@@ -76,7 +81,8 @@ public class MqttBrokerHandler extends SimpleChannelInboundHandler<MqttMessage> 
                 log.info("UNSUBACK");
                 break;
             case PINGREQ:
-                log.info("PINGREQ");
+                log.info("PING_REQ");
+                pingRegHandler.processPingReq(ctx.channel());
                 break;
             case PINGRESP:
                 break;
@@ -93,18 +99,22 @@ public class MqttBrokerHandler extends SimpleChannelInboundHandler<MqttMessage> 
         byte[] messageBytes = new byte[mqttPublishMessage.payload().readableBytes()];
         mqttPublishMessage.payload().getBytes(mqttPublishMessage.payload().readerIndex(), messageBytes);
         String msg = new String(messageBytes);
-
         log.info("topic:" + name + ",msg:" + msg);
     }
 
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        log.info("用户超时事件触发" + ctx.channel().id());
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
-            ctx.close();
-        } else {
-            super.userEventTriggered(ctx, evt);
+            if (idleStateEvent.state() == IdleState.ALL_IDLE) {
+                Channel channel = ctx.channel();
+                String clientId = (String) channel.attr(AttributeKey.valueOf("clientId")).get();
+                // 发送遗嘱消息
+                log.info("发送遗嘱消息" + clientId);
+                ctx.close();
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.mind.links.netty.mqtt.mqttStore;
+package com.mind.links.netty.mqtt.mqttStore.subscribe;
 
 import cn.hutool.core.util.StrUtil;
 import com.mind.links.netty.mqtt.mqttStore.cache.SubscribeNotWildcardCache;

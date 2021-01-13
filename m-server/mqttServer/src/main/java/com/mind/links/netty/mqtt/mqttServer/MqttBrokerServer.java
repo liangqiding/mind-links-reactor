@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class MqttBrokerServer  {
+public class MqttBrokerServer implements IMqttServer {
 
     private final BrokerProperties brokerProperties;
 
@@ -42,7 +42,7 @@ public class MqttBrokerServer  {
 
     public static Map<String, ChannelId> channelIdMap = new ConcurrentHashMap<>();
 
-
+    @Override
     public void start() throws Exception {
         log.info("Initializing {} MQTT Broker ...", "[" + JSON.toJSONString(brokerProperties) + "]");
         bossGroup = brokerProperties.getUseEpoll() ? new EpollEventLoopGroup() : new NioEventLoopGroup();
@@ -50,6 +50,7 @@ public class MqttBrokerServer  {
         mqttServer();
     }
 
+    @Override
     public void mqttServer() throws Exception {
         String address = InetAddress.getLocalHost().getHostAddress();
         try {
@@ -76,6 +77,7 @@ public class MqttBrokerServer  {
     /**
      * 销毁
      */
+    @Override
     @PreDestroy
     public void destroy() {
         bossGroup.shutdownGracefully();

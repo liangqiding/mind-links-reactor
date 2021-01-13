@@ -2,24 +2,24 @@
  * Copyright (c) 2018, Mr.Wang (recallcode@aliyun.com) All rights reserved.
  */
 
-package com.mind.links.netty.mqtt.mqttStore.message;
+package com.mind.links.netty.mqtt.mqttStore.publish;
 
 import java.util.List;
 
 /**
- * PUBLISH重发消息存储服务接口, 当QoS=1和QoS=2时存在该重发机制
+ * PUBREL重发消息存储服务接口, 当QoS=2时存在该重发机制
  */
-public interface IDupPublishMessageStoreService {
+public interface IDupPubRelMessageStoreService {
 
 	/**
 	 * 存储消息
 	 */
-	void put(String clientId, DupPublishMessageStore dupPublishMessageStore);
+	void put(String clientId, DupPubRelMessageStore dupPubRelMessageStore);
 
 	/**
 	 * 获取消息集合
 	 */
-	List<DupPublishMessageStore> get(String clientId);
+	List<DupPubRelMessageStore> get(String clientId);
 
 	/**
 	 * 删除消息

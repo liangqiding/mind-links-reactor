@@ -2,7 +2,7 @@
  * Copyright (c) 2018, Mr.Wang (recallcode@aliyun.com) All rights reserved.
  */
 
-package com.mind.links.netty.mqtt.mqttStore;
+package com.mind.links.netty.mqtt.mqttStore.subscribe;
 
 import java.io.Serializable;
 
