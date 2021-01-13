@@ -4,16 +4,19 @@ import com.mind.links.netty.mqtt.mqttFilter.MqttFilter;
 import com.mind.links.netty.mqtt.mqttStore.publish.DupPubRelMessageStore;
 import com.mind.links.netty.mqtt.mqttStore.publish.DupPublishMessageStore;
 import com.mind.links.netty.mqtt.config.BrokerProperties;
-import com.mind.links.netty.mqtt.common.MqttSession;
+import com.mind.links.netty.mqtt.mqttStore.MqttSession;
 import com.mind.links.netty.mqtt.mqttStore.session.SessionStoreHandler;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+
 import java.util.List;
 
 
@@ -25,7 +28,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ConnectHandler {
+public class ConnectHandler implements IMqttMessageHandler {
 
     private final SessionStoreHandler sessionStoreHandler;
 
@@ -33,8 +36,11 @@ public class ConnectHandler {
 
     private final MqttFilter mqttFilter;
 
-    public void connect(Channel channel, MqttConnectMessage msg) {
 
+    @Override
+    public Mono<Void> connect(final ChannelHandlerContext ctx, final MqttMessage mqttMessage) {
+        Channel channel = ctx.channel();
+        MqttConnectMessage msg = (MqttConnectMessage) mqttMessage;
         mqttFilter.filter(channel, msg);
 
         int expire = this.idleHandler(channel, msg);
@@ -44,9 +50,11 @@ public class ConnectHandler {
         this.response(channel, msg);
 
         this.sendUndoneMessage(channel, msg);
+
+        return Mono.empty();
     }
 
-    public int idleHandler(Channel channel, MqttConnectMessage msg) {
+    public int idleHandler(final Channel channel, MqttConnectMessage msg) {
         // 处理连接心跳包
         int expire = 0;
         if (msg.variableHeader().keepAliveTimeSeconds() > 0) {
@@ -60,7 +68,7 @@ public class ConnectHandler {
         return expire;
     }
 
-    public void saveSession(Channel channel, MqttConnectMessage msg, int expire) {
+    public void saveSession(final Channel channel, MqttConnectMessage msg, int expire) {
         // 处理遗嘱信息 并生成session
         MqttSession mqttSession = new MqttSession()
                 .setBrokerId(brokerProperties.getId())
@@ -80,7 +88,7 @@ public class ConnectHandler {
         log.debug("===2mqttSession:" + mqttSession);
     }
 
-    public void response(Channel channel, MqttConnectMessage msg) {
+    public void response(final Channel channel, MqttConnectMessage msg) {
         // 将clientId存储到channel的map中
         channel.attr(AttributeKey.valueOf("clientId")).set(msg.payload().clientIdentifier());
         boolean sessionPresent = sessionStoreHandler.containsKey(msg.payload().clientIdentifier()) && !msg.variableHeader().isCleanSession();
@@ -91,9 +99,9 @@ public class ConnectHandler {
         log.debug("===3 CONNECT - clientId: {}, cleanSession: {}", msg.payload().clientIdentifier(), msg.variableHeader().isCleanSession());
     }
 
-    public void sendUndoneMessage(Channel channel, MqttConnectMessage msg) {
+    public void sendUndoneMessage(final Channel channel, MqttConnectMessage msg) {
         //  TODO: 2021/1/12   如果cleanSession为0, 客户端CleanSession=0时，上线接收离线消息，源码分析,需要重发同一clientId存储的未完成的QoS1和QoS2的DUP消息
-        log.debug("isCleanSession:"+msg.variableHeader().isCleanSession());
+        log.debug("isCleanSession:" + msg.variableHeader().isCleanSession());
         if (!msg.variableHeader().isCleanSession()) {
             List<DupPublishMessageStore> dupPublishMessageStoreList = null;
             List<DupPubRelMessageStore> dupPubRelMessageStoreList = null;
@@ -111,4 +119,5 @@ public class ConnectHandler {
             });
         }
     }
+
 }

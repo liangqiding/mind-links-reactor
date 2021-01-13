@@ -1,6 +1,6 @@
 package com.mind.links.netty.mqtt.mqttStore.session;
 
-import com.mind.links.netty.mqtt.common.MqttSession;
+import com.mind.links.netty.mqtt.mqttStore.MqttSession;
 import com.mind.links.netty.mqtt.mqttServer.MqttBrokerServer;
 import com.mind.links.netty.mqtt.mqttStore.subscribe.SubscribeStoreService;
 import io.netty.channel.Channel;

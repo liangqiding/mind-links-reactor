@@ -1,5 +1,6 @@
 package com.mind.links.netty.mqtt.mqttHandler;
 
+import com.mind.links.netty.mqtt.common.MqttMsgTypeEnum;
 import com.mind.links.netty.mqtt.mqttHandler.protocolHandler.ConnectHandler;
 import com.mind.links.netty.mqtt.mqttHandler.protocolHandler.PingRegHandler;
 import io.netty.channel.*;
@@ -10,6 +11,8 @@ import io.netty.util.AttributeKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
 
 
 /**
@@ -27,81 +30,17 @@ public class MqttBrokerHandler extends SimpleChannelInboundHandler<MqttMessage> 
 
     private final PingRegHandler pingRegHandler;
 
+    private final Scheduler myScheduler;
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MqttMessage msg) throws Exception {
         log.debug("channelInactive:" + ctx.name());
-        if (msg.decoderResult().isFailure()) {
-            Throwable cause = msg.decoderResult().cause();
-            if (cause instanceof MqttUnacceptableProtocolVersionException) {
-                ctx.writeAndFlush(MqttMessageFactory.newMessage(
-                        new MqttFixedHeader(MqttMessageType.CONNACK, false, MqttQoS.AT_MOST_ONCE, false, 0),
-                        new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_REFUSED_UNACCEPTABLE_PROTOCOL_VERSION, false),
-                        null));
-            } else if (cause instanceof MqttIdentifierRejectedException) {
-                ctx.writeAndFlush(MqttMessageFactory.newMessage(
-                        new MqttFixedHeader(MqttMessageType.CONNACK, false, MqttQoS.AT_MOST_ONCE, false, 0),
-                        new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_REFUSED_IDENTIFIER_REJECTED, false),
-                        null));
-            }
-            ctx.close();
-        }
-
-        switch (msg.fixedHeader().messageType()) {
-            case CONNECT:
-                log.info("CONNECT");
-                connectHandler.connect(ctx.channel(), (MqttConnectMessage) msg);
-                break;
-            case CONNACK:
-                break;
-            case PUBLISH:
-                log.info("PUBLISH");
-                this.debug((MqttPublishMessage) msg);
-                break;
-            case PUBACK:
-                log.info("PUBACK");
-                break;
-            case PUBREC:
-                log.info("PUBREC");
-                break;
-            case PUBREL:
-                log.info("PUBREL");
-                break;
-            case PUBCOMP:
-                log.info("PUBCOMP");
-                break;
-            case SUBSCRIBE:
-                log.info("SUBSCRIBE");
-                break;
-            case SUBACK:
-                break;
-            case UNSUBSCRIBE:
-                log.info("UNSUBSCRIBE");
-                break;
-            case UNSUBACK:
-                log.info("UNSUBACK");
-                break;
-            case PINGREQ:
-                log.info("PING_REQ");
-                pingRegHandler.processPingReq(ctx.channel());
-                break;
-            case PINGRESP:
-                break;
-            case DISCONNECT:
-                log.info("DISCONNECT");
-                break;
-            default:
-                break;
-        }
+        Mono.just(msg)
+                .filter(mqttMessage -> this.decoderResultIsSuccess(ctx, msg))
+                .switchIfEmpty(error(ctx))
+                .flatMap(mqttMessage -> MqttMsgTypeEnum.msgHandler(mqttMessage.fixedHeader().messageType().value(),ctx,mqttMessage))
+                .subscribe();
     }
-
-    public void debug(MqttPublishMessage mqttPublishMessage) {
-        String name = mqttPublishMessage.variableHeader().topicName();
-        byte[] messageBytes = new byte[mqttPublishMessage.payload().readableBytes()];
-        mqttPublishMessage.payload().getBytes(mqttPublishMessage.payload().readerIndex(), messageBytes);
-        String msg = new String(messageBytes);
-        log.info("topic:" + name + ",msg:" + msg);
-    }
-
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
@@ -116,5 +55,29 @@ public class MqttBrokerHandler extends SimpleChannelInboundHandler<MqttMessage> 
                 ctx.close();
             }
         }
+    }
+
+    private boolean decoderResultIsSuccess(ChannelHandlerContext ctx, MqttMessage msg) {
+        if (msg.decoderResult().isFailure()) {
+            Throwable cause = msg.decoderResult().cause();
+            if (cause instanceof MqttUnacceptableProtocolVersionException) {
+                ctx.writeAndFlush(MqttMessageFactory.newMessage(
+                        new MqttFixedHeader(MqttMessageType.CONNACK, false, MqttQoS.AT_MOST_ONCE, false, 0),
+                        new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_REFUSED_UNACCEPTABLE_PROTOCOL_VERSION, false),
+                        null));
+            } else if (cause instanceof MqttIdentifierRejectedException) {
+                ctx.writeAndFlush(MqttMessageFactory.newMessage(
+                        new MqttFixedHeader(MqttMessageType.CONNACK, false, MqttQoS.AT_MOST_ONCE, false, 0),
+                        new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_REFUSED_IDENTIFIER_REJECTED, false),
+                        null));
+            }
+            ctx.close();
+            return false;
+        }
+        return true;
+    }
+
+    private  <T> Mono<T> error(ChannelHandlerContext ctx) {
+        return ExceptionHandler.errors("channelRead0-解码器异常");
     }
 }

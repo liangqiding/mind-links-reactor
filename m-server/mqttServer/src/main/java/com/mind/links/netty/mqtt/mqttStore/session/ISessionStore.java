@@ -1,6 +1,6 @@
 package com.mind.links.netty.mqtt.mqttStore.session;
 
-import com.mind.links.netty.mqtt.common.MqttSession;
+import com.mind.links.netty.mqtt.mqttStore.MqttSession;
 import io.netty.handler.codec.mqtt.MqttConnectMessage;
 import org.apache.ibatis.annotations.Param;
 

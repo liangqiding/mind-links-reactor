@@ -21,7 +21,7 @@ public enum LinksExceptionEnum {
      */
 
     OK(20000, "业务请求成功"),
-    ERROR(40000, "业务请求失败"),
+    ERROR(23333, "业务请求失败"),
     USER_HAD(30001, "用户名已存在"),
     UNAUTHORIZED(30002, "用户未授权"),
     USER_NOT_FOUND(30003, "用户不存在"),
@@ -40,7 +40,13 @@ public enum LinksExceptionEnum {
     RECONNECTION(30000, "尝试重连"),
     SYSTEM_ERROR(-1, "系统异常"),
     OTHER_ERROR(-200, "未知异常"),
-    UNDECLARED(-20000, "未声明的异常");
+    UNDECLARED(-20000, "未声明的异常"),
+
+    /**
+     * tcp
+     */
+    LINKS_OK(40000, "连接成功"),
+    LINKS_ERROR(43333, "连接失败");
 
     @ApiModelProperty("状态码")
     private final Integer code;

@@ -1,4 +1,4 @@
-package com.mind.links.netty.mqtt.common;
+package com.mind.links.netty.mqtt.mqttStore;
 
 
 import io.netty.handler.codec.mqtt.MqttPublishMessage;

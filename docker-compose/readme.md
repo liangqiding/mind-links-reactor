@@ -2,12 +2,10 @@
 
 ## 启动基础服务
 
-mysql、redis、rabbitmq
+mysql、redis、kafka、mongodb
  
 `docker-compose up -d`
 
-rabbitmq默认账号密码：guest/guest
-mysql默认账号密码：root/root123
 
 ## 启动devops组件，如elasticsearch、zipkin、skywalking、kibana、grafana
 

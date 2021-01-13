@@ -60,7 +60,7 @@ public class MqttServerChannelInitializer extends ChannelInitializer<SocketChann
     public static class NettyInitializerProperties {
 
         @ApiModelProperty("心跳机制(多例)")
-        volatile IdleStateHandler idleStateHandler = new IdleStateHandler(60, 0, 0);
+        volatile IdleStateHandler idleStateHandler = new IdleStateHandler(10, 0, 0);
 
         @ApiModelProperty("MQTT解码器(多例)")
         volatile MqttDecoder mqttDecoder = new MqttDecoder();
