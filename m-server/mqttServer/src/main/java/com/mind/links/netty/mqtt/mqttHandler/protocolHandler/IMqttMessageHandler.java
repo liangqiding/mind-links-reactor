@@ -80,7 +80,7 @@ public interface IMqttMessageHandler {
 
 
     /**
-     * 7 发布完成（qos2 第三步
+     * 7 发布完成（qos2 第三步)
      *
      * @param channel 上下文
      * @param msg 消息

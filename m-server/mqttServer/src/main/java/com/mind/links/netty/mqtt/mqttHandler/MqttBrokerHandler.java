@@ -1,6 +1,5 @@
 package com.mind.links.netty.mqtt.mqttHandler;
 
-import com.mind.links.netty.mqtt.common.ChannelCommon;
 import com.mind.links.netty.mqtt.common.MqttMsgTypeEnum;
 import exception.LinksExceptionTcp;
 import io.netty.channel.*;
@@ -12,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.function.Consumer;
 
 /**
  * MQTT消息处理
@@ -29,7 +27,7 @@ public class MqttBrokerHandler extends SimpleChannelInboundHandler<MqttMessage> 
         log.debug("channelRead0:" + ctx.channel());
         Mono.just(ctx.channel())
                 .filter(channel -> this.decoderResultIsSuccess(ctx, msg))
-                .switchIfEmpty(LinksExceptionTcp.errors("channelRead0-解码器异常"))
+                .switchIfEmpty(LinksExceptionTcp.errors("channelRead0-解码器异常,只支持mqtt协议报文"))
                 .flatMap(channel -> MqttMsgTypeEnum.msgHandler(msg.fixedHeader().messageType().value(), channel, msg))
                 .onErrorResume(LinksExceptionTcp::errors)
                 .subscribe(channel -> log.debug("事件{},处理完成{}", msg.fixedHeader().messageType(), channel));
@@ -66,7 +64,6 @@ public class MqttBrokerHandler extends SimpleChannelInboundHandler<MqttMessage> 
                         new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_REFUSED_IDENTIFIER_REJECTED, false),
                         null));
             }
-            ctx.close();
             return false;
         }
         return true;

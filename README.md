@@ -1,10 +1,16 @@
-# mind-links 基于Reactor3的大型响应式分布式物联网智能家电系统
+# mind-links 基于Reactor3 netty的大型响应式分布式物联网智能家电系统,百万长连接
 
 ## 前言
 
-`mind-links` 本项目基于netty的大型响应式分布式物联网智能家电系统，主要技术包括： Reactor3,netty,SpringCloud,nacos,Elasticsearch,Kafka,docker,Redisson,mqtt，mysql,mongodb,EKL
+`mind-links` 本项目基于netty的大型响应式分布式物联网智能家电系统，主要技术包括：mqtt,Reactor3,netty,SpringCloud,nacos,Elasticsearch,Kafka,docker,Redisson,mysql,mongodb,EKL
 
-- 后台项目 基于SpringCloud的微服务开发脚手架实现  参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)，
+项目包含前端web页面,后端web接口,tcp服务器
+
+整合mqtt协议支持，百万长连接设计方案
+
+- web后端服务 基于SpringCloud的微服务开发脚手架开发 参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)，
+
+- TCP服务器 基于netty 的tcp长连接服务器,采用分布式的设计思路,整合多种协议支持,包括：mqtt协议的完整支持（14种报文结构和遗嘱等）,webSocket,Socket
 
 - 前端项目 采用TS.JS形式，基于vue-typescript-admin-template开发脚手架实现 参考地址[https://github.com/Armour/vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
 

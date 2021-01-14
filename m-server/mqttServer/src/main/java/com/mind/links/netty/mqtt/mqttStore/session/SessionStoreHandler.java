@@ -2,12 +2,14 @@ package com.mind.links.netty.mqtt.mqttStore.session;
 
 import com.alibaba.fastjson.JSON;
 import com.mind.links.netty.mqtt.common.ChannelCommon;
+import com.mind.links.netty.mqtt.config.BrokerProperties;
 import com.mind.links.netty.mqtt.mqttStore.MqttSession;
 import com.mind.links.netty.mqtt.mqttServer.MqttBrokerServer;
 import com.mind.links.netty.mqtt.mqttStore.subscribe.SubscribeStoreService;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 import io.netty.handler.codec.mqtt.MqttConnectMessage;
+import io.netty.util.AttributeKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,7 +27,20 @@ public class SessionStoreHandler implements ISessionStore{
 
     private final SubscribeStoreService subscribeStoreService;
 
+    private final BrokerProperties brokerProperties;
+
     public ConcurrentHashMap<String, MqttSession> sessionStoreMap = new ConcurrentHashMap<>();
+
+    public void extendSession(Channel channel) {
+        String clientId = (String) channel.attr(AttributeKey.valueOf("clientId")).get();
+        if (containsKey(clientId)) {
+            MqttSession sessionStore = get(clientId);
+            ChannelId channelId = ChannelCommon.channelIdMap.get(sessionStore.getBrokerId() + "_" + sessionStore.getChannelId());
+            if (brokerProperties.getId().equals(sessionStore.getBrokerId()) && channelId != null) {
+                expire(clientId, sessionStore.getExpire());
+            }
+        }
+     }
 
     @Override
     public void cleanSession(MqttConnectMessage msg) {
@@ -63,7 +78,7 @@ public class SessionStoreHandler implements ISessionStore{
     @Override
     public void expire(String clientId, int expire) {
         if (!sessionStoreMap.containsKey(clientId)) {
-            sessionStoreMap.remove(clientId);
+            // 设置失效时间
         }
     }
 

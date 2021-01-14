@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.net.SocketAddress;
+import java.util.Optional;
 
 
 /**
@@ -32,22 +33,17 @@ public class ExceptionHandler extends ChannelDuplexHandler {
 
     @Override
     public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception {
-        ctx.connect(remoteAddress, localAddress, promise.addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) {
-                if (!future.isSuccess()) {
-                    log.error("connect exceptionCaught", future.cause());
-                }
-            }
-        }));
+        ctx.connect(remoteAddress, localAddress, promise.addListener((ChannelFutureListener) future ->
+                Optional.of(future.isSuccess())
+                        .filter(b -> !b)
+                        .ifPresent(b -> log.error("connect exceptionCaught", future.cause()))));
     }
 
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        ctx.write(msg, promise.addListener((ChannelFutureListener) future -> {
-            if (!future.isSuccess()) {
-                log.error("write exceptionCaught", future.cause());
-            }
-        }));
+        ctx.write(msg, promise.addListener((ChannelFutureListener) future ->
+                Optional.of(future.isSuccess())
+                        .filter(b -> !b)
+                        .ifPresent(b -> log.error("write exceptionCaught", future.cause()))));
     }
 }
