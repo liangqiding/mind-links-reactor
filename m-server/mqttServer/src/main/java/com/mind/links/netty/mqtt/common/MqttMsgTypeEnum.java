@@ -118,7 +118,6 @@ public enum MqttMsgTypeEnum {
 
     public static Mono<Channel> msgHandler(int messageType, Channel channel, final MqttMessage msg) {
         return Flux.fromIterable(Arrays.asList(values().clone()))
-                .log()
                 .filter(e -> e.value == messageType)
                 .switchIfEmpty(LinksExceptionTcp.errors("错误的消息类型"))
                 .next()

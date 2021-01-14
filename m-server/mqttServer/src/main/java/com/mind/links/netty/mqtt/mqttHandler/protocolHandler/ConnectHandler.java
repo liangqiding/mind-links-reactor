@@ -105,8 +105,10 @@ public class ConnectHandler implements IMqttMessageHandler {
                 });
     }
 
+    /**
+     * 如果cleanSession为0, 客户端CleanSession=0时，上线接收离线消息，源码分析,需要重发同一clientId存储的未完成的QoS1和QoS2的DUP消息
+     */
     public void sendUndoneMessage(final Channel channel, MqttConnectMessage msg) {
-        //  TODO: 2021/1/12   如果cleanSession为0, 客户端CleanSession=0时，上线接收离线消息，源码分析,需要重发同一clientId存储的未完成的QoS1和QoS2的DUP消息
         log.debug("isCleanSession:" + msg.variableHeader().isCleanSession());
         if (!msg.variableHeader().isCleanSession()) {
             List<DupPublishMessageStore> dupPublishMessageStoreList = null;

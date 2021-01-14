@@ -13,11 +13,15 @@ import reactor.core.publisher.Mono;
  */
 @Component
 @Slf4j
-public class DisconnectHandler implements IMqttMessageHandler{
+public class DisconnectHandler implements IMqttMessageHandler {
 
     @Override
     public Mono<Channel> disconnect(Channel channel) {
-        log.debug("断开连接:"+channel);
+        log.debug("断开连接:" + channel);
         return Mono.just(channel);
+    }
+
+    public void test() {
+        // 清空session
     }
 }
