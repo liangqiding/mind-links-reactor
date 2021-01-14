@@ -3,6 +3,7 @@ package com.mind.links.netty.mqtt.mqttHandler;
 
 import com.mind.links.common.enums.LinksExceptionEnum;
 import com.mind.links.common.exception.LinksException;
+import com.mind.links.netty.mqtt.common.ChannelCommon;
 import io.netty.channel.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,18 +24,10 @@ import java.net.SocketAddress;
 @Component
 public class ExceptionHandler extends ChannelDuplexHandler {
 
-
-    public static <T> Mono<T> errors(String msg) {
-        return errors(LinksExceptionEnum.LINKS_ERROR.getCode(),msg);
-    }
-
-    public static <T> Mono<T> errors(Integer code,String msg) {
-        return Mono.error(new LinksException(code,msg));
-    }
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("exceptionCaught:",cause);
+        log.error("exceptionCaught:", cause);
+        ChannelCommon.channelClose(ctx.channel());
     }
 
     @Override
@@ -42,8 +35,8 @@ public class ExceptionHandler extends ChannelDuplexHandler {
         ctx.connect(remoteAddress, localAddress, promise.addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) {
-                if(!future.isSuccess()){
-                    log.error("connect exceptionCaught",future.cause());
+                if (!future.isSuccess()) {
+                    log.error("connect exceptionCaught", future.cause());
                 }
             }
         }));
@@ -52,8 +45,8 @@ public class ExceptionHandler extends ChannelDuplexHandler {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         ctx.write(msg, promise.addListener((ChannelFutureListener) future -> {
-            if(!future.isSuccess()){
-                log.error("write exceptionCaught",future.cause());
+            if (!future.isSuccess()) {
+                log.error("write exceptionCaught", future.cause());
             }
         }));
     }

@@ -18,13 +18,13 @@ import java.util.Optional;
 /**
  * @author qidingliang
  * <p>
- * 公共异常处理类
+ * 公共异常处理类 http异常
  */
 @Slf4j
 public class LinksExceptionHandler {
 
     @ApiModelProperty("错误码")
-    public static final Integer ERROR = 40000;
+    public static final Integer ERROR = LinksExceptionEnum.ERROR.getCode();
 
     public static Mono<ResponseResult<String>> errorHandler(Throwable t) {
         return Mono.fromCallable(() -> errorHandler((Exception) t));

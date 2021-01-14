@@ -1,8 +1,8 @@
 package com.mind.links.netty.mqtt.mqttHandler.protocolHandler;
 
+import com.mind.links.netty.mqtt.common.ChannelCommon;
 import com.mind.links.netty.mqtt.mqttStore.MqttSession;
 import com.mind.links.netty.mqtt.config.BrokerProperties;
-import com.mind.links.netty.mqtt.mqttServer.MqttBrokerServer;
 import com.mind.links.netty.mqtt.mqttStore.session.SessionStoreHandler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -31,21 +31,22 @@ public class PingRegHandler implements IMqttMessageHandler {
 
 
     @Override
-    public Mono<Void> pingReq(final ChannelHandlerContext ctx) {
-        Channel channel = ctx.channel();
-        String clientId = (String) channel.attr(AttributeKey.valueOf("clientId")).get();
-        if (sessionStoreHandler.containsKey(clientId)) {
-            MqttSession sessionStore = sessionStoreHandler.get(clientId);
-            ChannelId channelId = MqttBrokerServer.channelIdMap.get(sessionStore.getBrokerId() + "_" + sessionStore.getChannelId());
-            if (brokerProperties.getId().equals(sessionStore.getBrokerId()) && channelId != null) {
-                sessionStoreHandler.expire(clientId, sessionStore.getExpire());
-                MqttMessage pingRespMessage = MqttMessageFactory.newMessage(
-                        new MqttFixedHeader(MqttMessageType.PINGRESP, false, MqttQoS.AT_MOST_ONCE, false, 0), null, null);
-                log.debug("PING_REQ - clientId: {}", clientId);
-                channel.writeAndFlush(pingRespMessage);
-            }
-        }
-        return Mono.empty();
+    public Mono<Channel> pingReq(Channel channel) {
+        return Mono.just(channel)
+                .doOnNext(c -> {
+                    String clientId = (String) c.attr(AttributeKey.valueOf("clientId")).get();
+                    if (sessionStoreHandler.containsKey(clientId)) {
+                        MqttSession sessionStore = sessionStoreHandler.get(clientId);
+                        ChannelId channelId = ChannelCommon.channelIdMap.get(sessionStore.getBrokerId() + "_" + sessionStore.getChannelId());
+                        if (brokerProperties.getId().equals(sessionStore.getBrokerId()) && channelId != null) {
+                            sessionStoreHandler.expire(clientId, sessionStore.getExpire());
+                            MqttMessage pingRespMessage = MqttMessageFactory.newMessage(
+                                    new MqttFixedHeader(MqttMessageType.PINGRESP, false, MqttQoS.AT_MOST_ONCE, false, 0), null, null);
+                            log.debug("PING_REQ - clientId: {}", clientId);
+                            c.writeAndFlush(pingRespMessage);
+                        }
+                    }
+                });
     }
 
 }

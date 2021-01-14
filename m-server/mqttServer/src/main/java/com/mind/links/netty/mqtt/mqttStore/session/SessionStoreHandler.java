@@ -1,5 +1,7 @@
 package com.mind.links.netty.mqtt.mqttStore.session;
 
+import com.alibaba.fastjson.JSON;
+import com.mind.links.netty.mqtt.common.ChannelCommon;
 import com.mind.links.netty.mqtt.mqttStore.MqttSession;
 import com.mind.links.netty.mqtt.mqttServer.MqttBrokerServer;
 import com.mind.links.netty.mqtt.mqttStore.subscribe.SubscribeStoreService;
@@ -7,6 +9,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 import io.netty.handler.codec.mqtt.MqttConnectMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class SessionStoreHandler implements ISessionStore{
 
     private final SubscribeStoreService subscribeStoreService;
@@ -32,9 +36,9 @@ public class SessionStoreHandler implements ISessionStore{
                 // 清理缓存
             }
             try {
-                ChannelId channelId = MqttBrokerServer.channelIdMap.get(sessionStore.getBrokerId() + "_" + sessionStore.getChannelId());
+                ChannelId channelId = ChannelCommon.channelIdMap.get(sessionStore.getBrokerId() + "_" + sessionStore.getChannelId());
                 if (channelId != null) {
-                    Channel previous = MqttBrokerServer.channelGroup.find(channelId);
+                    Channel previous = ChannelCommon.channelGroup.find(channelId);
                     if (previous != null) previous.close();
                 }
             } catch (Exception e) {
@@ -50,6 +54,7 @@ public class SessionStoreHandler implements ISessionStore{
     @Override
     public void put(String clientId, MqttSession sessionStore, int expire) {
         //SessionStore对象不能正常转为JSON,使用工具类类解决
+        log.debug("保存session:"+ JSON.toJSONString(sessionStore));
         if (!sessionStoreMap.containsKey(clientId)) {
             sessionStoreMap.put(clientId, sessionStore);
         }

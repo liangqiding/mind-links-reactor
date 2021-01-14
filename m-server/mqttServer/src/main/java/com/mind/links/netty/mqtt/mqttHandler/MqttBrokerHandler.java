@@ -1,19 +1,18 @@
 package com.mind.links.netty.mqtt.mqttHandler;
 
+import com.mind.links.netty.mqtt.common.ChannelCommon;
 import com.mind.links.netty.mqtt.common.MqttMsgTypeEnum;
-import com.mind.links.netty.mqtt.mqttHandler.protocolHandler.ConnectHandler;
-import com.mind.links.netty.mqtt.mqttHandler.protocolHandler.PingRegHandler;
+import exception.LinksExceptionTcp;
 import io.netty.channel.*;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
 
+import java.util.function.Consumer;
 
 /**
  * MQTT消息处理
@@ -23,23 +22,17 @@ import reactor.core.scheduler.Scheduler;
 @ChannelHandler.Sharable
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class MqttBrokerHandler extends SimpleChannelInboundHandler<MqttMessage> {
-
-    private final ConnectHandler connectHandler;
-
-    private final PingRegHandler pingRegHandler;
-
-    private final Scheduler myScheduler;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MqttMessage msg) throws Exception {
-        log.debug("channelInactive:" + ctx.name());
-        Mono.just(msg)
-                .filter(mqttMessage -> this.decoderResultIsSuccess(ctx, msg))
-                .switchIfEmpty(error(ctx))
-                .flatMap(mqttMessage -> MqttMsgTypeEnum.msgHandler(mqttMessage.fixedHeader().messageType().value(),ctx,mqttMessage))
-                .subscribe();
+        log.debug("channelRead0:" + ctx.channel());
+        Mono.just(ctx.channel())
+                .filter(channel -> this.decoderResultIsSuccess(ctx, msg))
+                .switchIfEmpty(LinksExceptionTcp.errors("channelRead0-解码器异常"))
+                .flatMap(channel -> MqttMsgTypeEnum.msgHandler(msg.fixedHeader().messageType().value(), channel, msg))
+                .onErrorResume(LinksExceptionTcp::errors)
+                .subscribe(channel -> log.debug("事件{},处理完成{}", msg.fixedHeader().messageType(), channel));
     }
 
     @Override
@@ -54,6 +47,8 @@ public class MqttBrokerHandler extends SimpleChannelInboundHandler<MqttMessage> 
                 log.info("发送遗嘱消息" + clientId);
                 ctx.close();
             }
+        } else {
+            super.userEventTriggered(ctx, evt);
         }
     }
 
@@ -77,7 +72,4 @@ public class MqttBrokerHandler extends SimpleChannelInboundHandler<MqttMessage> 
         return true;
     }
 
-    private  <T> Mono<T> error(ChannelHandlerContext ctx) {
-        return ExceptionHandler.errors("channelRead0-解码器异常");
-    }
 }

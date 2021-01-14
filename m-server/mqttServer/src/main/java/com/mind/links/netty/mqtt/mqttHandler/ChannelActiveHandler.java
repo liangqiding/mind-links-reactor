@@ -1,6 +1,6 @@
 package com.mind.links.netty.mqtt.mqttHandler;
 
-import com.mind.links.netty.mqtt.mqttServer.MqttBrokerServer;
+import com.mind.links.netty.mqtt.common.ChannelCommon;
 import com.mind.links.netty.mqtt.config.BrokerProperties;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -21,12 +21,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ChannelActiveHandler extends ChannelInboundHandlerAdapter {
 
-    private final BrokerProperties brokerProperties;
+    private final ChannelCommon channelCommon;
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) {
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
         log.debug("channelActive:" + ctx.name());
-        MqttBrokerServer.channelGroup.add(ctx.channel());
-        MqttBrokerServer.channelIdMap.put(brokerProperties.getId() + "_" + ctx.channel().id().asLongText(), ctx.channel().id());
+        super.channelActive(ctx);
+        channelCommon.saveChannel(ctx);
     }
+
 }

@@ -8,7 +8,6 @@ import com.mind.links.netty.mqtt.mqttStore.MqttSession;
 import com.mind.links.netty.mqtt.mqttStore.session.SessionStoreHandler;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.mqtt.*;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.AttributeKey;
@@ -38,38 +37,46 @@ public class ConnectHandler implements IMqttMessageHandler {
 
 
     @Override
-    public Mono<Void> connect(final ChannelHandlerContext ctx, final MqttMessage mqttMessage) {
-        Channel channel = ctx.channel();
+    public Mono<Channel> connect(Channel channel, final MqttMessage mqttMessage) {
         MqttConnectMessage msg = (MqttConnectMessage) mqttMessage;
-        mqttFilter.filter(channel, msg);
-
-        int expire = this.idleHandler(channel, msg);
-
-        this.saveSession(channel, msg, expire);
-
-        this.response(channel, msg);
-
-        this.sendUndoneMessage(channel, msg);
-
-        return Mono.empty();
+        return Mono.just(channel)
+                .flatMap(c -> mqttFilter.filter(c, msg))
+                .flatMap(c -> this.saveSession(c, msg))
+                .flatMap(c -> this.response(c, msg))
+                .doOnNext(c -> this.sendUndoneMessage(c, msg));
     }
 
-    public int idleHandler(final Channel channel, MqttConnectMessage msg) {
-        // 处理连接心跳包
+
+    /**
+     * 保存session
+     */
+    public Mono<Channel> saveSession(final Channel channel, MqttConnectMessage msg) {
+        int expire = this.refreshIdle(channel, msg);
+        MqttSession mqttSession = this.getMqttSession(channel, msg, expire);
+        return Mono.just(channel)
+                .doOnNext(c -> sessionStoreHandler.put(msg.payload().clientIdentifier(), mqttSession, expire));
+    }
+
+    /**
+     * 刷新session有效时间
+     */
+    public int refreshIdle(Channel channel, MqttConnectMessage msg) {
         int expire = 0;
         if (msg.variableHeader().keepAliveTimeSeconds() > 0) {
             if (channel.pipeline().names().contains("idle")) {
                 channel.pipeline().remove("idle");
             }
-            expire = Math.round(msg.variableHeader().keepAliveTimeSeconds() * 1.5f);
+            expire = (Math.round(msg.variableHeader().keepAliveTimeSeconds() * 1.5f));
             channel.pipeline().addFirst("idle", new IdleStateHandler(0, 0, expire));
         }
-        log.debug("===1expire:" + expire);
+        log.debug("到期时间expire:" + expire);
         return expire;
     }
 
-    public void saveSession(final Channel channel, MqttConnectMessage msg, int expire) {
-        // 处理遗嘱信息 并生成session
+    /**
+     * 封装session
+     */
+    public MqttSession getMqttSession(Channel channel, MqttConnectMessage msg, int expire) {
         MqttSession mqttSession = new MqttSession()
                 .setBrokerId(brokerProperties.getId())
                 .setClientId(msg.payload().clientIdentifier())
@@ -83,20 +90,20 @@ public class ConnectHandler implements IMqttMessageHandler {
                     new MqttPublishVariableHeader(msg.payload().willTopic(), 0), Unpooled.buffer().writeBytes(msg.payload().willMessageInBytes()));
             mqttSession.setWillMessage(willMessage);
         }
-        // 至此存储会话信息及返回接受客户端连接
-        sessionStoreHandler.put(msg.payload().clientIdentifier(), mqttSession, expire);
-        log.debug("===2mqttSession:" + mqttSession);
+        return mqttSession;
     }
 
-    public void response(final Channel channel, MqttConnectMessage msg) {
-        // 将clientId存储到channel的map中
-        channel.attr(AttributeKey.valueOf("clientId")).set(msg.payload().clientIdentifier());
-        boolean sessionPresent = sessionStoreHandler.containsKey(msg.payload().clientIdentifier()) && !msg.variableHeader().isCleanSession();
-        MqttConnAckMessage okResp = (MqttConnAckMessage) MqttMessageFactory.newMessage(
-                new MqttFixedHeader(MqttMessageType.CONNACK, false, MqttQoS.AT_MOST_ONCE, false, 0),
-                new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_ACCEPTED, sessionPresent), null);
-        channel.writeAndFlush(okResp);
-        log.debug("===3 CONNECT - clientId: {}, cleanSession: {}", msg.payload().clientIdentifier(), msg.variableHeader().isCleanSession());
+    public Mono<Channel> response(final Channel channel, MqttConnectMessage msg) {
+        return Mono.just(channel)
+                .doOnNext(c -> {
+                    c.attr(AttributeKey.valueOf("clientId")).set(msg.payload().clientIdentifier());
+                    boolean sessionPresent = sessionStoreHandler.containsKey(msg.payload().clientIdentifier()) && !msg.variableHeader().isCleanSession();
+                    MqttConnAckMessage okResp = (MqttConnAckMessage) MqttMessageFactory.newMessage(
+                            new MqttFixedHeader(MqttMessageType.CONNACK, false, MqttQoS.AT_MOST_ONCE, false, 0),
+                            new MqttConnAckVariableHeader(MqttConnectReturnCode.CONNECTION_ACCEPTED, sessionPresent), null);
+                    c.writeAndFlush(okResp);
+                    log.debug("===3 CONNECT - clientId: {}, cleanSession: {}", msg.payload().clientIdentifier(), msg.variableHeader().isCleanSession());
+                });
     }
 
     public void sendUndoneMessage(final Channel channel, MqttConnectMessage msg) {

@@ -1,14 +1,12 @@
 package com.mind.links.netty.mqtt.mqttHandler;
 
-import com.mind.links.netty.mqtt.mqttServer.MqttBrokerServer;
-import com.mind.links.netty.mqtt.config.BrokerProperties;
+import com.mind.links.netty.mqtt.common.ChannelCommon;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
 
 /**
  * description: 连接中断管理
@@ -22,12 +20,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ChannelInactiveHandler extends ChannelInboundHandlerAdapter {
 
-    private final BrokerProperties brokerProperties;
+    private final ChannelCommon channelCommon;
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.debug("channelInactive:" + ctx.name());
-        MqttBrokerServer.channelGroup.remove(ctx.channel());
-        MqttBrokerServer.channelIdMap.remove(brokerProperties.getId() + "_" + ctx.channel().id().asLongText());
+        super.channelInactive(ctx);
+        channelCommon.removeChannel(ctx);
     }
 }
