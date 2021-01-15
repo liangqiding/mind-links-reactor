@@ -1,7 +1,5 @@
 # mind-links 基于Reactor3 netty的大型响应式分布式物联网智能家电系统,百万长连接
 
-# mind-links 基于Reactor3 netty的大型响应式分布式物联网智能家电系统,百万长连接
-
 ## 前言
 
 `mind-links` 本项目基于netty的大型响应式分布式物联网智能家电系统，主要技术包括：mqtt,Reactor3,netty,SpringCloud,nacos,Elasticsearch,Kafka,docker,Redisson,mysql,mongodb,EKL
