@@ -8,14 +8,11 @@
 > 整合mqtt协议支持，百万长连接设计方案
 
 ## 相关项目
-- mind-links后端项目
- 项目地址地址： [https://github.com/liangqiding/mind-links](https://github.com/liangqiding/mind-links)
+- mind-links后端项目： [https://github.com/liangqiding/mind-links](https://github.com/liangqiding/mind-links)
 
-- mind-links TCP服务器基于netty的tcp长连接服务器
- 项目地址地址： [https://github.com/liangqiding/mind-links-server](https://github.com/liangqiding/mind-links-server)
+- mind-links TCP服务器基于netty的tcp长连接服务器： [https://github.com/liangqiding/mind-links-server](https://github.com/liangqiding/mind-links-server)
 
-- mind-links -前端项目 采用TS.JS形式
- 项目地址地址： [https://github.com/liangqiding/mind-links-web](https://github.com/liangqiding/mind-links-web)
+- mind-links -前端项目 采用TS.JS形式： [https://github.com/liangqiding/mind-links-web](https://github.com/liangqiding/mind-links-web)
 
 - mind-links -TCP测试设备 基于c/c++ 编写的小型测试客户端 
 
