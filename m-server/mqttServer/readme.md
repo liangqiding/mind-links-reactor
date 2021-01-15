@@ -1,1 +1,0 @@
-https://github.com/hui6075/mqtt_v5/blob/master/protocol/mqtt-v5.0-zh_cn.pdf

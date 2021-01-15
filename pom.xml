@@ -227,6 +227,11 @@
                 <artifactId>logback-kafka-appender</artifactId>
                 <version>${logback-kafka-appender.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
