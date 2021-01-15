@@ -1,22 +1,29 @@
 # mind-links 基于Reactor3 netty的大型响应式分布式物联网智能家电系统,百万长连接
 
+# mind-links 基于Reactor3 netty的大型响应式分布式物联网智能家电系统,百万长连接
+
 ## 前言
 
 `mind-links` 本项目基于netty的大型响应式分布式物联网智能家电系统，主要技术包括：mqtt,Reactor3,netty,SpringCloud,nacos,Elasticsearch,Kafka,docker,Redisson,mysql,mongodb,EKL
 
-项目包含前端web页面,后端web接口,tcp服务器
+> 项目包含前端web页面,后端web服务,tcp服务器
+> 整合mqtt协议支持，百万长连接设计方案
 
-整合mqtt协议支持，百万长连接设计方案
+## 相关项目
+- mind-links后端项目
+ 项目地址地址： [https://github.com/liangqiding/mind-links](https://github.com/liangqiding/mind-links)
 
-- web后端服务 基于SpringCloud的微服务开发脚手架开发 参考地址[https://github.com/zhoutaoo/SpringCloud](https://github.com/zhoutaoo/SpringCloud)，
+- mind-links TCP服务器基于netty的tcp长连接服务器
 
-- TCP服务器 基于netty 的tcp长连接服务器,采用分布式的设计思路,整合多种协议支持,包括：mqtt协议的完整支持（14种报文结构和遗嘱等）,webSocket,Socket
+ 项目地址地址： [https://github.com/liangqiding/mind-links-server](hhttps://github.com/liangqiding/mind-links-server)
 
-- 前端项目 采用TS.JS形式，基于vue-typescript-admin-template开发脚手架实现 参考地址[https://github.com/Armour/vue-typescript-admin-template](https://github.com/Armour/vue-typescript-admin-template)
+- mind-links -前端项目 采用TS.JS形式
+ 项目地址地址： [https://github.com/liangqiding/mind-links-web](https://github.com/liangqiding/mind-links-web)
 
-- TCP测试设备 基于c/c++ 编写的小型测试客户端 
+- mind-links -TCP测试设备 基于c/c++ 编写的小型测试客户端 
 
-- 目前项目还在持续更新中
+ 目前项目还在持续更新中
+ 
 ## 项目文档
 
 - 文档地址：
