@@ -14,7 +14,8 @@
     
 # 2 接口文档
 
-minio服务/主要接口 
+> minio服务/主要接口 
+
 返回示例：
 ```json
 {
@@ -82,7 +83,13 @@ DELETE /minio/file/delete
 |200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|成功|Inline|
 
 ### 返回数据结构
-> 2进制文件
+```json
+{
+"code":20000,
+"message":"业务请求成功",
+"data":""
+}
+```
 
 #### 2.4 DELETE 删除存储桶
 
@@ -104,7 +111,13 @@ DELETE /minio/bucket/delete
 
 ### 返回数据结构
 
-> 2进制文件
+```json
+{
+"code":20000,
+"message":"业务请求成功",
+"data":""
+}
+```
 
 #### 2.5 GET 获取图片（直接获取）
 
