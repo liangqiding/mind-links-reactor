@@ -29,6 +29,7 @@
 | tcp项目文档        |  [tcp项目文档](https://github.com/liangqiding/mind-links-server)    |   
 | m-security        |  [security登录服务文档](./m-auth/security/readme.md)                |   
 | m-logger          |  [全局日记收集文档](./m-logger/m-logger-handler/readme.md)           |   
+| m-minio         |  [文件服务器](./m-minio/readme.md)                  |   
 
 - 备用地址：[http://#暂无](https://#)
 
