@@ -1,15 +1,14 @@
-package com.mind.links.redisson;
+package com.mind.links.cache.redisson;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.reactive.config.EnableWebFlux;
 
 /**
- * description : TODO
+ * date: 2021-01-16 08:10
+ * description
  *
- * @author : qiDing
- * date: 2020-12-10 11:38
- * @version v1.0.0
+ * @author qiDing
  */
 @SpringBootApplication
 @EnableWebFlux

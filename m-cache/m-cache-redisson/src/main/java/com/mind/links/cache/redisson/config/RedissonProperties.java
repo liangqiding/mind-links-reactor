@@ -1,9 +1,8 @@
-package com.mind.links.redisson.config;
+package com.mind.links.cache.redisson.config;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Accessors(chain = true)
-@NoArgsConstructor
 @ConfigurationProperties(prefix = "redisson.single")
 @Component
 @ApiModel("redisson配置")

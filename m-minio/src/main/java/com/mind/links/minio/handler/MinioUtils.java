@@ -36,6 +36,8 @@ public class MinioUtils implements MinioUtil {
     private Scheduler myScheduler;
 
 
+
+
     @Override
     public Mono<String> uploadObject(Mono<FilePart> file, String bucketName, String minIoPathName) {
         AtomicReference<String> saveFileNames = new AtomicReference<>();

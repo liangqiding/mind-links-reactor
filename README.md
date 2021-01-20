@@ -4,6 +4,8 @@
 
 `mind-links` 本项目基于netty的大型响应式分布式物联网智能家电系统，主要技术包括：mqtt,Reactor3,netty,SpringCloud,nacos,Elasticsearch,Kafka,docker,Redisson,mysql,mongodb,EKL
 
+阅读本项目代码需要一定的reactor及lambda基础
+
 > 项目包含前端web页面,后端web服务,tcp服务器
 > 整合mqtt协议支持，百万长连接设计方案
 
@@ -24,8 +26,9 @@
 
 |  服务              | 文档                 |   
 |-------------------|----------------------|
-| m-security        |  [security登录服务文档...](./m-auth/security/readme.md)                |   
-| m-logger          |  [全局日记收集文档...](./m-logger/m-logger-handler/readme.md)           |  
+| tcp项目文档        |  [tcp项目文档](https://github.com/liangqiding/mind-links-server)    |   
+| m-security        |  [security登录服务文档](./m-auth/security/readme.md)                |   
+| m-logger          |  [全局日记收集文档](./m-logger/m-logger-handler/readme.md)           |   
 
 - 备用地址：[http://#暂无](https://#)
 

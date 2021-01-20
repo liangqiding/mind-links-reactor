@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 /**
  * description : TODO
@@ -44,4 +45,5 @@ public class MinioConfig {
                 .credentials(accessKey, secretKey)
                 .build();
     }
+    
 }

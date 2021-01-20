@@ -3,7 +3,6 @@ package com.mind.links.common.enums;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.http.MediaType;
-
 import java.util.*;
 
 
