@@ -4,6 +4,21 @@
 
 整合minio 文件服务器
 
+# 核心配置
+
+> 用到的pom包  | [版本号参考](../pom.xml)
+
+```xml
+        <dependency>
+                   <groupId>io.minio</groupId>
+                   <artifactId>minio</artifactId>
+               </dependency>
+               <dependency>
+                   <groupId>org.springframework.boot</groupId>
+                   <artifactId>spring-boot-starter-webflux</artifactId>
+               </dependency>
+```
+
 # 1 功能介绍
 
 #### 1.1 完成文件上传下载
@@ -11,6 +26,7 @@
 #### 1.2 文件md5校验
 	
 #### 1.3 断点重连
+
     
 # 2 接口文档
 
