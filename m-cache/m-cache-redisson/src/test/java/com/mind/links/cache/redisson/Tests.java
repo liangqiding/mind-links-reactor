@@ -36,10 +36,10 @@ public class Tests {
     }
 
     public static void main(String[] args) {
-        Mono.just("66")
-                .flatMap(s -> Mono.empty())
+        Mono.just("667")
+                .filter(s -> s.equals("66"))
                 .then(Mono.just("111"))
-                .flatMap(o -> test("1"))
+                .flatMap(Tests::test)
                 .subscribe(System.out::println);
     }
 

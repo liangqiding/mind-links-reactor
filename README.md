@@ -1,4 +1,11 @@
 # mind-links 基于Reactor3 netty的大型响应式分布式物联网智能家电系统,百万长连接
+<p>
+<a href=" https://github.com/liangqiding/mind-links-server"><img src="https://gitee.com/liangqiding/mind-links-static/raw/master/mind-links-server.svg" alt="TCP服务器项目"></a>
+<a href=" https://github.com/liangqiding/mind-links"><img src="https://gitee.com/liangqiding/mind-links-static/raw/master/mind-links.svg" alt="后台项目"></a>
+  <a href=" https://github.com/liangqiding/mind-links-web"><img src="https://gitee.com/liangqiding/mind-links-static/raw/master/mind-links-web.svg" alt="前端项目"></a>
+  <a href="#"><img src="https://gitee.com/liangqiding/mind-links-static/raw/master/qq.svg" alt="QQ"></a>
+  <a href="https://gitee.com/liangqiding/mind-links"><img src="https://gitee.com/liangqiding/mind-links-static/raw/master/mayun.svg" alt="码云"></a>
+</p>
 
 ## 前言
 
@@ -27,7 +34,7 @@
 |  服务              | 文档                 |   
 |-------------------|----------------------|
 | tcp项目文档        |  [tcp项目文档](https://github.com/liangqiding/mind-links-server)    |   
-| m-security        |  [security登录服务文档](./m-auth/security/readme.md)                |   
+| m-security        |  [security授权服务文档](./m-auth/security/readme.md)                |   
 | m-logger          |  [全局日记收集文档](./m-logger/m-logger-handler/readme.md)           |   
 | m-minio         |  [文件服务器](./m-minio/readme.md)                  |   
 
