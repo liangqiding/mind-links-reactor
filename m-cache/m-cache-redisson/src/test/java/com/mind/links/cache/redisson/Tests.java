@@ -10,6 +10,7 @@ import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.naming.LinkException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,10 +37,11 @@ public class Tests {
     }
 
     public static void main(String[] args) {
-        Mono.just("667")
-                .filter(s -> s.equals("66"))
-                .then(Mono.just("111"))
-                .flatMap(Tests::test)
+        Mono.just("111")
+                .filter(s -> s.equals("111"))
+                .switchIfEmpty(Mono.error(new LinkException("1111")))
+                .filter(s -> s.equals("222"))
+                .switchIfEmpty(Mono.just("333"))
                 .subscribe(System.out::println);
     }
 
