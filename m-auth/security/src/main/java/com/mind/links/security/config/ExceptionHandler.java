@@ -39,8 +39,7 @@ public class ExceptionHandler implements ErrorWebExceptionHandler {
                 .writeWith(Mono.just(throwable)
                         .flatMap(LinksExceptionHandler::errorHandler)
                         .map(responseResult -> response.bufferFactory()
-                                .wrap(responseResult.toJsonString().getBytes(StandardCharsets.UTF_8)))
-                );
+                                .wrap(responseResult.toJsonString().getBytes(StandardCharsets.UTF_8))));
     }
 }
 

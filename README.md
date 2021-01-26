@@ -182,7 +182,7 @@
 | Mysql         | 8.0    | https://www.mysql.com/                                       |
 | Redis         |        | https://redis.io/download                                    |
 | MongoDB       | 4.3    | https://www.mongodb.com/download-center                      |
-| Kafka         |        | http://www.rabbitmq.com/download.html                        |
+| Kafka         |        | http://kafka.apache.org/                       |
 | Nginx         | 1.19.x | http://nginx.org/en/download.html                            |
 | Elasticsearch | 7.10.1  | https://www.elastic.co/downloads/elasticsearch               |
 | Logstash      | 7.10.1  | https://www.elastic.co/cn/downloads/logstash                 |
