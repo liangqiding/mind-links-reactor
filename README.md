@@ -54,7 +54,14 @@
 
 ![业务架构图](https://gitee.com/liangqiding/mind-links-static/raw/master/drawio/BusinessStructureChart.png)
 
-#### 测试效果
+#### 效果预览
+> 工具 mqttx
+![mqttx测试效果](https://gitee.com/liangqiding/mind-links-static/raw/master/server/mqttx.png)
+> 工具 mqtt.fx
+![mqtt.fx测试效果](https://gitee.com/liangqiding/mind-links-static/raw/master/server/mqttfx.png)
+
+#### 压测效果
+
 > 测试工具 jmeter
 ![测试工具](https://gitee.com/liangqiding/mind-links-static/raw/master/server/tool.png)
 
