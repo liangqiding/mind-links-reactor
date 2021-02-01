@@ -1,4 +1,4 @@
-# mind-links 基于Reactor3 netty的大型响应式分布式物联网智能家电系统,百万长连接
+# mind-links 基于Reactor3 netty的大型响应式分布式物联网智能家电系统,十万长连接
 
 <p>
 <a href="https://gitee.com/liangqiding/mind-links"><img src="https://gitee.com/liangqiding/mind-links-static/raw/master/mayun.svg" alt="国内地址(若图片无法显示点击切换)"></a>
@@ -16,6 +16,8 @@
 
 > 项目包含前端web页面,后端web服务,tcp服务器
 > 整合mqtt协议支持，百万长连接设计方案
+
+#### 已达成12万长连接后面有测试图
 
 ## 相关项目
 - mind-links后端项目： [https://github.com/liangqiding/mind-links](https://github.com/liangqiding/mind-links)
@@ -67,6 +69,9 @@
 
 > 压测效果 稳定6万连接（自身配置限制 2016年的笔记本了）
 ![测试工具](https://gitee.com/liangqiding/mind-links-static/raw/master/server/mqtt-test2.png)
+
+> 压测效果 集群模式下（两节点）压测效果 达成12万连接
+ ![测试工具](https://gitee.com/liangqiding/mind-links-static/raw/master/server/jiqun2tai.png)
 
 #### 后台模块
 
