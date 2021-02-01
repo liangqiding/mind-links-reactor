@@ -54,7 +54,13 @@
 
 ![业务架构图](https://gitee.com/liangqiding/mind-links-static/raw/master/drawio/BusinessStructureChart.png)
 
-#### 模块介绍
+#### 测试效果
+> 测试工具 jmeter
+![测试工具](https://gitee.com/liangqiding/mind-links-static/raw/master/server/tool.png)
+
+> 压测效果 轻松2万连接（自身配置限制 2016年的笔记本了）
+![测试工具](https://gitee.com/liangqiding/mind-links-static/raw/master/server/mqtt-test.png)
+
 #### 后台模块
 
 |  服务       | 服务说明       |   进度         |    备注   |
@@ -100,11 +106,6 @@
 
 ### 项目演示
 #### TCP mqtt服务器压测
-> 测试工具 jmeter
-![测试工具](https://gitee.com/liangqiding/mind-links-static/raw/master/server/tool.png)
-
-> 压测效果轻松2万连接（自身配置限制 2016年的笔记本了）
-![测试工具](https://gitee.com/liangqiding/mind-links-static/raw/master/server/mqtt-test.png)
 
 #### 后台管理系统
 
