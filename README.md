@@ -67,11 +67,23 @@
 > 测试工具 jmeter
 ![测试工具](https://gitee.com/liangqiding/mind-links-static/raw/master/server/tool.png)
 
-> 压测效果 稳定6万连接（自身配置限制 2016年的笔记本了）
+> 压测效果 单机下压测效果 稳定6万连接（自身配置限制 i5 6300hq+16G）
 ![测试工具](https://gitee.com/liangqiding/mind-links-static/raw/master/server/mqtt-test2.png)
 
 > 压测效果 集群模式下（两节点）压测效果 达成12万连接
- ![测试工具](https://gitee.com/liangqiding/mind-links-static/raw/master/server/jiqun2tai.png)
+![测试工具](https://gitee.com/liangqiding/mind-links-static/raw/master/server/jiqun2tai.png)
+
+>说明：由于测试机的端口限制,单机最多也就65553个端口了，所以理论上jmeter最大也就可以模拟6万个连接（系统本身也会有很多服务占用端口）
+
+>使用虚拟机理论上是可以让测试机端口无限的，前提性能跟得上。但实际中我们发现，单台测试机跑jmeter到3万个连接，其实已经是极限了（内存和cpu性能问题）
+
+>这里借来了多台测试机运行jmeter,两个性能较好的运行ming-links-server服务
+
+>到了9万连接的时候，会明显感觉到连接变慢（这里感觉应该快到瓶颈了），而且偶尔会有连不上的问题，不过好在之前的连接都非常稳定，新的连接虽然连接变慢，但还是可以慢慢的增长，
+>为了让其慢慢涨，编写了一个脚本程序，让测试机
+>每隔一段时间连200个，最后连接稳定在12万多。
+
+>后续会测试消息的并发量，及kafka的吞吐速度。
 
 #### 后台模块
 
