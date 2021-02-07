@@ -1,15 +1,15 @@
-package com.mind.links.security.domain;
+package com.mind.links.security.domain.vo;
 
-
-import java.io.Serializable;
-import java.util.Date;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.mind.links.security.domain.LinksUser;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import java.io.Serializable;
+import java.util.Date;
 
 
 /**
@@ -24,9 +24,28 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel("用户类")
-public class LinksUser extends Model<LinksUser> {
+public class LinksUserVo extends Model<LinksUserVo> {
 
     private static final long serialVersionUID = 1L;
+
+    public LinksUserVo(LinksUser linksUser) {
+        this.userId = linksUser.getUserId();
+        this.username = linksUser.getUsername();
+        this.name = linksUser.getName();
+        this.avatar = linksUser.getAvatar();
+        this.phone = linksUser.getPhone();
+        this.sex = linksUser.getSex();
+        this.createTime = linksUser.getCreateTime();
+        this.updateTime = linksUser.getUpdateTime();
+        this.provinceCode = linksUser.getProvinceCode();
+        this.cityCode = linksUser.getCityCode();
+        this.areaCode = linksUser.getAreaCode();
+        this.townCode = linksUser.getTownCode();
+        this.place = linksUser.getPlace();
+        this.introduction = linksUser.getIntroduction();
+    }
+    @ApiModelProperty("用户权限")
+    private String roles="[\"admin\"]";
 
     @ApiModelProperty("用户id")
     private Long userId;
@@ -34,17 +53,14 @@ public class LinksUser extends Model<LinksUser> {
     @ApiModelProperty("账号")
     private String username;
 
-    @ApiModelProperty("密码")
-    private String password;
+    @ApiModelProperty("个人说明")
+    private String introduction;
 
     @ApiModelProperty("用户名称")
     private String name;
 
     @ApiModelProperty("头像")
     private String avatar;
-
-    @ApiModelProperty("个人说明")
-    private String introduction;
 
     @ApiModelProperty("手机")
     private String phone;
@@ -70,17 +86,8 @@ public class LinksUser extends Model<LinksUser> {
     @ApiModelProperty("行政码 镇")
     private String townCode;
 
-    @ApiModelProperty("更新人")
-    private Long updateUser;
-
     @ApiModelProperty("地址")
     private String place;
-
-    @ApiModelProperty("是否已删除")
-    private Boolean isDelete;
-
-    @ApiModelProperty("是否启用")
-    private Boolean enable;
 
     @Override
     protected Serializable pkVal() {

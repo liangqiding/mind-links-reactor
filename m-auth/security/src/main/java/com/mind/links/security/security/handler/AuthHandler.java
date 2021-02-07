@@ -1,5 +1,6 @@
 package com.mind.links.security.security.handler;
 
+import com.mind.links.security.domain.LoginResponse;
 import com.mind.links.security.jwt.TokenProvider;
 import com.mind.links.security.security.manage.ManageAuthenticationManager;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +26,12 @@ public class AuthHandler {
 
     private final ManageAuthenticationManager manageAuthenticationManager;
 
-    public Mono<String> loginAuth(String username, String password, String clientId) {
+    public Mono<LoginResponse> loginAuth(String username, String password, String clientId) {
         log.debug("clientId:" + clientId);
         return manageAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password))
                 .flatMap(this::setAuthentication)
-                .flatMap(auth -> tokenProvider.createToken(auth, clientId));
+                .flatMap(auth -> tokenProvider.createToken(auth, clientId))
+                .map(accessToken -> new LoginResponse("bearer",accessToken));
     }
 
     public Mono<Authentication> checkToken(String token) {

@@ -10,9 +10,9 @@ import reactor.core.scheduler.Schedulers;
 /**
  * Date: 2020/6/06 0010 13:55
  * Description: BoundedElastic线程池配置
- *
  * @author qiding
  */
+
 @Configuration
 @ApiModel("自定义有边界的BoundedElastic线程池,reactor默认可通过配置文件加载")
 public class ScheduleConfig {

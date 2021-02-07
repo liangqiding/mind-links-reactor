@@ -3,6 +3,7 @@ package com.mind.links.security.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mind.links.security.dao.UserMapper;
 import com.mind.links.security.domain.LinksUser;
+import com.mind.links.security.domain.vo.LinksUserVo;
 import com.mind.links.security.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -27,5 +28,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, LinksUser> implemen
     @Override
     public Mono<LinksUser> getUserByUsername(String username) {
         return Mono.fromCallable(() -> this.getOne(new QueryWrapper<LinksUser>().eq("username", username))).subscribeOn(myScheduler);
+    }
+
+    @Override
+    public Mono<LinksUserVo> getUserById(Long userId) {
+        return Mono.fromCallable(() -> this.getOne(new QueryWrapper<LinksUser>().eq("user_id", userId)))
+                .map(LinksUserVo::new)
+                .subscribeOn(myScheduler);
     }
 }

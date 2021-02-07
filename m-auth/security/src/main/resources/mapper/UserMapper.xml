@@ -21,11 +21,12 @@
         <result column="place" property="place" />
         <result column="is_delete" property="isDelete" />
         <result column="enable" property="enable" />
+        <result column="introduction" property="introduction" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        user_id, username, password, name, avatar, phone, sex, create_time, update_time, province_code, city_code, area_code, town_code, update_user, place, is_delete, enable
+        user_id,introduction, username, password, name, avatar, phone, sex, create_time, update_time, province_code, city_code, area_code, town_code, update_user, place, is_delete, enable
     </sql>
 
 </mapper>
