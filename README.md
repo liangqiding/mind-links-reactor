@@ -1,14 +1,16 @@
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">mind-mqtt-reactor</h1>
 <h4 align="center">基于Reactor3 netty的大型响应式分布式物联网智能家电系统,十万长连接</h4>
+<h5  style="color: red" align="center" >本项目尚未完成，且已于2020.10.10停止维护更新</h5>
 <p align="center">
 	<a href="#"><img src="https://img.shields.io/badge/Springboot-2.5.3-blue"></a>
 	<a href="#"><img src="https://img.shields.io/badge/license%20-MIT-green"></a>
 	<a href="https://gitee.com/liangqiding/mind-links"><img src="https://img.shields.io/badge/%E7%A0%81%E4%BA%91-%E5%9B%BD%E5%86%85%E5%9C%B0%E5%9D%80-yellow"></a>
 </p>
 
+
 ## 前言
 
-`本项目尚未完成，且已于2021年停止维护更新`
+`本项目尚未完成，且已于2020.10.10停止维护更新`
 
 `mind-links` 本项目基于netty的大型响应式分布式物联网智能家电系统，主要技术包括：mqtt,Reactor3,netty,SpringCloud,nacos,Elasticsearch,Kafka,docker,Redisson,mysql,mongodb,EKL
 
@@ -282,10 +284,4 @@ docker方式脚本初使化：进入docker-compose目录，执行命令 `docker-
 ## 更新日志
 
 **2020-10-10：** 
-
-
-## 联系交流
-> qq:742740345
-
-> 邮箱：742740345@qq.com
 
