@@ -2,7 +2,6 @@
 <h4 align="center">基于Reactor3 netty的大型响应式分布式物联网智能家电系统,十万长连接</h4>
 <h5  style="color: red" align="center" >本项目尚未完成，且已于2020.10.10停止维护更新</h5>
 <p align="center">
-	<a href="#"><img src="https://img.shields.io/badge/Springboot-2.5.3-blue"></a>
 	<a href="#"><img src="https://img.shields.io/badge/license%20-MIT-green"></a>
 	<a href="https://gitee.com/liangqiding/mind-links"><img src="https://img.shields.io/badge/%E7%A0%81%E4%BA%91-%E5%9B%BD%E5%86%85%E5%9C%B0%E5%9D%80-yellow"></a>
 </p>
