@@ -1,14 +1,14 @@
-# mind-links 基于Reactor3 netty的大型响应式分布式物联网智能家电系统,十万长连接
-
-<p>
-<a href="https://gitee.com/liangqiding/mind-links"><img src="https://gitee.com/liangqiding/mind-links-static/raw/master/mayun.svg" alt="国内地址(若图片无法显示点击切换)"></a>
-<a href="https://github.com/liangqiding/mind-links-server"><img src="https://gitee.com/liangqiding/mind-links-static/raw/master/mind-links-server.svg" alt="TCP服务器项目"></a>
-<a href="https://github.com/liangqiding/mind-links"><img src="https://gitee.com/liangqiding/mind-links-static/raw/master/mind-links.svg" alt="后台项目"></a>
-<a href="https://github.com/liangqiding/mind-links-web"><img src="https://gitee.com/liangqiding/mind-links-static/raw/master/mind-links-web.svg" alt="前端项目"></a>
-<a href="#"><img src="https://gitee.com/liangqiding/mind-links-static/raw/master/qq.svg" alt="QQ"></a>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">mind-mqtt-reactor</h1>
+<h4 align="center">基于Reactor3 netty的大型响应式分布式物联网智能家电系统,十万长连接</h4>
+<p align="center">
+	<a href="#"><img src="https://img.shields.io/badge/Springboot-2.5.3-blue"></a>
+	<a href="#"><img src="https://img.shields.io/badge/license%20-MIT-green"></a>
+	<a href="https://gitee.com/liangqiding/mind-links"><img src="https://img.shields.io/badge/%E7%A0%81%E4%BA%91-%E5%9B%BD%E5%86%85%E5%9C%B0%E5%9D%80-yellow"></a>
 </p>
 
 ## 前言
+
+`本项目尚未完成，且已于2021年停止维护更新`
 
 `mind-links` 本项目基于netty的大型响应式分布式物联网智能家电系统，主要技术包括：mqtt,Reactor3,netty,SpringCloud,nacos,Elasticsearch,Kafka,docker,Redisson,mysql,mongodb,EKL
 
@@ -17,19 +17,12 @@
 > 项目包含前端web页面,后端web服务,tcp服务器
 > 整合mqtt协议支持，百万长连接设计方案
 
+- MQTT-Broker 地址 [https://github.com/liangqiding/mind-links-server-reactor](https://github.com/liangqiding/mind-links-server-reactor)
+
 #### 已达成12万长连接后面有测试图
 
-## 相关项目
-- mind-links后端项目： [https://github.com/liangqiding/mind-links](https://github.com/liangqiding/mind-links)
-
-- mind-links TCP服务器基于netty的tcp长连接服务器： [https://github.com/liangqiding/mind-links-server](https://github.com/liangqiding/mind-links-server)
-
-- mind-links -前端项目 采用TS.JS形式： [https://github.com/liangqiding/mind-links-web](https://github.com/liangqiding/mind-links-web)
-
-- mind-links -TCP测试设备 基于c/c++ 编写的小型测试客户端 
-
  目前项目还在持续更新中
- 
+
 ## 项目文档
 
 - 文档地址：
